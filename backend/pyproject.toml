@@ -16,6 +16,8 @@ dependencies = [
 dev = [
     "pre-commit>=4.0.0",
     "ruff>=0.8.0",
+    "pytest>=8.0.0",
+    "httpx>=0.28.0",
 ]
 
 [build-system]
@@ -32,3 +34,7 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

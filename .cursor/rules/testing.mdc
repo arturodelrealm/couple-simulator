@@ -6,7 +6,9 @@ alwaysApply: false
 
 # Testing conventions
 
-Test harness status: see [engineering-baseline-backlog.md](../../docs/engineering-baseline-backlog.md) (pytest not yet configured).
+Backend tests use **pytest** in `backend/tests/`. Run with `make test` (Docker) or `cd backend && pytest` (local Python 3.12 + `pip install -e ".[dev]"`).
+
+Test DB uses in-memory SQLite with a JSONB→JSON compile hook in `conftest.py`. Production uses PostgreSQL via Alembic — do not use `create_all()` outside tests.
 
 ## What to test (priority order)
 
@@ -28,6 +30,6 @@ Protect behavior that is expensive or embarrassing to break:
 
 - Game engine logic should be testable **without HTTP** and without a running frontend
 - Prefer testing services/functions directly over full stack when possible
-- When pytest is added: place tests in `backend/tests/`, mirror service module names
+- Mirror service module names in `backend/tests/` (e.g. `test_game_service.py`)
 
-Do not add overlapping test frameworks. Extend pytest when the backlog item is implemented.
+See [engineering-baseline-backlog.md](../../docs/backlog/engineering-baseline-backlog.md) for remaining baseline items (mypy, CI, frontend tests).

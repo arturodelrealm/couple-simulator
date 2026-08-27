@@ -26,6 +26,7 @@ switch ($Task) {
         Write-Host "  .\tasks.ps1 makemigrations -Msg 'your message'"
         Write-Host "  .\tasks.ps1 lint"
         Write-Host "  .\tasks.ps1 format"
+        Write-Host "  .\tasks.ps1 test"
         Write-Host "  .\tasks.ps1 pre-commit-install"
         Write-Host "  .\tasks.ps1 pre-commit-run"
         Write-Host ""
@@ -65,6 +66,10 @@ switch ($Task) {
         & ruff format .
         if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
         Pop-Location
+    }
+
+    "test" {
+        Run-Compose @("run", "--rm", "--no-deps", "backend", "sh", "-c", "pip install -e '.[dev]' -q && pytest")
     }
 
     "pre-commit-install" {

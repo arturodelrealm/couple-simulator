@@ -9,7 +9,7 @@ Guide for **AI coding agents** and human contributors. For architecture and codi
 1. **Read repository instructions** — [AGENTS.md](../AGENTS.md), this file, and relevant [Cursor rules](../.cursor/rules/).
 2. **Read product context** — [docs/overview.md](overview.md) and the current milestone (MVP 0 unless stated otherwise).
 3. **Inspect existing implementation** — match naming, patterns, and directory layout before adding abstractions.
-4. **Check the engineering backlog** — [engineering-baseline-backlog.md](engineering-baseline-backlog.md) for known gaps; do not rebuild infrastructure that is already planned or in progress.
+4. **Check the engineering backlog** — [engineering-baseline-backlog.md](backlog/engineering-baseline-backlog.md) for known gaps; do not rebuild infrastructure that is already planned or in progress.
 
 ---
 
@@ -122,10 +122,13 @@ Run what exists today before submitting changes:
 ```bash
 make pre-commit-run          # Ruff + file hooks (backend)
 make lint                    # Ruff check only
+make test                    # backend pytest (Docker)
 cd frontend && npm run build # TypeScript + Vite build
 ```
 
-Future checks (pytest, mypy, ESLint, CI) are listed in [engineering-baseline-backlog.md](engineering-baseline-backlog.md). Add them when implemented; do not skip documented conventions in the meantime.
+With a local Python 3.12 environment: `pip install -e "./backend[dev]"` then `cd backend && pytest`.
+
+Future checks (mypy, ESLint, CI) are listed in [engineering-baseline-backlog.md](backlog/engineering-baseline-backlog.md).
 
 ---
 
@@ -148,7 +151,7 @@ Update docs when you change:
 
 Do not duplicate content across files — **link** to the canonical doc.
 
-Mark items complete in [engineering-baseline-backlog.md](engineering-baseline-backlog.md) only when the work is actually done. Never mark **human action required** items (Fly.io setup, GitHub secrets, first deploy) complete without user confirmation.
+Mark items complete in [engineering-baseline-backlog.md](backlog/engineering-baseline-backlog.md) only when the work is actually done. Never mark **human action required** items (Fly.io setup, GitHub secrets, first deploy) complete without user confirmation.
 
 ---
 
@@ -174,6 +177,7 @@ Before finishing a task, verify:
 - [ ] Model changes have a migration path documented for the user
 - [ ] No secrets or unrelated edits in the diff
 - [ ] `make pre-commit-run` passes (backend changes)
+- [ ] `make test` passes (backend changes)
 - [ ] `npm run build` passes (frontend changes)
 - [ ] Documentation updated if behavior or setup changed
 
@@ -185,7 +189,7 @@ Before finishing a task, verify:
 |----------|----------|
 | Technical conventions | [AGENTS.md](../AGENTS.md) |
 | API standards | [rest-api-standards.md](rest-api-standards.md) |
-| Engineering baseline backlog | [engineering-baseline-backlog.md](engineering-baseline-backlog.md) |
+| Engineering baseline backlog | [backlog/engineering-baseline-backlog.md](backlog/engineering-baseline-backlog.md) |
 | Cursor rules | [.cursor/rules/](../.cursor/rules/) |
 | FastAPI skill | [.cursor/skills/fastapi/SKILL.md](../.cursor/skills/fastapi/SKILL.md) |
 | React skill | [.cursor/skills/react/SKILL.md](../.cursor/skills/react/SKILL.md) |

@@ -8,7 +8,7 @@ Technical guidance for AI agents and contributors. **Read this file before makin
 | [docs/development-workflow.md](docs/development-workflow.md) | Step-by-step agent workflow and pre-submit checklist |
 | [docs/overview.md](docs/overview.md) | Product context, game flow, current milestone |
 | [docs/rest-api-standards.md](docs/rest-api-standards.md) | HTTP API shape, errors, REST conventions |
-| [docs/engineering-baseline-backlog.md](docs/engineering-baseline-backlog.md) | Engineering baseline audit and improvement backlog |
+| [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md) | Engineering baseline audit and improvement backlog |
 
 **Cursor rules** in [`.cursor/rules/`](.cursor/rules/) supplement this file — especially `general.mdc`, `backend.mdc`, `frontend.mdc`, `database.mdc`, `testing.mdc`, and `game-engine.mdc`.
 
@@ -79,7 +79,8 @@ couple-simulator/
 │   │   ├── schemas/       # Pydantic v2 request/response models
 │   │   ├── repositories/  # data access (optional, if needed)
 │   │   └── shared/        # reusable helpers and utilities
-│   └── alembic/           # database migrations
+│   ├── alembic/           # database migrations
+│   └── tests/             # pytest suite
 ├── frontend/
 │   └── src/
 │       ├── components/
@@ -158,7 +159,14 @@ Day-to-day:
 ```bash
 make lint              # check only
 make format            # auto-format
+make test              # backend pytest (Docker)
 make pre-commit-run    # run all hooks on the full repo (CI-friendly)
+```
+
+Backend tests live in `backend/tests/`. Run with `make test`, or locally after `pip install -e "./backend[dev]"`:
+
+```bash
+cd backend && pytest
 ```
 
 When the frontend is added, extend `.pre-commit-config.yaml` with ESLint and Prettier hooks.
@@ -284,6 +292,7 @@ Follow the full workflow in [docs/development-workflow.md](docs/development-work
 - [ ] All code and identifiers are in English
 - [ ] User-facing strings are translatable (gettext / i18n keys)
 - [ ] PEP 8 followed for Python; `make pre-commit-run` passes
+- [ ] `make test` passes when backend behavior changes
 - [ ] Business logic in services, not routers
 - [ ] SQLAlchemy 2.0 + Pydantic v2 patterns used
 - [ ] UUID primary keys on new models

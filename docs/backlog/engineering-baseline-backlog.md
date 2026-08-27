@@ -14,7 +14,7 @@ The repository has a **solid MVP 0 foundation**: FastAPI with a service-layer ar
 What is **not yet in place** for a maintainable, agent-friendly baseline:
 
 - **No CI** (no `.github/workflows/` at all)
-- **No automated tests** (backend or frontend)
+- **No frontend automated tests** (backend pytest added)
 - **No deployment configuration** (target platform: Fly.io)
 - **No frontend lint/format tooling** (ESLint, Prettier)
 - **No backend type checking** (mypy)
@@ -32,6 +32,7 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
 - [x] **SQLAlchemy 2.0 conventions** — `Mapped`, `mapped_column`, `select()`, no legacy `session.query()`.
 - [x] **Alembic migrations** — configured in `backend/alembic/`, initial migration `001_initial_mvp0_models.py` matches MVP 0 models. No `Base.metadata.create_all()` in application code.
 - [x] **Backend linting and formatting (Ruff)** — `backend/pyproject.toml` with Ruff; `make lint` / `make format`.
+- [x] **Backend pytest** — `backend/tests/` with avatar validation, game service, and API smoke tests; `make test` runs via Docker.
 - [x] **Pre-commit hooks (backend)** — `.pre-commit-config.yaml` runs Ruff check/format on `backend/` plus basic file hooks. Preserve this setup.
 - [x] **Structured API errors** — `AppError`, global exception handlers, `ok()` envelope per `docs/rest-api-standards.md`.
 - [x] **Health endpoint** — `GET /health` in `backend/app/main.py` returns standard envelope.
@@ -70,11 +71,10 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
 
 ### Backend quality gaps (extend, do not replace)
 
-- [ ] **Add pytest and initial backend tests** — zero test files or test dependencies today. Critical paths (`game_service`, `avatar_validation`, status transitions) are untested.  
+- [x] **Add pytest and initial backend tests** — `game_service`, `avatar_validation`, status transitions, and API smoke tests in `backend/tests/`.  
   - **Where:** `backend/tests/`, `backend/pyproject.toml` `[project.optional-dependencies] dev`  
   - **Type:** agent  
-  - **Depends on:** none  
-  - **Priority:** high — protect business logic before game engine grows.
+  - **Depends on:** none
 
 - [ ] **Add mypy (incremental)** — no static type checking on backend. Ruff covers lint/format only.  
   - **Where:** `backend/pyproject.toml`, optional CI job  
@@ -186,10 +186,10 @@ No `.github/workflows/` directory exists. CI is the authoritative quality gate.
 
 ### Testing strategy (game engine — future-critical)
 
-- [ ] **Backend test harness** — pytest, `TestClient` or service-level tests with in-memory/SQLite or test Postgres container.  
+- [ ] **Backend test harness** — pytest configured; extend coverage as game engine grows.  
   - **Where:** `backend/tests/`  
   - **Type:** agent  
-  - **Depends on:** pytest setup
+  - **Depends on:** game engine implementation (not in MVP 0)
 
 - [ ] **Prioritized test targets (as game engine is built)** — do not chase coverage percentage; test behavior that is expensive to break:  
   - Event resolution  
@@ -305,7 +305,7 @@ Tasks a coding agent can perform autonomously (after user approves implementatio
 
 1. ~~**Write root `README.md`**~~ — done.
 2. ~~**Add `docs/development-workflow.md`**~~ — done.
-3. **Add pytest + initial tests** for `game_service`, `avatar_validation`, API routes (smoke).
+3. ~~**Add pytest + initial tests**~~ — done.
 4. **Add mypy** with incremental strictness on services/shared.
 5. **Add ESLint (+ optional Prettier)** for frontend; extend `.pre-commit-config.yaml`.
 6. **Create `.github/workflows/ci.yml`** — backend lint/test/typecheck, frontend lint/build, migration check, minimal permissions.
@@ -336,7 +336,7 @@ Adapted to this repository’s actual gaps:
 |-------|--------|------------------|
 | **1** | Repository audit | ✅ This document |
 | **2** | Agent instructions | ✅ `README.md`, `docs/development-workflow.md`, Cursor rules |
-| **3** | Local quality tooling | pytest + initial tests, mypy (incremental), ESLint (+ Prettier), extend pre-commit |
+| **3** | Local quality tooling | ✅ pytest; mypy, ESLint, pre-commit frontend extensions remain |
 | **4** | CI quality gates | `.github/workflows/ci.yml`, PR template, migration consistency check |
 | **5** | Security checks | Dependabot, secret scan (one tool), dependency audit in CI |
 | **6** | Database safety | Migration check in CI; document destructive migration review in PR template |
@@ -395,7 +395,7 @@ The engineering baseline is **complete enough for confident agent-assisted devel
 | Area | Finding |
 |------|---------|
 | **CI** | No GitHub workflows in repo or on `origin/main`. |
-| **Tests** | No test directories or frameworks configured. |
+| **Tests** | ✅ Backend pytest (16 tests); no frontend tests yet. |
 | **README** | ✅ Added — setup, commands, doc index. |
 | **Backend deps** | `pyproject.toml` dev extras: `pre-commit`, `ruff` only. |
 | **Frontend deps** | No ESLint, Prettier, Vitest, Playwright. |

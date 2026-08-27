@@ -20,6 +20,7 @@ case "$task" in
     echo "  ./task.sh makemigrations 'your message'"
     echo "  ./task.sh lint"
     echo "  ./task.sh format"
+    echo "  ./task.sh test"
     echo "  ./task.sh pre-commit-install"
     echo "  ./task.sh pre-commit-run"
     echo ""
@@ -44,6 +45,9 @@ case "$task" in
     ;;
   format)
     cd "$BACKEND_DIR" && ruff format .
+    ;;
+  test)
+    $COMPOSE run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && pytest"
     ;;
   pre-commit-install)
     pre-commit install

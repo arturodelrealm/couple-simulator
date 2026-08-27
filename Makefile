@@ -3,7 +3,7 @@ MSG ?= describe the change
 BACKEND_DIR := backend
 
 .PHONY: help runserver build-server build-frontend migrate makemigrations \
-        lint format pre-commit-install pre-commit-run
+        lint format test pre-commit-install pre-commit-run
 
 help:
 	@echo "Available targets:"
@@ -14,6 +14,7 @@ help:
 	@echo "  make makemigrations      Autogenerate migration (MSG='your message')"
 	@echo "  make lint                Run Ruff linter on backend"
 	@echo "  make format              Run Ruff formatter on backend"
+	@echo "  make test                Run backend pytest suite"
 	@echo "  make pre-commit-install  Install git pre-commit hooks"
 	@echo "  make pre-commit-run      Run all pre-commit hooks on every file"
 	@echo ""
@@ -44,6 +45,9 @@ lint:
 
 format:
 	cd $(BACKEND_DIR) && ruff format .
+
+test:
+	$(COMPOSE) run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && pytest"
 
 pre-commit-install:
 	pre-commit install

@@ -62,6 +62,7 @@ A life-simulation game for couples. **Current milestone: MVP 0** — create a ga
 | Start stack | `make runserver` |
 | Apply migrations | `make migrate` |
 | Autogenerate migration | `make makemigrations MSG='describe the change'` |
+| Backend tests | `make test` |
 | Backend lint | `make lint` |
 | Backend format | `make format` |
 | Run all pre-commit hooks | `make pre-commit-run` |
@@ -95,7 +96,7 @@ couple-simulator/
 | [docs/development-workflow.md](docs/development-workflow.md) | Step-by-step workflow for agents and contributors |
 | [docs/overview.md](docs/overview.md) | Product goals and current milestone |
 | [docs/rest-api-standards.md](docs/rest-api-standards.md) | HTTP API conventions |
-| [docs/engineering-baseline-backlog.md](docs/engineering-baseline-backlog.md) | Engineering baseline audit and improvement backlog |
+| [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md) | Engineering baseline audit and improvement backlog |
 
 **AI agents:** read [AGENTS.md](AGENTS.md) and [docs/development-workflow.md](docs/development-workflow.md) before making substantial changes. Cursor rules in `.cursor/rules/` supplement those docs.
 
@@ -107,9 +108,10 @@ couple-simulator/
 ## Quality checks (current)
 
 - **Backend:** Ruff lint/format via `make lint`, `make format`, and pre-commit.
+- **Backend tests:** pytest via `make test` (runs in Docker with Python 3.12). With a local 3.12 venv: `pip install -e "./backend[dev]"` then `cd backend && pytest`.
 - **Frontend:** TypeScript strict mode; `npm run build` runs `tsc` then Vite build.
 
-CI, automated tests, and deployment are tracked in [docs/engineering-baseline-backlog.md](docs/engineering-baseline-backlog.md).
+CI and deployment are tracked in [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md).
 
 ## License
 
