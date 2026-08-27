@@ -2,13 +2,14 @@ COMPOSE := docker compose
 MSG ?= describe the change
 BACKEND_DIR := backend
 
-.PHONY: help runserver build-server migrate makemigrations \
+.PHONY: help runserver build-server build-frontend migrate makemigrations \
         lint format pre-commit-install pre-commit-run
 
 help:
 	@echo "Available targets:"
-	@echo "  make runserver           Start db + backend (build if needed)"
+	@echo "  make runserver           Start db + backend + frontend (build if needed)"
 	@echo "  make build-server        Build the backend Docker image"
+	@echo "  make build-frontend      Build the frontend Docker image"
 	@echo "  make migrate             Apply Alembic migrations (upgrade head)"
 	@echo "  make makemigrations      Autogenerate migration (MSG='your message')"
 	@echo "  make lint                Run Ruff linter on backend"
@@ -26,6 +27,9 @@ runserver:
 
 build-server:
 	$(COMPOSE) build backend
+
+build-frontend:
+	$(COMPOSE) build frontend
 
 migrate:
 	$(COMPOSE) up -d db

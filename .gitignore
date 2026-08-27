@@ -224,3 +224,30 @@ docker-compose.override.yml
 
 # Setuptools / local Python builds (backend package)
 backend/*.egg-info/
+
+# --- Node / React / Vite (frontend) ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Vite / frontend build output (dist/ is also listed above for Python packaging)
+frontend/dist/
+
+# TypeScript incremental build info
+*.tsbuildinfo
+
+# Vite dependency pre-bundling cache
+.vite/
+
+# Frontend test / tool caches
+coverage/
+.eslintcache
+.stylelintcache
+
+# Optional local env files (root .env rules above still apply)
+.env.development.local
+.env.test.local
+.env.production.local
