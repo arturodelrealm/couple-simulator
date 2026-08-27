@@ -1,0 +1,47 @@
+{
+  "common": {
+    "loading": "Loading..."
+  },
+  "game": {
+    "create": {
+      "title": "Create a new game",
+      "description": "Enter partner A's name to start.",
+      "nameLabel": "Partner A name",
+      "namePlaceholder": "Name",
+      "submit": "Start"
+    },
+    "confirm": {
+      "title": "Game created",
+      "gameIdLabel": "Game ID",
+      "hint": "You can close this page and return later — your game will be recovered automatically.",
+      "backToCreate": "Create a new game"
+    }
+  },
+  "avatar": {
+    "builder": {
+      "title": "Create your character",
+      "forPartner": "Avatar for {{name}}",
+      "save": "Save character"
+    },
+    "section": {
+      "hair": "Hair",
+      "eyes": "Eyes",
+      "eyebrows": "Eyebrows",
+      "mouth": "Mouth",
+      "facialHair": "Facial hair",
+      "clothes": "Clothes",
+      "accessories": "Accessories"
+    },
+    "option": {
+      "none": "None"
+    }
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "gameNotFound": "Game not found.",
+    "invalidAvatarConfig": "Invalid avatar configuration.",
+    "validationError": "Please check your input and try again.",
+    "badRequest": "Invalid request.",
+    "nameRequired": "Name is required."
+  }
+}

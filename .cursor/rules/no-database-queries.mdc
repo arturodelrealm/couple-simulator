@@ -1,0 +1,33 @@
+---
+description: Never run database queries or migrations directly
+alwaysApply: true
+---
+
+# Do Not Run Database Queries
+
+Never execute database operations yourself. The user runs all database commands.
+
+## Do not run
+
+- SQL against any database (`psql`, `sqlite3`, `mysql`, raw `SELECT`/`INSERT`/`UPDATE`/`DELETE`)
+- Migration commands (`alembic upgrade`, `alembic downgrade`, `alembic stamp`)
+- Scripts or one-off code that connect to and query the database
+- ORM sessions against a live database to inspect or mutate data
+
+## Instead
+
+- Write or edit migration files, models, and repository code
+- Tell the user which command to run and why (e.g. `alembic upgrade head`)
+- Use existing tests or mock data when verification is needed without a live DB
+
+## Examples
+
+```bash
+# ❌ Do not run
+psql -c "SELECT * FROM games"
+alembic upgrade head
+python -c "from app.db import SessionLocal; ..."
+
+# ✅ Provide the command for the user
+# Run: alembic upgrade head
+```

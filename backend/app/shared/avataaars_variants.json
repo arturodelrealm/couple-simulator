@@ -1,0 +1,35 @@
+{
+  "topVariant": [
+    "bigHair", "bob", "bun", "curly", "curvy", "dreads", "dreads01", "dreads02",
+    "frida", "frizzle", "fro", "froBand", "hat", "hijab", "longButNotTooLong",
+    "miaWallace", "shaggy", "shaggyMullet", "shavedSides", "shortCurly",
+    "shortFlat", "shortRound", "shortWaved", "sides", "straight01", "straight02",
+    "straightAndStrand", "theCaesar", "theCaesarAndSidePart", "turban",
+    "winterHat02", "winterHat03", "winterHat04", "winterHat1"
+  ],
+  "eyesVariant": [
+    "closed", "cry", "default", "eyeRoll", "happy", "hearts", "side", "squint",
+    "surprised", "wink", "winkWacky", "xDizzy"
+  ],
+  "eyebrowsVariant": [
+    "angry", "angryNatural", "default", "defaultNatural", "flatNatural",
+    "frownNatural", "raisedExcited", "raisedExcitedNatural", "sadConcerned",
+    "sadConcernedNatural", "unibrowNatural", "upDown", "upDownNatural"
+  ],
+  "mouthVariant": [
+    "concerned", "default", "disbelief", "eating", "grimace", "sad", "screamOpen",
+    "serious", "smile", "tongue", "twinkle", "vomit"
+  ],
+  "facialHairVariant": [
+    "beardLight", "beardMajestic", "beardMedium", "moustacheFancy",
+    "moustacheMagnum"
+  ],
+  "clothesVariant": [
+    "blazerAndShirt", "blazerAndSweater", "collarAndSweater", "graphicShirt",
+    "hoodie", "overall", "shirtCrewNeck", "shirtScoopNeck", "shirtVNeck"
+  ],
+  "accessoriesVariant": [
+    "eyepatch", "kurt", "prescription01", "prescription02", "round",
+    "sunglasses", "wayfarers"
+  ]
+}
