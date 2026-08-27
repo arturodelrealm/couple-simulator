@@ -1,0 +1,38 @@
+---
+description: FastAPI backend — service layer, SQLAlchemy 2.0, AppError, sync by default
+globs: backend/**/*.py
+alwaysApply: false
+---
+
+# Backend conventions
+
+Full reference: [AGENTS.md](../../AGENTS.md). Skill: [.cursor/skills/fastapi/SKILL.md](../skills/fastapi/SKILL.md).
+
+## Layer responsibilities
+
+| Layer | Path | Role |
+|-------|------|------|
+| Routers | `app/routers/` | Parse input, call service, return `ok()` — no business rules |
+| Services | `app/services/` | Business logic and orchestration |
+| Models | `app/models/` | SQLAlchemy schema only |
+| Schemas | `app/schemas/` | Pydantic v2 request/response models |
+| Shared | `app/shared/` | Reusable helpers (validation, enums, exceptions) |
+
+## Patterns
+
+- SQLAlchemy 2.0: `Mapped`, `mapped_column`, `select()`, `session.scalars()` — not `session.query()`
+- Pydantic v2: `model_validate()`, `model_dump()`, `ConfigDict(from_attributes=True)`
+- Domain errors: raise `AppError(code, _("message"), status_code=...)` with gettext strings
+- API responses: use `ok(data)` from `app.schemas.responses`; follow [rest-api-standards.md](../../docs/rest-api-standards.md)
+- UUID primary keys on new models
+- Sync endpoints and DB access unless async is clearly justified
+
+## Linting
+
+Ruff (E, F, I) in `backend/pyproject.toml`. Run `make lint` / `make format` from repo root.
+
+## Do not
+
+- Put business logic in routers
+- Use `Base.metadata.create_all()` for schema changes
+- Hand-write new Alembic migration files — change models, then user runs `make makemigrations MSG='...'`

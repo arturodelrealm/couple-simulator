@@ -2,9 +2,15 @@
 
 Technical guidance for AI agents and contributors. **Read this file before making changes.**
 
-For product context (game flow, priorities, current milestone), see [docs/overview.md](docs/overview.md).
+| Document | Purpose |
+|----------|---------|
+| [README.md](README.md) | Local setup, commands, documentation index |
+| [docs/development-workflow.md](docs/development-workflow.md) | Step-by-step agent workflow and pre-submit checklist |
+| [docs/overview.md](docs/overview.md) | Product context, game flow, current milestone |
+| [docs/rest-api-standards.md](docs/rest-api-standards.md) | HTTP API shape, errors, REST conventions |
+| [docs/engineering-baseline-backlog.md](docs/engineering-baseline-backlog.md) | Engineering baseline audit and improvement backlog |
 
-For HTTP API shape, error format, and REST conventions, see [docs/rest-api-standards.md](docs/rest-api-standards.md).
+**Cursor rules** in [`.cursor/rules/`](.cursor/rules/) supplement this file — especially `general.mdc`, `backend.mdc`, `frontend.mdc`, `database.mdc`, `testing.mdc`, and `game-engine.mdc`.
 
 ---
 
@@ -83,8 +89,11 @@ couple-simulator/
 │       ├── shared/        # reusable UI and utility code
 │       └── locales/       # translation files
 ├── docs/
-│   ├── overview.md        # product overview
+│   ├── overview.md                 # product overview
+│   ├── development-workflow.md     # agent workflow
+│   ├── engineering-baseline-backlog.md
 │   └── backlog/
+├── README.md                       # setup and commands
 └── AGENTS.md
 ```
 
@@ -268,10 +277,10 @@ See [docs/overview.md](docs/overview.md) for the product goal and done criteria.
 
 ## Agent checklist
 
-Before submitting changes, verify:
+Follow the full workflow in [docs/development-workflow.md](docs/development-workflow.md). Before submitting changes, verify:
 
 - [ ] Read [docs/overview.md](docs/overview.md) for product context
-- [ ] Read this file for technical conventions
+- [ ] Read this file and [docs/development-workflow.md](docs/development-workflow.md)
 - [ ] All code and identifiers are in English
 - [ ] User-facing strings are translatable (gettext / i18n keys)
 - [ ] PEP 8 followed for Python; `make pre-commit-run` passes

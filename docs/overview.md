@@ -72,3 +72,5 @@ Create game → Enter partner A name → Create/select avatar → Save → Recov
 
 - [Backlog and milestone breakdown](backlog/backlog_simulador_vida_pareja.md) — full product backlog, domain model, and phased implementation plan.
 - [AGENTS.md](../AGENTS.md) — technical conventions for agents and contributors.
+- [development-workflow.md](development-workflow.md) — step-by-step workflow for agents.
+- [engineering-baseline-backlog.md](engineering-baseline-backlog.md) — engineering baseline and CI/deployment backlog.

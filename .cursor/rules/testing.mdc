@@ -1,0 +1,33 @@
+---
+description: Test priorities — business logic and game engine behavior
+globs: backend/tests/**,**/*test*.py,**/*.test.ts,**/*.test.tsx
+alwaysApply: false
+---
+
+# Testing conventions
+
+Test harness status: see [engineering-baseline-backlog.md](../../docs/engineering-baseline-backlog.md) (pytest not yet configured).
+
+## What to test (priority order)
+
+Protect behavior that is expensive or embarrassing to break:
+
+1. Game / event engine logic (outcomes, effects, conditions)
+2. Simulation state transitions and compatibility rules
+3. Service-layer business rules (`app/services/`)
+4. Validation helpers (`app/shared/` — e.g. avatar config)
+5. API smoke tests for critical endpoints
+
+## What not to prioritize
+
+- Coverage percentage targets
+- Trivial getters or framework boilerplate
+- Full E2E until core game loop exists
+
+## Design for testability
+
+- Game engine logic should be testable **without HTTP** and without a running frontend
+- Prefer testing services/functions directly over full stack when possible
+- When pytest is added: place tests in `backend/tests/`, mirror service module names
+
+Do not add overlapping test frameworks. Extend pytest when the backlog item is implemented.

@@ -1,0 +1,38 @@
+---
+description: Data-driven events — no hardcoded event logic in routers or UI
+globs: backend/app/services/**,backend/app/**/engine/**,frontend/src/pages/**,frontend/src/hooks/**
+alwaysApply: false
+---
+
+# Game engine principles
+
+Product rules: [overview.md](../../docs/overview.md) and domain model in [AGENTS.md](../../AGENTS.md).
+
+## Architecture
+
+```text
+Frontend  →  FastAPI API  →  Services / Engine  →  Persistence
+```
+
+## Data-driven design
+
+```text
+Event
+  ├── Questions → Options → Option effects
+  ├── Answers (per player, stored independently)
+  ├── Outcome conditions
+  └── Outcome effects → SimulationState → Timeline
+```
+
+- Events, questions, options, and effects are **configuration/data**, not per-event `if/else` in routers or React
+- A player's **answer** and the **simulation outcome** are separate concepts
+- Backend resolves events; frontend renders structured results and actions
+- Preserve all player answers even when rules change later
+
+## Do not
+
+- Hardcode individual events in `app/routers/` or page components
+- Compute compatibility, outcomes, or timeline entries in the frontend
+- Over-engineer the engine in V1 — explicit per-option effects are acceptable
+
+When adding engine code, prefer a dedicated module (e.g. `app/services/` or future `app/engine/`) with unit tests.

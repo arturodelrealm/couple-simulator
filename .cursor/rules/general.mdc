@@ -1,0 +1,31 @@
+---
+description: Read project docs first; preserve existing tooling and minimal scope
+alwaysApply: true
+---
+
+# General agent guidance
+
+Before substantial changes, read:
+
+- [AGENTS.md](../../AGENTS.md) — architecture and conventions
+- [docs/development-workflow.md](../../docs/development-workflow.md) — step-by-step workflow
+- [docs/overview.md](../../docs/overview.md) — product scope and current milestone
+
+## Preserve existing choices
+
+Do not replace Ruff, pre-commit, Alembic, FastAPI layout, or Docker Compose without a concrete technical problem.
+
+## Scope
+
+- Smallest correct diff; no unrelated edits
+- No new dependencies unless necessary
+- English for all code, identifiers, and comments
+- Never commit secrets (`.env`, credentials, tokens)
+
+## Quality
+
+- Backend: `make pre-commit-run` or `make lint` before finishing
+- Frontend: `npm run build` (includes `tsc`) before finishing
+- Tell the user which migration commands to run; do not run DB operations yourself
+
+See [docs/engineering-baseline-backlog.md](../../docs/engineering-baseline-backlog.md) for planned CI, tests, and deployment work.
