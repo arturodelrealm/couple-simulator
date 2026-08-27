@@ -19,6 +19,7 @@ case "$task" in
     echo "  ./task.sh build-server"
     echo "  ./task.sh migrate"
     echo "  ./task.sh makemigrations 'your message'"
+    echo "  ./task.sh check-migrations"
     echo "  ./task.sh lint"
     echo "  ./task.sh lint-frontend"
     echo "  ./task.sh format"
@@ -44,6 +45,10 @@ case "$task" in
   makemigrations)
     $COMPOSE up -d db
     $COMPOSE run --rm backend alembic revision --autogenerate -m "$MSG"
+    ;;
+  check-migrations)
+    $COMPOSE up -d db
+    $COMPOSE run --rm backend sh -c "alembic upgrade head && alembic check"
     ;;
   lint)
     cd "$BACKEND_DIR" && ruff check .

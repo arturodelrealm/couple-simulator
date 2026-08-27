@@ -24,6 +24,7 @@ switch ($Task) {
         Write-Host "  .\tasks.ps1 build-server"
         Write-Host "  .\tasks.ps1 migrate"
         Write-Host "  .\tasks.ps1 makemigrations -Msg 'your message'"
+        Write-Host "  .\tasks.ps1 check-migrations"
         Write-Host "  .\tasks.ps1 lint"
         Write-Host "  .\tasks.ps1 lint-frontend"
         Write-Host "  .\tasks.ps1 format"
@@ -56,6 +57,11 @@ switch ($Task) {
             "run", "--rm", "backend",
             "alembic", "revision", "--autogenerate", "-m", $Msg
         )
+    }
+
+    "check-migrations" {
+        Run-Compose @("up", "-d", "db")
+        Run-Compose @("run", "--rm", "backend", "sh", "-c", "alembic upgrade head && alembic check")
     }
 
     "lint" {

@@ -61,6 +61,7 @@ A life-simulation game for couples. **Current milestone: MVP 0** — create a ga
 |------|---------|
 | Start stack | `make runserver` |
 | Apply migrations | `make migrate` |
+| Check migration consistency | `make check-migrations` |
 | Autogenerate migration | `make makemigrations MSG='describe the change'` |
 | Backend lint | `make lint` |
 | Backend format | `make format` |
@@ -117,7 +118,7 @@ couple-simulator/
 - **Backend typecheck:** mypy on `app/services/` and `app/shared/` via `make typecheck`.
 - **Frontend:** ESLint + Prettier via `make lint-frontend` and `make format-check-frontend`; TypeScript check in `npm run build`.
 
-CI and deployment are tracked in [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md).
+**CI:** GitHub Actions runs on pushes to `main` and on pull requests (`.github/workflows/ci.yml`) — backend lint/test/typecheck, frontend lint/build, and migration consistency.
 
 ## License
 

@@ -111,6 +111,14 @@ When models change:
    make migrate
    ```
 
+5. After model changes, verify consistency:
+
+   ```bash
+   make check-migrations
+   ```
+
+Flag destructive migrations (`drop_table`, `drop_column`, data loss) in the PR description.
+
 **Never** hand-write new migration files from scratch (see `.cursor/rules/no-framework-scaffolding.mdc`). **Never** use `Base.metadata.create_all()` for schema changes.
 
 ---

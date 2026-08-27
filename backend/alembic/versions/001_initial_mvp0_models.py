@@ -9,8 +9,9 @@ Create Date: 2026-08-26
 from typing import Sequence, Union
 
 import sqlalchemy as sa
-from alembic import op
 from sqlalchemy.dialects import postgresql
+
+from alembic import op
 
 # revision identifiers, used by Alembic.
 revision: str = "001_initial_mvp0"
@@ -23,7 +24,12 @@ def upgrade() -> None:
     op.create_table(
         "games",
         sa.Column("id", sa.Uuid(), nullable=False),
-        sa.Column("status", sa.String(length=32), server_default="CREATED", nullable=False),
+        sa.Column(
+            "status",
+            sa.String(length=32),
+            server_default="CREATED",
+            nullable=False,
+        ),
         sa.Column(
             "created_at",
             sa.DateTime(timezone=True),

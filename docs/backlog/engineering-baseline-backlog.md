@@ -13,7 +13,7 @@ The repository has a **solid MVP 0 foundation**: FastAPI with a service-layer ar
 
 What is **not yet in place** for a maintainable, agent-friendly baseline:
 
-- **No CI** (no `.github/workflows/` at all)
+- **No CI enforcement on merge** — workflow exists; branch protection on `main` is a human repo setting
 - **No frontend automated tests** (backend pytest added)
 - **No deployment configuration** (target platform: Fly.io)
 - **No dependency update automation** (Dependabot)
@@ -50,7 +50,8 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
 - [x] **Cursor skills** — `.cursor/skills/fastapi/SKILL.md`, `.cursor/skills/react/SKILL.md`.
 - [x] **Product and API docs** — `docs/overview.md`, `docs/rest-api-standards.md`.
 - [x] **CORS configuration** — environment-driven via `CORS_ORIGINS` setting.
-- [x] **Avatar validation** — controlled DiceBear subset validated in `backend/app/shared/avatar_validation.py`.
+- [x] **GitHub Actions CI** — `.github/workflows/ci.yml`: backend lint/test/typecheck, frontend lint/build, `alembic check` on PostgreSQL.
+- [x] **Pull request template** — `.github/pull_request_template.md` with tests, migrations, secrets, docs, deployment checklist.
 
 ---
 
@@ -124,16 +125,15 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
 
 ### Database and migrations
 
-- [ ] **CI migration consistency check** — no automated check that model changes have corresponding migrations.  
-  - **Where:** `.github/workflows/` script or Makefile target  
+- [x] **CI migration consistency check** — `make check-migrations` and CI `migrations` job run `alembic upgrade head` + `alembic check`.  
+  - **Where:** `.github/workflows/ci.yml`, Makefile  
   - **Type:** agent  
-  - **Depends on:** CI workflow creation  
-  - **Approach:** Run `alembic revision --autogenerate` in CI against ephemeral Postgres; fail if diff is non-empty (or use `alembic check` when available).
+  - **Depends on:** none
 
-- [ ] **Document migration review expectations** — destructive migrations (`drop`, `alter` data loss) should be called out in PRs.  
-  - **Where:** PR template + short section in agent workflow doc  
+- [x] **Document migration review expectations** — PR template migration section; destructive migration callouts in `docs/development-workflow.md`.  
+  - **Where:** `.github/pull_request_template.md`, `docs/development-workflow.md`  
   - **Type:** agent  
-  - **Depends on:** PR template
+  - **Depends on:** none
 
 ### Health checks
 
@@ -154,18 +154,14 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
 
 ## D. Missing
 
-### CI / GitHub Actions (highest impact gap)
+### CI / GitHub Actions
 
-No `.github/workflows/` directory exists. CI is the authoritative quality gate.
-
-- [ ] **Create PR CI workflow** — single workflow (avoid duplicates) with jobs:  
-  - **Backend:** `make pre-commit-run` or Ruff + pytest + mypy  
-  - **Frontend:** ESLint + `npm run build` (includes `tsc`)  
-  - **Migration check:** autogenerate diff against ephemeral Postgres  
-  - **Permissions:** minimum required (`contents: read`); no `write-all`  
+- [x] **Create PR CI workflow** — `.github/workflows/ci.yml` with parallel backend, frontend, and migrations jobs; `permissions: contents: read`.  
   - **Where:** `.github/workflows/ci.yml`  
   - **Type:** agent  
-  - **Depends on:** pytest, ESLint ✅, migration check script
+  - **Depends on:** pytest, ESLint ✅
+
+- [ ] **Require CI on merge (human)** — enable branch protection on `main` so CI must pass before merge.
 
 - [ ] **Add Dependabot configuration** — no `dependabot.yml`; no automated dependency PRs for Python, npm, GitHub Actions, or Docker base images.  
   - **Where:** `.github/dependabot.yml`  
@@ -221,7 +217,7 @@ No `.github/workflows/` directory exists. CI is the authoritative quality gate.
 
 ### Branch and PR policy
 
-- [ ] **Pull request template** — none exists. Should cover tests, migrations, secrets, docs, deployment impact.  
+- [x] **Pull request template** — tests, migrations, secrets, docs, deployment impact.  
   - **Where:** `.github/pull_request_template.md`  
   - **Type:** agent  
   - **Depends on:** none
@@ -308,10 +304,10 @@ Tasks a coding agent can perform autonomously (after user approves implementatio
 3. ~~**Add pytest + initial tests**~~ — done.
 4. ~~**Add mypy** with incremental strictness on services/shared~~ — done.
 5. ~~**Add ESLint (+ Prettier)** for frontend; extend `.pre-commit-config.yaml`~~ — done.
-6. **Create `.github/workflows/ci.yml`** — backend lint/test/typecheck, frontend lint/build, migration check, minimal permissions.
+6. ~~**Create `.github/workflows/ci.yml`**~~ — done.
 7. **Create `.github/dependabot.yml`** — Python, npm, GitHub Actions, Docker.
-8. **Add `.github/pull_request_template.md`**.
-9. **Add migration consistency script** — Makefile target + CI step.
+8. ~~**Add `.github/pull_request_template.md`**~~ — done.
+9. ~~**Add migration consistency script**~~ — `make check-migrations` + CI job.
 10. **Add structured logging** in exception handlers.
 11. ~~**Create focused `.cursor/rules/*.mdc`**~~ — done.
 12. **Prepare Fly.io artifacts** — `fly.toml`, production start script, deploy workflow template, `docs/deployment.md`.
@@ -337,7 +333,7 @@ Adapted to this repository’s actual gaps:
 | **1** | Repository audit | ✅ This document |
 | **2** | Agent instructions | ✅ `README.md`, `docs/development-workflow.md`, Cursor rules |
 | **3** | Local quality tooling | ✅ Complete (pytest, mypy, ESLint, Prettier, pre-commit) |
-| **4** | CI quality gates | `.github/workflows/ci.yml`, PR template, migration consistency check |
+| **4** | CI quality gates | ✅ CI workflow, PR template, migration check; branch protection remains human |
 | **5** | Security checks | Dependabot, secret scan (one tool), dependency audit in CI |
 | **6** | Database safety | Migration check in CI; document destructive migration review in PR template |
 | **7** | Deployment preparation | `fly.toml`, production Dockerfile/start script, deploy workflow **template**, `docs/deployment.md` |
@@ -357,10 +353,11 @@ The engineering baseline is **complete enough for confident agent-assisted devel
 
 ### Quality gates
 
-- [ ] CI runs on every pull request and is required before merge to `main`.
-- [ ] Backend: Ruff (lint + format), pytest (core services covered), mypy on services/shared in CI (local: `make typecheck` ✅).
-- [ ] Frontend: ESLint and Prettier pass in CI (local: `make lint-frontend` ✅, `make format-check-frontend` ✅); `npm run build` (with `tsc`) passes in CI.
-- [ ] Migration consistency check runs in CI when backend models change.
+- [x] CI workflow runs on pull requests and pushes to `main` (`.github/workflows/ci.yml`).
+- [ ] CI required before merge to `main` — enable branch protection (human).
+- [x] Backend: Ruff, pytest, mypy on services/shared in CI.
+- [x] Frontend: ESLint, Prettier check, and `npm run build` in CI.
+- [x] Migration consistency check (`alembic check`) in CI.
 
 ### Security and dependencies
 
@@ -373,7 +370,7 @@ The engineering baseline is **complete enough for confident agent-assisted devel
 
 - [x] `README.md` enables a new developer or agent to run the stack locally in one documented path.
 - [x] `AGENTS.md` + `docs/development-workflow.md` + focused Cursor rules guide agents without contradicting each other.
-- [ ] PR template reminds contributors about tests, migrations, secrets, and deployment.
+- [x] PR template reminds contributors about tests, migrations, secrets, and deployment.
 
 ### Deployment readiness (artifacts prepared; human steps confirmed)
 
@@ -394,7 +391,7 @@ The engineering baseline is **complete enough for confident agent-assisted devel
 
 | Area | Finding |
 |------|---------|
-| **CI** | No GitHub workflows in repo or on `origin/main`. |
+| **CI** | ✅ `.github/workflows/ci.yml` (backend, frontend, migrations). Branch protection: human. |
 | **Tests** | ✅ Backend pytest (16 tests); no frontend tests yet. |
 | **README** | ✅ Added — setup, commands, doc index. |
 | **Backend deps** | `pyproject.toml` dev extras: pre-commit, ruff, pytest, httpx, mypy. |

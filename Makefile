@@ -3,7 +3,7 @@ MSG ?= describe the change
 BACKEND_DIR := backend
 FRONTEND_DIR := frontend
 
-.PHONY: help runserver build-server build-frontend migrate makemigrations \
+.PHONY: help runserver build-server build-frontend migrate makemigrations check-migrations \
         lint lint-frontend format format-frontend format-check-frontend \
         typecheck test pre-commit-install pre-commit-run
 
@@ -14,6 +14,7 @@ help:
 	@echo "  make build-frontend      Build the frontend Docker image"
 	@echo "  make migrate             Apply Alembic migrations (upgrade head)"
 	@echo "  make makemigrations      Autogenerate migration (MSG='your message')"
+	@echo "  make check-migrations    Verify models match applied migrations"
 	@echo "  make lint                Run Ruff linter on backend"
 	@echo "  make lint-frontend       Run ESLint on frontend"
 	@echo "  make format              Run Ruff formatter on backend"
@@ -45,6 +46,10 @@ migrate:
 makemigrations:
 	$(COMPOSE) up -d db
 	$(COMPOSE) run --rm backend alembic revision --autogenerate -m "$(MSG)"
+
+check-migrations:
+	$(COMPOSE) up -d db
+	$(COMPOSE) run --rm backend sh -c "alembic upgrade head && alembic check"
 
 lint:
 	cd $(BACKEND_DIR) && ruff check .

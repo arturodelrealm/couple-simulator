@@ -14,6 +14,7 @@ Complements `no-database-queries.mdc` and `no-framework-scaffolding.mdc`.
 2. User autogenerates: `make makemigrations MSG='describe the change'`
 3. Review file in `backend/alembic/versions/`
 4. User applies: `make migrate`
+5. Verify: `make check-migrations` (also runs in CI via `alembic check`)
 
 ## Rules
 
