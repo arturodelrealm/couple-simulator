@@ -110,7 +110,7 @@ couple-simulator/
 ## Configuration
 
 - Root [`.env.example`](.env.example) — database URL, CORS, environment (placeholders only; never commit secrets).
-- Frontend [`frontend/.env.example`](frontend/.env.example) — API proxy target for Vite.
+- Frontend [`frontend/.env.example`](frontend/.env.example) — local API proxy; production uses `VITE_API_BASE_URL` in Cloudflare Pages (see [docs/deployment.md](docs/deployment.md)).
 
 ## Quality checks (current)
 
@@ -121,7 +121,7 @@ couple-simulator/
 
 **CI:** GitHub Actions runs on pushes to `main` and on pull requests (`.github/workflows/ci.yml`) — backend lint/test/typecheck, frontend lint/build, and migration consistency.
 
-**Deploy (backend):** After CI passes on `main`, `.github/workflows/deploy.yml` deploys the API to Fly.io. See [docs/deployment.md](docs/deployment.md) for one-time setup (`FLY_API_TOKEN`, `DATABASE_URL`, first manual deploy).
+**Deploy:** Backend — after CI passes on `main`, `.github/workflows/deploy.yml` deploys the API to Fly.io. Frontend — Cloudflare Pages builds `frontend/` on pushes to `main`. See [docs/deployment.md](docs/deployment.md) for setup (`FLY_API_TOKEN`, `VITE_API_BASE_URL`, CORS).
 
 ## License
 

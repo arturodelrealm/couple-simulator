@@ -8,7 +8,7 @@
 - [ ] **Database migrations** — model changes include an Alembic migration (`make makemigrations`); destructive changes called out below
 - [ ] **Secrets** — no `.env`, credentials, tokens, or production values in this PR
 - [ ] **Documentation** — README, AGENTS.md, or `docs/` updated if setup, API, or workflow changed
-- [ ] **Deployment** — note if this affects Fly.io, Docker production images, or env vars (N/A for most MVP changes)
+- [ ] **Deployment** — note if this affects Fly.io, Cloudflare Pages, Docker images, or env vars (N/A for most MVP changes)
 
 ## Migration notes
 

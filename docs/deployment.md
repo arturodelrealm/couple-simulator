@@ -1,145 +1,200 @@
-# Backend deployment (Fly.io)
+# Deployment
 
-This document covers deploying the **FastAPI backend** to Fly.io. The React frontend is deployed separately (local Vite dev server for now; production frontend hosting TBD).
+Production stack:
 
-## Architecture
+| Component | Platform | Source |
+|-----------|----------|--------|
+| Frontend | Cloudflare Pages | `frontend/` (Vite static build) |
+| API | Fly.io | `backend/` (Docker) |
+| Database | External PostgreSQL | Connection via Fly secret |
 
 ```text
-Frontend (local or future host)  →  Fly.io API  →  PostgreSQL (external)
+Browser → Cloudflare Pages (React SPA)
+              │
+              └── HTTPS → Fly.io API → PostgreSQL
 ```
 
-| Component | Location |
-|-----------|----------|
-| API | Fly.io app `couple-simulator` (`backend/fly.toml`) |
-| Database | Your existing PostgreSQL instance (not managed by this repo) |
-| Migrations | `alembic upgrade head` on each deploy (`release_command`) |
+Local development still uses Docker Compose (`make runserver`); production paths are separate.
 
-## Repository layout
+---
 
-`fly.toml` lives in **`backend/`**, not the repo root. Fly builds the Docker image from `backend/Dockerfile` when you run deploy from that directory.
+## Backend (Fly.io)
+
+### Repository layout
+
+`fly.toml` lives in **`backend/`**, not the repo root. Deploy from that directory:
 
 ```bash
 cd backend
 fly deploy
 ```
 
-## One-time Fly.io setup
+### One-time setup
 
-### 1. Install CLI and log in
+#### 1. Install CLI and log in
 
 ```bash
 fly auth login
 ```
 
-### 2. Confirm the app
-
-If you already ran `fly launch` from the repo root, the app `couple-simulator` may exist. Remove the root `fly.toml` (if still present) and use `backend/fly.toml` instead.
-
-From `backend/`:
+#### 2. Confirm the app
 
 ```bash
+cd backend
 fly status
 ```
 
 If the app does not exist yet:
 
 ```bash
-cd backend
 fly launch --no-deploy
 ```
 
-Use the existing app name (`couple-simulator`) and region (`gru`) when prompted.
+Use app name `couple-simulator` and your preferred region when prompted.
 
-### 3. Set secrets
+#### 3. Set secrets
 
-Never commit production credentials. Set them on the Fly app:
+Never commit production credentials.
 
 ```bash
 cd backend
 fly secrets set \
   DATABASE_URL="postgresql+psycopg2://USER:PASSWORD@HOST:5432/DBNAME" \
-  CORS_ORIGINS="http://localhost:5173" \
+  CORS_ORIGINS="https://YOUR-PAGES-URL.pages.dev,http://localhost:5173" \
   -a couple-simulator
 ```
 
 Notes:
 
-- Use the **`postgresql+psycopg2://`** form (required by SQLAlchemy). If your provider gives `postgres://` or `postgresql://`, the app normalizes common variants automatically.
-- Set `CORS_ORIGINS` to the URL(s) where the frontend will run (comma-separated). Update when you deploy the frontend.
-- `ENVIRONMENT=production` is set in `fly.toml`; override with a secret only if needed.
+- Use **`postgresql+psycopg2://`** (SQLAlchemy). The app normalizes common `postgres://` variants automatically.
+- **`CORS_ORIGINS`** must include your Cloudflare Pages URL (and `http://localhost:5173` for local dev). Comma-separated, no trailing slashes.
+- `ENVIRONMENT=production` is set in `fly.toml`.
 
-### 4. First manual deploy
+#### 4. First manual deploy
 
 ```bash
 cd backend
 fly deploy
-fly logs
 curl https://couple-simulator.fly.dev/health
 ```
 
-Expected: HTTP 200 with the standard API envelope (`data.status: ok`).
+Migrations run via `release_command` in `fly.toml` (`alembic upgrade head`).
 
-Migrations run once per deploy via `release_command` in `fly.toml`. Check deploy output for Alembic errors before the new version receives traffic.
-
-### 5. GitHub Actions deploy token
-
-Create a deploy token and add it to GitHub:
+#### 5. GitHub Actions deploy token
 
 ```bash
 fly tokens create deploy -a couple-simulator
 ```
 
-In GitHub: **Settings → Secrets and variables → Actions → New repository secret**
+Add to GitHub **Settings → Secrets → Actions**:
 
 | Name | Value |
 |------|--------|
-| `FLY_API_TOKEN` | Token from the command above |
+| `FLY_API_TOKEN` | Deploy token |
 
-## Automatic deploy on `main`
+### Automatic deploy on `main`
 
-Flow:
+1. PR → **CI** (lint, test, migrations).
+2. Merge to `main` → **CI** runs again.
+3. CI success → **Deploy backend** (`.github/workflows/deploy.yml`) → Fly deploy + migrate.
 
-1. Pull request → **CI** workflow (lint, test, migrations check).
-2. Merge to `main` → **CI** runs again on push.
-3. When CI succeeds → **Deploy backend** workflow runs (`.github/workflows/deploy.yml`).
-4. Fly builds the image, runs `alembic upgrade head`, then rolls out the new machines.
+Enable **branch protection** on `main` so only CI-green code merges.
 
-Optional but recommended: enable **branch protection** on `main` so CI must pass before merge.
+### Local vs production (backend)
 
-## Local development vs production
-
-| | Local (Docker Compose) | Production (Fly.io) |
-|--|------------------------|---------------------|
-| Start script | `scripts/start.sh` (reload + migrations on start) | `scripts/start-prod.sh` (uvicorn only) |
+| | Local (Compose) | Production (Fly.io) |
+|--|-----------------|---------------------|
+| Start script | `start.sh` (reload + migrations) | `start-prod.sh` (uvicorn only) |
 | Migrations | On container start | `release_command` on deploy |
-| Port | Host `8001` → container `8000` | Fly `internal_port = 8000` |
-| Hot reload | Yes (`--reload`) | No |
+| Port | Host `8001` → `8000` | Fly `internal_port = 8000` |
 
-Compose overrides the container command for development:
+---
 
-```yaml
-command: ["sh", "scripts/start.sh"]
+## Frontend (Cloudflare Pages)
+
+The frontend is a **static Vite build** served by Cloudflare Pages. The Compose `frontend/Dockerfile` stays dev-only (`npm run dev`); production does not use it.
+
+### Cloudflare Pages settings
+
+Connect the GitHub repo and configure:
+
+| Setting | Value |
+|---------|--------|
+| Production branch | `main` |
+| Root directory | `frontend` |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Node.js version | `22` (also in `frontend/.node-version`) |
+
+### Build environment variable
+
+Set in Cloudflare Pages → **Settings → Environment variables** (Production):
+
+| Name | Value |
+|------|--------|
+| `VITE_API_BASE_URL` | `https://couple-simulator.fly.dev` |
+
+Vite embeds this at **build time**. After changing it, trigger a new deployment.
+
+Optional: set the same variable for **Preview** deployments if PR previews should call the production API.
+
+### SPA routing
+
+React Router uses client-side routes (`/create`, `/games/:id/avatar`, etc.). `frontend/public/_redirects` is copied into `dist/` so Cloudflare serves `index.html` for all paths:
+
+```text
+/*    /index.html   200
 ```
+
+### Update API CORS
+
+After the first Pages deploy, copy your Pages URL and add it to Fly:
+
+```bash
+cd backend
+fly secrets set \
+  CORS_ORIGINS="https://YOUR-PAGES-URL.pages.dev,http://localhost:5173" \
+  -a couple-simulator
+```
+
+### Smoke test
+
+1. Open the Pages URL.
+2. Create a game → build avatar → confirmation.
+3. Refresh on `/games/<id>/avatar` (SPA routing).
+4. Browser console: no CORS errors.
+
+### Automatic deploy on `main`
+
+Cloudflare Pages rebuilds when `main` updates (Git integration). No GitHub Actions workflow is required for the frontend if Pages is connected to the repo.
+
+Recommended flow with branch protection:
+
+```text
+PR → CI → merge to main → Cloudflare Pages build + Fly backend deploy
+```
+
+Preview deployments: Cloudflare builds PR branches automatically; ensure preview env has `VITE_API_BASE_URL` if previews should hit the API.
+
+---
 
 ## Troubleshooting
 
 | Symptom | Check |
 |---------|--------|
-| Deploy fails on `release_command` | `fly logs`; verify `DATABASE_URL` and DB network access from Fly |
-| `/health` fails | `internal_port` must be `8000`; confirm app listens on `0.0.0.0` |
-| DB connection errors | URL driver (`postgresql+psycopg2`), firewall, SSL params from provider |
-| CORS errors from frontend | Update `CORS_ORIGINS` secret with the frontend origin |
+| CORS errors in browser | Fly `CORS_ORIGINS` includes exact Pages origin (scheme + host, no path) |
+| API calls go to wrong host | `VITE_API_BASE_URL` in Cloudflare build env; redeploy after changing |
+| 404 on refresh deep link | `_redirects` present in `frontend/public/` and in deployed `dist/` |
+| Backend deploy fails on migrate | `fly logs`; `DATABASE_URL` and DB network access |
+| `/health` fails | Fly `internal_port = 8000` |
 
-Useful commands:
+Backend commands:
 
 ```bash
 cd backend
 fly status
 fly logs
 fly secrets list
-fly ssh console
 ```
 
-## Frontend (later)
-
-The frontend stays on React + Vite + TypeScript. When you host it (Fly static app, Netlify, etc.), set `VITE_API_BASE_URL` at build time to `https://couple-simulator.fly.dev` and add that frontend URL to `CORS_ORIGINS` on the API.
+Frontend: Cloudflare dashboard → Pages → your project → Deployments / Functions & logs.

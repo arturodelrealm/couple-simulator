@@ -118,8 +118,8 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
   - **Type:** agent prepares; human validates first deploy  
   - **Depends on:** Fly.io deployment task
 
-- [ ] **Production frontend build strategy** — `frontend/Dockerfile` runs Vite dev server (`npm run dev`). Acceptable for local Compose; production should serve static `dist/` (nginx, Caddy, or Fly static + API).  
-  - **Where:** `frontend/Dockerfile`, deployment docs  
+- [x] **Production frontend build strategy** — `frontend/Dockerfile` runs Vite dev server (`npm run dev`). Acceptable for local Compose; production serves static `dist/` via Cloudflare Pages.  
+  - **Where:** `frontend/public/_redirects`, `frontend/.env.example`, deployment docs  
   - **Type:** agent prepares  
   - **Depends on:** Fly.io deployment task
 
