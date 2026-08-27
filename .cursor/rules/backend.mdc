@@ -31,6 +31,10 @@ Full reference: [AGENTS.md](../../AGENTS.md). Skill: [.cursor/skills/fastapi/SKI
 
 Ruff (E, F, I) in `backend/pyproject.toml`. Run `make lint` / `make format` from repo root.
 
+## Type checking
+
+mypy runs incrementally on `app/services/` and `app/shared/` (`disallow_untyped_defs = true`). Run `make typecheck` or `mypy app/services app/shared` from `backend/`. Extend coverage to other packages later; do not block on 100% repo coverage.
+
 ## Do not
 
 - Put business logic in routers

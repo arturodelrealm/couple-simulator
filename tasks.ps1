@@ -26,6 +26,7 @@ switch ($Task) {
         Write-Host "  .\tasks.ps1 makemigrations -Msg 'your message'"
         Write-Host "  .\tasks.ps1 lint"
         Write-Host "  .\tasks.ps1 format"
+        Write-Host "  .\tasks.ps1 typecheck"
         Write-Host "  .\tasks.ps1 test"
         Write-Host "  .\tasks.ps1 pre-commit-install"
         Write-Host "  .\tasks.ps1 pre-commit-run"
@@ -66,6 +67,10 @@ switch ($Task) {
         & ruff format .
         if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
         Pop-Location
+    }
+
+    "typecheck" {
+        Run-Compose @("run", "--rm", "--no-deps", "backend", "sh", "-c", "pip install -e '.[dev]' -q && mypy app/services app/shared")
     }
 
     "test" {

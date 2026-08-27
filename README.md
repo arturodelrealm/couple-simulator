@@ -63,6 +63,7 @@ A life-simulation game for couples. **Current milestone: MVP 0** — create a ga
 | Apply migrations | `make migrate` |
 | Autogenerate migration | `make makemigrations MSG='describe the change'` |
 | Backend tests | `make test` |
+| Backend typecheck | `make typecheck` |
 | Backend lint | `make lint` |
 | Backend format | `make format` |
 | Run all pre-commit hooks | `make pre-commit-run` |
@@ -109,6 +110,7 @@ couple-simulator/
 
 - **Backend:** Ruff lint/format via `make lint`, `make format`, and pre-commit.
 - **Backend tests:** pytest via `make test` (runs in Docker with Python 3.12). With a local 3.12 venv: `pip install -e "./backend[dev]"` then `cd backend && pytest`.
+- **Backend typecheck:** mypy on `app/services/` and `app/shared/` via `make typecheck`.
 - **Frontend:** TypeScript strict mode; `npm run build` runs `tsc` then Vite build.
 
 CI and deployment are tracked in [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md).

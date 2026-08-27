@@ -159,14 +159,16 @@ Day-to-day:
 ```bash
 make lint              # check only
 make format            # auto-format
+make typecheck         # mypy on app/services and app/shared
 make test              # backend pytest (Docker)
 make pre-commit-run    # run all hooks on the full repo (CI-friendly)
 ```
 
-Backend tests live in `backend/tests/`. Run with `make test`, or locally after `pip install -e "./backend[dev]"`:
+Backend tests live in `backend/tests/`. Type checking is incremental: mypy runs on `app/services/` and `app/shared/` only. Run with `make test` / `make typecheck`, or locally after `pip install -e "./backend[dev]"`:
 
 ```bash
 cd backend && pytest
+cd backend && mypy app/services app/shared
 ```
 
 When the frontend is added, extend `.pre-commit-config.yaml` with ESLint and Prettier hooks.
@@ -293,6 +295,7 @@ Follow the full workflow in [docs/development-workflow.md](docs/development-work
 - [ ] User-facing strings are translatable (gettext / i18n keys)
 - [ ] PEP 8 followed for Python; `make pre-commit-run` passes
 - [ ] `make test` passes when backend behavior changes
+- [ ] `make typecheck` passes when backend services/shared change
 - [ ] Business logic in services, not routers
 - [ ] SQLAlchemy 2.0 + Pydantic v2 patterns used
 - [ ] UUID primary keys on new models

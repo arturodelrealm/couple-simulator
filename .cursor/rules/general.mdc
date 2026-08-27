@@ -24,7 +24,7 @@ Do not replace Ruff, pre-commit, Alembic, FastAPI layout, or Docker Compose with
 
 ## Quality
 
-- Backend: `make pre-commit-run` or `make lint` before finishing
+- Backend: `make pre-commit-run`, `make typecheck`, and `make test` before finishing (when applicable)
 - Frontend: `npm run build` (includes `tsc`) before finishing
 - Tell the user which migration commands to run; do not run DB operations yourself
 

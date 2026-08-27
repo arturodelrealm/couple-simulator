@@ -122,13 +122,14 @@ Run what exists today before submitting changes:
 ```bash
 make pre-commit-run          # Ruff + file hooks (backend)
 make lint                    # Ruff check only
+make typecheck               # mypy on app/services and app/shared
 make test                    # backend pytest (Docker)
 cd frontend && npm run build # TypeScript + Vite build
 ```
 
-With a local Python 3.12 environment: `pip install -e "./backend[dev]"` then `cd backend && pytest`.
+With a local Python 3.12 environment: `pip install -e "./backend[dev]"` then `cd backend && pytest` and `mypy app/services app/shared`.
 
-Future checks (mypy, ESLint, CI) are listed in [engineering-baseline-backlog.md](backlog/engineering-baseline-backlog.md).
+Future checks (ESLint, CI) are listed in [engineering-baseline-backlog.md](backlog/engineering-baseline-backlog.md).
 
 ---
 
@@ -178,6 +179,7 @@ Before finishing a task, verify:
 - [ ] No secrets or unrelated edits in the diff
 - [ ] `make pre-commit-run` passes (backend changes)
 - [ ] `make test` passes (backend changes)
+- [ ] `make typecheck` passes (backend services/shared changes)
 - [ ] `npm run build` passes (frontend changes)
 - [ ] Documentation updated if behavior or setup changed
 
