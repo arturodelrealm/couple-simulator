@@ -103,6 +103,7 @@ couple-simulator/
 | [docs/overview.md](docs/overview.md) | Product goals and current milestone |
 | [docs/rest-api-standards.md](docs/rest-api-standards.md) | HTTP API conventions |
 | [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md) | Engineering baseline audit and improvement backlog |
+| [docs/deployment.md](docs/deployment.md) | Backend deployment to Fly.io |
 
 **AI agents:** read [AGENTS.md](AGENTS.md) and [docs/development-workflow.md](docs/development-workflow.md) before making substantial changes. Cursor rules in `.cursor/rules/` supplement those docs.
 
@@ -119,6 +120,8 @@ couple-simulator/
 - **Frontend:** ESLint + Prettier via `make lint-frontend` and `make format-check-frontend`; TypeScript check in `npm run build`.
 
 **CI:** GitHub Actions runs on pushes to `main` and on pull requests (`.github/workflows/ci.yml`) — backend lint/test/typecheck, frontend lint/build, and migration consistency.
+
+**Deploy (backend):** After CI passes on `main`, `.github/workflows/deploy.yml` deploys the API to Fly.io. See [docs/deployment.md](docs/deployment.md) for one-time setup (`FLY_API_TOKEN`, `DATABASE_URL`, first manual deploy).
 
 ## License
 

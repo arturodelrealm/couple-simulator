@@ -6,6 +6,6 @@ COPY pyproject.toml .
 RUN pip install --no-cache-dir .
 
 COPY . .
-RUN chmod +x scripts/start.sh
+RUN chmod +x scripts/start.sh scripts/start-prod.sh
 
-CMD ["sh", "scripts/start.sh"]
+CMD ["sh", "scripts/start-prod.sh"]

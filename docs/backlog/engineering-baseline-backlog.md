@@ -113,7 +113,7 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
 
 ### Docker and local development
 
-- [ ] **Separate dev vs production backend startup** — `backend/scripts/start.sh` runs `uvicorn ... --reload` (development). Production needs a non-reload entrypoint without bind-mount assumptions.  
+- [x] **Separate dev vs production backend startup** — `backend/scripts/start.sh` runs `uvicorn ... --reload` (development). Production needs a non-reload entrypoint without bind-mount assumptions.  
   - **Where:** `backend/scripts/`, `backend/Dockerfile`  
   - **Type:** agent prepares; human validates first deploy  
   - **Depends on:** Fly.io deployment task
@@ -224,22 +224,22 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
 
 ### Deployment (Fly.io — prepare only)
 
-- [ ] **`fly.toml` for backend API** — not present.  
+- [x] **`fly.toml` for backend API** — not present.  
   - **Where:** repository root or `backend/fly.toml`  
   - **Type:** agent prepares  
   - **Depends on:** human Fly.io app creation
 
-- [ ] **Production Dockerfile for backend** — current Dockerfile is fine for Compose; may need multi-stage or non-reload CMD for Fly.  
+- [x] **Production Dockerfile for backend** — current Dockerfile is fine for Compose; may need multi-stage or non-reload CMD for Fly.  
   - **Where:** `backend/Dockerfile`  
   - **Type:** agent  
   - **Depends on:** production start script
 
-- [ ] **GitHub Actions deploy workflow** — trigger on merge to `main`: deploy to Fly.io, run migrations, health check.  
+- [x] **GitHub Actions deploy workflow** — trigger on merge to `main`: deploy to Fly.io, run migrations, health check.  
   - **Where:** `.github/workflows/deploy.yml`  
   - **Type:** agent prepares  
   - **Depends on:** human secrets and first manual deploy verification
 
-- [ ] **Deployment documentation** — document flow: PR → CI → merge → deploy → migrate → verify.  
+- [x] **Deployment documentation** — document flow: PR → CI → merge → deploy → migrate → verify.  
   - **Where:** `docs/deployment.md` (new, focused)  
   - **Type:** agent  
   - **Depends on:** Fly.io prep tasks
@@ -374,7 +374,7 @@ The engineering baseline is **complete enough for confident agent-assisted devel
 
 ### Deployment readiness (artifacts prepared; human steps confirmed)
 
-- [ ] `fly.toml`, production backend entrypoint, and deploy workflow exist and are documented.
+- [x] `fly.toml`, production backend entrypoint, and deploy workflow exist and are documented.
 - [ ] Human has completed Fly.io app, database, secrets, and verified first deploy + migration.
 - [ ] `/health` (and readiness check if used) is wired into Fly health checks.
 
