@@ -7,7 +7,11 @@ type AvatarPreviewProps = {
   size?: number;
 };
 
-export function AvatarPreview({ config, seed, size = 160 }: AvatarPreviewProps) {
+export function AvatarPreview({
+  config,
+  seed,
+  size = 160,
+}: AvatarPreviewProps) {
   const dataUri = createAvatarDataUri(config, seed, size);
 
   return (

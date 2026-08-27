@@ -16,7 +16,10 @@ export type AvatarConfig = Partial<
   }
 >;
 
-export const AVATAR_VARIANTS = variantsJson as Record<AvatarVariantKey, string[]>;
+export const AVATAR_VARIANTS = variantsJson as Record<
+  AvatarVariantKey,
+  string[]
+>;
 
 export type AvatarSection = {
   key: AvatarVariantKey;
@@ -41,3 +44,7 @@ export const AVATAR_SECTIONS: AvatarSection[] = [
     probabilityKey: "accessoriesProbability",
   },
 ];
+
+export function getSectionOptions(optionKey: AvatarVariantKey): string[] {
+  return AVATAR_VARIANTS[optionKey];
+}

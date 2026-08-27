@@ -16,7 +16,6 @@ What is **not yet in place** for a maintainable, agent-friendly baseline:
 - **No CI** (no `.github/workflows/` at all)
 - **No frontend automated tests** (backend pytest added)
 - **No deployment configuration** (target platform: Fly.io)
-- **No frontend lint/format tooling** (ESLint, Prettier)
 - **No dependency update automation** (Dependabot)
 - **No secret scanning or security checks in CI**
 - **No game engine yet** (expected — current scope is MVP 0 CRUD only)
@@ -33,7 +32,8 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
 - [x] **Backend linting and formatting (Ruff)** — `backend/pyproject.toml` with Ruff; `make lint` / `make format`.
 - [x] **Backend pytest** — `backend/tests/` with avatar validation, game service, and API smoke tests; `make test` runs via Docker.
 - [x] **Backend mypy (incremental)** — `make typecheck` runs mypy on `app/services/` and `app/shared/` with `disallow_untyped_defs`.
-- [x] **Pre-commit hooks (backend)** — `.pre-commit-config.yaml` runs Ruff check/format on `backend/` plus basic file hooks. Preserve this setup.
+- [x] **Frontend ESLint + Prettier** — flat ESLint config, Prettier, npm scripts, `make lint-frontend` / `make format-*-frontend`, pre-commit hooks.
+- [x] **Pre-commit hooks** — Ruff on `backend/`; ESLint and Prettier check on `frontend/`; basic file hooks.
 - [x] **Structured API errors** — `AppError`, global exception handlers, `ok()` envelope per `docs/rest-api-standards.md`.
 - [x] **Health endpoint** — `GET /health` in `backend/app/main.py` returns standard envelope.
 - [x] **Configuration via environment** — `pydantic-settings` in `backend/app/config.py`; root `.env.example` with placeholders only.
@@ -95,20 +95,20 @@ The codebase already follows good patterns (thin routers, `AppError` + response 
 
 ### Frontend quality gaps
 
-- [ ] **Add ESLint for React/TypeScript** — no ESLint config or dependency. `AGENTS.md` already anticipates extending pre-commit once frontend lint exists.  
+- [x] **Add ESLint for React/TypeScript** — `frontend/eslint.config.js`, `npm run lint`, `make lint-frontend`.  
   - **Where:** `frontend/package.json`, ESLint config  
   - **Type:** agent  
   - **Depends on:** none
 
-- [ ] **Add Prettier (optional but recommended)** — no formatter for frontend; backend uses Ruff format.  
-  - **Where:** `frontend/`, root or frontend Prettier config  
+- [x] **Add Prettier** — `frontend/prettier.config.js`, `eslint-config-prettier`, `npm run format` / `format:check`.  
+  - **Where:** `frontend/`  
   - **Type:** agent  
-  - **Depends on:** ESLint config (integrate eslint-config-prettier to avoid conflicts)
+  - **Depends on:** ESLint config
 
-- [ ] **Extend pre-commit for frontend** — `.pre-commit-config.yaml` covers backend only; `AGENTS.md` line 155 already says to extend it.  
+- [x] **Extend pre-commit for frontend** — local hooks for ESLint and Prettier check on `frontend/`.  
   - **Where:** `.pre-commit-config.yaml`  
   - **Type:** agent  
-  - **Depends on:** ESLint (+ Prettier if added)
+  - **Depends on:** ESLint, Prettier
 
 ### Docker and local development
 
@@ -165,7 +165,7 @@ No `.github/workflows/` directory exists. CI is the authoritative quality gate.
   - **Permissions:** minimum required (`contents: read`); no `write-all`  
   - **Where:** `.github/workflows/ci.yml`  
   - **Type:** agent  
-  - **Depends on:** pytest, ESLint, migration check script
+  - **Depends on:** pytest, ESLint ✅, migration check script
 
 - [ ] **Add Dependabot configuration** — no `dependabot.yml`; no automated dependency PRs for Python, npm, GitHub Actions, or Docker base images.  
   - **Where:** `.github/dependabot.yml`  
@@ -307,7 +307,7 @@ Tasks a coding agent can perform autonomously (after user approves implementatio
 2. ~~**Add `docs/development-workflow.md`**~~ — done.
 3. ~~**Add pytest + initial tests**~~ — done.
 4. ~~**Add mypy** with incremental strictness on services/shared~~ — done.
-5. **Add ESLint (+ optional Prettier)** for frontend; extend `.pre-commit-config.yaml`.
+5. ~~**Add ESLint (+ Prettier)** for frontend; extend `.pre-commit-config.yaml`~~ — done.
 6. **Create `.github/workflows/ci.yml`** — backend lint/test/typecheck, frontend lint/build, migration check, minimal permissions.
 7. **Create `.github/dependabot.yml`** — Python, npm, GitHub Actions, Docker.
 8. **Add `.github/pull_request_template.md`**.
@@ -336,7 +336,7 @@ Adapted to this repository’s actual gaps:
 |-------|--------|------------------|
 | **1** | Repository audit | ✅ This document |
 | **2** | Agent instructions | ✅ `README.md`, `docs/development-workflow.md`, Cursor rules |
-| **3** | Local quality tooling | ✅ pytest, mypy (services/shared); ESLint, pre-commit frontend extensions remain |
+| **3** | Local quality tooling | ✅ Complete (pytest, mypy, ESLint, Prettier, pre-commit) |
 | **4** | CI quality gates | `.github/workflows/ci.yml`, PR template, migration consistency check |
 | **5** | Security checks | Dependabot, secret scan (one tool), dependency audit in CI |
 | **6** | Database safety | Migration check in CI; document destructive migration review in PR template |
@@ -359,7 +359,7 @@ The engineering baseline is **complete enough for confident agent-assisted devel
 
 - [ ] CI runs on every pull request and is required before merge to `main`.
 - [ ] Backend: Ruff (lint + format), pytest (core services covered), mypy on services/shared in CI (local: `make typecheck` ✅).
-- [ ] Frontend: ESLint passes; `npm run build` (with `tsc`) passes in CI.
+- [ ] Frontend: ESLint and Prettier pass in CI (local: `make lint-frontend` ✅, `make format-check-frontend` ✅); `npm run build` (with `tsc`) passes in CI.
 - [ ] Migration consistency check runs in CI when backend models change.
 
 ### Security and dependencies

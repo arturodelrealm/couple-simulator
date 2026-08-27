@@ -124,6 +124,8 @@ make pre-commit-run          # Ruff + file hooks (backend)
 make lint                    # Ruff check only
 make typecheck               # mypy on app/services and app/shared
 make test                    # backend pytest (Docker)
+make lint-frontend           # ESLint
+make format-check-frontend   # Prettier check
 cd frontend && npm run build # TypeScript + Vite build
 ```
 
@@ -180,6 +182,7 @@ Before finishing a task, verify:
 - [ ] `make pre-commit-run` passes (backend changes)
 - [ ] `make test` passes (backend changes)
 - [ ] `make typecheck` passes (backend services/shared changes)
+- [ ] `make lint-frontend` and `make format-check-frontend` pass (frontend changes)
 - [ ] `npm run build` passes (frontend changes)
 - [ ] Documentation updated if behavior or setup changed
 

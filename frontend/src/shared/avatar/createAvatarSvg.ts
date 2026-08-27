@@ -5,7 +5,9 @@ import type { AvatarConfig } from "./avataaarsVariants";
 
 const style = new Style(avataaarsDefinition);
 
-function toDiceBearOptions(config: AvatarConfig): Record<string, string | number> {
+function toDiceBearOptions(
+  config: AvatarConfig,
+): Record<string, string | number> {
   const options: Record<string, string | number> = {};
   for (const [key, value] of Object.entries(config)) {
     if (value !== undefined) {

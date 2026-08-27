@@ -173,6 +173,8 @@ cd backend && mypy app/services app/shared
 
 When the frontend is added, extend `.pre-commit-config.yaml` with ESLint and Prettier hooks.
 
+Frontend ESLint and Prettier run via pre-commit (local hooks) and `make lint-frontend` / `make format-check-frontend`.
+
 ---
 
 ## Frontend conventions
@@ -183,6 +185,18 @@ When the frontend is added, extend `.pre-commit-config.yaml` with ESLint and Pre
 - API calls go through a dedicated service layer, not inline in components.
 - All user-visible text goes through i18n translation keys.
 - Prioritize functionality over polish until the core game loop works (see [docs/overview.md](docs/overview.md)).
+
+### Linting and formatting
+
+ESLint (flat config in `frontend/eslint.config.js`) and Prettier (`frontend/prettier.config.js`). From repo root:
+
+```bash
+make lint-frontend           # ESLint
+make format-check-frontend   # Prettier check
+make format-frontend         # Prettier write
+```
+
+Or from `frontend/`: `npm run lint`, `npm run format:check`, `npm run format`.
 
 ---
 
@@ -303,4 +317,6 @@ Follow the full workflow in [docs/development-workflow.md](docs/development-work
 - [ ] Reusable logic placed in `shared/` directories
 - [ ] Async used only when justified
 - [ ] REST responses follow [docs/rest-api-standards.md](docs/rest-api-standards.md)
+- [ ] `make lint-frontend` and `make format-check-frontend` pass (frontend changes)
+- [ ] `npm run build` passes (frontend changes)
 - [ ] Changes align with the current MVP milestone scope

@@ -25,7 +25,10 @@ switch ($Task) {
         Write-Host "  .\tasks.ps1 migrate"
         Write-Host "  .\tasks.ps1 makemigrations -Msg 'your message'"
         Write-Host "  .\tasks.ps1 lint"
+        Write-Host "  .\tasks.ps1 lint-frontend"
         Write-Host "  .\tasks.ps1 format"
+        Write-Host "  .\tasks.ps1 format-frontend"
+        Write-Host "  .\tasks.ps1 format-check-frontend"
         Write-Host "  .\tasks.ps1 typecheck"
         Write-Host "  .\tasks.ps1 test"
         Write-Host "  .\tasks.ps1 pre-commit-install"
@@ -62,9 +65,30 @@ switch ($Task) {
         Pop-Location
     }
 
+    "lint-frontend" {
+        Push-Location frontend
+        & npm run lint
+        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
+        Pop-Location
+    }
+
     "format" {
         Push-Location backend
         & ruff format .
+        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
+        Pop-Location
+    }
+
+    "format-frontend" {
+        Push-Location frontend
+        & npm run format
+        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
+        Pop-Location
+    }
+
+    "format-check-frontend" {
+        Push-Location frontend
+        & npm run format:check
         if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
         Pop-Location
     }

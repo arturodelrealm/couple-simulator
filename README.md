@@ -62,19 +62,23 @@ A life-simulation game for couples. **Current milestone: MVP 0** — create a ga
 | Start stack | `make runserver` |
 | Apply migrations | `make migrate` |
 | Autogenerate migration | `make makemigrations MSG='describe the change'` |
-| Backend tests | `make test` |
-| Backend typecheck | `make typecheck` |
 | Backend lint | `make lint` |
 | Backend format | `make format` |
+| Backend typecheck | `make typecheck` |
+| Backend tests | `make test` |
+| Frontend lint | `make lint-frontend` |
+| Frontend format | `make format-frontend` |
+| Frontend format check | `make format-check-frontend` |
+| Frontend build | `cd frontend && npm run build` |
 | Run all pre-commit hooks | `make pre-commit-run` |
 | Install pre-commit hooks | `make pre-commit-install` |
-| Frontend production build | `cd frontend && npm run build` |
 
-One-time backend dev setup (for lint hooks outside Docker):
+One-time dev setup (for git hooks and local frontend lint):
 
 ```bash
 pip install -e "./backend[dev]"
 make pre-commit-install
+cd frontend && npm install
 ```
 
 ## Project layout
@@ -111,7 +115,7 @@ couple-simulator/
 - **Backend:** Ruff lint/format via `make lint`, `make format`, and pre-commit.
 - **Backend tests:** pytest via `make test` (runs in Docker with Python 3.12). With a local 3.12 venv: `pip install -e "./backend[dev]"` then `cd backend && pytest`.
 - **Backend typecheck:** mypy on `app/services/` and `app/shared/` via `make typecheck`.
-- **Frontend:** TypeScript strict mode; `npm run build` runs `tsc` then Vite build.
+- **Frontend:** ESLint + Prettier via `make lint-frontend` and `make format-check-frontend`; TypeScript check in `npm run build`.
 
 CI and deployment are tracked in [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md).
 

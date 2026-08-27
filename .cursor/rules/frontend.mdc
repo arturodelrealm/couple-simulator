@@ -25,10 +25,13 @@ Full reference: [AGENTS.md](../../AGENTS.md). Skill: [.cursor/skills/react/SKILL
 - API calls only through `src/services/` — not inline `fetch` in components
 - Game outcomes and simulation rules come from the **backend** — frontend displays results
 
-## Build
+## Build and lint
 
 ```bash
 cd frontend && npm run build   # tsc + vite build
+make lint-frontend             # ESLint
+make format-check-frontend     # Prettier check
+make format-frontend           # Prettier write
 ```
 
 Do not replace `vite.config.ts`, `tsconfig.json`, or Tailwind scaffolding by hand — see `no-framework-scaffolding.mdc`.

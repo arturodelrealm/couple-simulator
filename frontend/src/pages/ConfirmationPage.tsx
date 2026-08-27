@@ -48,7 +48,9 @@ export function ConfirmationPage() {
         </p>
         <AvatarPreview config={avatarConfig} seed={gameId} size={180} />
         <div className="rounded-lg border border-slate-200 bg-white p-4">
-          <p className="text-sm text-slate-600">{t("game.confirm.gameIdLabel")}</p>
+          <p className="text-sm text-slate-600">
+            {t("game.confirm.gameIdLabel")}
+          </p>
           <p className="mt-1 font-mono text-sm text-slate-900">{game.id}</p>
         </div>
         <p className="text-sm text-slate-600">{t("game.confirm.hint")}</p>
