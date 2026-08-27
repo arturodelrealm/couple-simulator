@@ -1,0 +1,37 @@
+---
+description: React frontend — TypeScript strict, i18n, hooks/services separation
+globs: frontend/**/*.{ts,tsx}
+alwaysApply: false
+---
+
+# Frontend conventions
+
+Full reference: [AGENTS.md](../../AGENTS.md). Skill: [.cursor/skills/react/SKILL.md](../skills/react/SKILL.md).
+
+## Structure
+
+| Layer | Path | Role |
+|-------|------|------|
+| Pages | `src/pages/` | Route screens; keep thin |
+| Components | `src/components/` | Composed UI |
+| Hooks | `src/hooks/` | State and flow logic |
+| Services | `src/services/` | API calls via `apiClient` |
+| Shared | `src/shared/` | Reusable UI, avatar helpers, storage |
+
+## Rules
+
+- TypeScript **strict** — avoid `any`
+- User-visible text via **i18n keys** in `src/locales/` — not hardcoded strings
+- API calls only through `src/services/` — not inline `fetch` in components
+- Game outcomes and simulation rules come from the **backend** — frontend displays results
+
+## Build and lint
+
+```bash
+cd frontend && npm run build   # tsc + vite build
+make lint-frontend             # ESLint
+make format-check-frontend     # Prettier check
+make format-frontend           # Prettier write
+```
+
+Do not replace `vite.config.ts`, `tsconfig.json`, or Tailwind scaffolding by hand — see `no-framework-scaffolding.mdc`.

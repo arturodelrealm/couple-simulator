@@ -1,12 +1,12 @@
 import type { ReactNode } from "react";
 
 import type { AvatarConfig } from "../../shared/avatar/avataaarsVariants";
-import { AVATAR_SECTIONS } from "../../shared/avatar/avataaarsVariants";
-import { AvatarPreview } from "../../shared/ui/AvatarPreview";
 import {
-  AvatarOptionSection,
+  AVATAR_SECTIONS,
   getSectionOptions,
-} from "./AvatarOptionSection";
+} from "../../shared/avatar/avataaarsVariants";
+import { AvatarPreview } from "../../shared/ui/AvatarPreview";
+import { AvatarOptionSection } from "./AvatarOptionSection";
 
 type AvatarBuilderProps = {
   config: AvatarConfig;
@@ -22,7 +22,7 @@ export function AvatarBuilder({
   footer,
 }: AvatarBuilderProps) {
   const handleSelect = (
-    sectionKey: typeof AVATAR_SECTIONS[number],
+    sectionKey: (typeof AVATAR_SECTIONS)[number],
     value: string,
     enabled: boolean,
   ) => {
@@ -45,9 +45,7 @@ export function AvatarBuilder({
           value={config[section.key]}
           probabilityKey={section.probabilityKey}
           probabilityValue={
-            section.probabilityKey
-              ? config[section.probabilityKey]
-              : undefined
+            section.probabilityKey ? config[section.probabilityKey] : undefined
           }
           config={config}
           onSelect={(value, enabled) => handleSelect(section, value, enabled)}

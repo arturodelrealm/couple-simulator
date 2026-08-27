@@ -8,6 +8,7 @@ set -euo pipefail
 COMPOSE="docker compose"
 MSG="${2:-describe the change}"
 BACKEND_DIR="backend"
+FRONTEND_DIR="frontend"
 
 task="${1:-help}"
 
@@ -18,8 +19,14 @@ case "$task" in
     echo "  ./task.sh build-server"
     echo "  ./task.sh migrate"
     echo "  ./task.sh makemigrations 'your message'"
+    echo "  ./task.sh check-migrations"
     echo "  ./task.sh lint"
+    echo "  ./task.sh lint-frontend"
     echo "  ./task.sh format"
+    echo "  ./task.sh format-frontend"
+    echo "  ./task.sh format-check-frontend"
+    echo "  ./task.sh typecheck"
+    echo "  ./task.sh test"
     echo "  ./task.sh pre-commit-install"
     echo "  ./task.sh pre-commit-run"
     echo ""
@@ -39,11 +46,30 @@ case "$task" in
     $COMPOSE up -d db
     $COMPOSE run --rm backend alembic revision --autogenerate -m "$MSG"
     ;;
+  check-migrations)
+    $COMPOSE up -d db
+    $COMPOSE run --rm backend sh -c "alembic upgrade head && alembic check"
+    ;;
   lint)
     cd "$BACKEND_DIR" && ruff check .
     ;;
+  lint-frontend)
+    cd "$FRONTEND_DIR" && npm run lint
+    ;;
   format)
     cd "$BACKEND_DIR" && ruff format .
+    ;;
+  format-frontend)
+    cd "$FRONTEND_DIR" && npm run format
+    ;;
+  format-check-frontend)
+    cd "$FRONTEND_DIR" && npm run format:check
+    ;;
+  typecheck)
+    $COMPOSE run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && mypy app/services app/shared"
+    ;;
+  test)
+    $COMPOSE run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && pytest"
     ;;
   pre-commit-install)
     pre-commit install

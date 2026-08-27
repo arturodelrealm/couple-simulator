@@ -1,3 +1,4 @@
+from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,6 +15,17 @@ class Settings(BaseSettings):
     api_prefix: str = "/api"
     environment: str = "development"
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+
+    @field_validator("database_url", mode="before")
+    @classmethod
+    def normalize_database_url(cls, value: object) -> object:
+        if not isinstance(value, str):
+            return value
+        if value.startswith("postgres://"):
+            return value.replace("postgres://", "postgresql+psycopg2://", 1)
+        if value.startswith("postgresql://") and "+psycopg2" not in value:
+            return value.replace("postgresql://", "postgresql+psycopg2://", 1)
+        return value
 
     def cors_origin_list(self) -> list[str]:
         return [

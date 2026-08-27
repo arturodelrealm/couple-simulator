@@ -1,7 +1,9 @@
 import { useTranslation } from "react-i18next";
 
-import type { AvatarConfig, AvatarVariantKey } from "../../shared/avatar/avataaarsVariants";
-import { AVATAR_VARIANTS } from "../../shared/avatar/avataaarsVariants";
+import type {
+  AvatarConfig,
+  AvatarVariantKey,
+} from "../../shared/avatar/avataaarsVariants";
 import { createAvatarDataUri } from "../../shared/avatar/createAvatarSvg";
 import { AvatarOptionGrid } from "../../shared/ui/AvatarOptionGrid";
 import { OptionCard } from "../../shared/ui/OptionCard";
@@ -43,9 +45,7 @@ export function AvatarOptionSection({
             onSelect={() => onSelect(options[0], false)}
             label={t("avatar.option.none")}
           >
-            <div
-              className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-xs text-slate-500"
-            >
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-xs text-slate-500">
               {t("avatar.option.none")}
             </div>
           </OptionCard>
@@ -58,9 +58,12 @@ export function AvatarOptionSection({
           if (probabilityKey) {
             thumbConfig[probabilityKey] = 100;
           }
-          const thumbUri = createAvatarDataUri(thumbConfig, "thumb", THUMB_SIZE);
-          const selected =
-            !isNoneSelected && value === option;
+          const thumbUri = createAvatarDataUri(
+            thumbConfig,
+            "thumb",
+            THUMB_SIZE,
+          );
+          const selected = !isNoneSelected && value === option;
 
           return (
             <OptionCard
@@ -82,8 +85,4 @@ export function AvatarOptionSection({
       </AvatarOptionGrid>
     </section>
   );
-}
-
-export function getSectionOptions(optionKey: AvatarVariantKey): string[] {
-  return AVATAR_VARIANTS[optionKey];
 }

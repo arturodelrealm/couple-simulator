@@ -1,0 +1,32 @@
+---
+description: Schema changes via Alembic only; review migrations like code
+globs: backend/app/models/**,backend/alembic/**
+alwaysApply: false
+---
+
+# Database and migrations
+
+Complements `no-database-queries.mdc` and `no-framework-scaffolding.mdc`.
+
+## Every schema change needs a migration
+
+1. Edit models in `backend/app/models/`
+2. User autogenerates: `make makemigrations MSG='describe the change'`
+3. Review file in `backend/alembic/versions/`
+4. User applies: `make migrate`
+5. Verify: `make check-migrations` (also runs in CI via `alembic check`)
+
+## Rules
+
+- **Never** `Base.metadata.create_all()` in application code
+- **Never** manually alter production databases
+- Import new models in `backend/alembic/env.py` so autogenerate detects them
+- Use SQLAlchemy 2.0 style (`Mapped`, `mapped_column`, relationships with `back_populates`)
+
+## Migration review
+
+- Flag destructive operations (`drop_table`, `drop_column`, data loss) in PR description
+- Prefer additive migrations in active development
+- Downgrade paths should remain valid when feasible
+
+Agents write model code and review migrations; **users run** `makemigrations` and `migrate`.

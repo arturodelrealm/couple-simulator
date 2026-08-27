@@ -15,3 +15,20 @@ repos:
         args: [--fix]
       - id: ruff-format
         files: ^backend/
+
+  - repo: local
+    hooks:
+      - id: frontend-eslint
+        name: frontend eslint
+        entry: bash -c 'cd frontend && npm run lint'
+        language: system
+        files: ^frontend/src/.*\.(ts|tsx)$
+        pass_filenames: false
+
+      - id: frontend-prettier
+        name: frontend prettier check
+        entry: bash -c 'cd frontend && npm run format:check'
+        language: system
+        files: ^frontend/
+        exclude: ^frontend/package-lock\.json$
+        pass_filenames: false

@@ -18,6 +18,7 @@ services:
 
   backend:
     build: ./backend
+    command: ["sh", "scripts/start.sh"]
     restart: unless-stopped
     depends_on:
       db:

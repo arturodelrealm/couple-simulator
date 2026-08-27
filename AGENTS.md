@@ -2,9 +2,15 @@
 
 Technical guidance for AI agents and contributors. **Read this file before making changes.**
 
-For product context (game flow, priorities, current milestone), see [docs/overview.md](docs/overview.md).
+| Document | Purpose |
+|----------|---------|
+| [README.md](README.md) | Local setup, commands, documentation index |
+| [docs/development-workflow.md](docs/development-workflow.md) | Step-by-step agent workflow and pre-submit checklist |
+| [docs/overview.md](docs/overview.md) | Product context, game flow, current milestone |
+| [docs/rest-api-standards.md](docs/rest-api-standards.md) | HTTP API shape, errors, REST conventions |
+| [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md) | Engineering baseline audit and improvement backlog |
 
-For HTTP API shape, error format, and REST conventions, see [docs/rest-api-standards.md](docs/rest-api-standards.md).
+**Cursor rules** in [`.cursor/rules/`](.cursor/rules/) supplement this file — especially `general.mdc`, `backend.mdc`, `frontend.mdc`, `database.mdc`, `testing.mdc`, and `game-engine.mdc`.
 
 ---
 
@@ -73,7 +79,8 @@ couple-simulator/
 │   │   ├── schemas/       # Pydantic v2 request/response models
 │   │   ├── repositories/  # data access (optional, if needed)
 │   │   └── shared/        # reusable helpers and utilities
-│   └── alembic/           # database migrations
+│   ├── alembic/           # database migrations
+│   └── tests/             # pytest suite
 ├── frontend/
 │   └── src/
 │       ├── components/
@@ -83,8 +90,11 @@ couple-simulator/
 │       ├── shared/        # reusable UI and utility code
 │       └── locales/       # translation files
 ├── docs/
-│   ├── overview.md        # product overview
+│   ├── overview.md                 # product overview
+│   ├── development-workflow.md     # agent workflow
+│   ├── engineering-baseline-backlog.md
 │   └── backlog/
+├── README.md                       # setup and commands
 └── AGENTS.md
 ```
 
@@ -149,10 +159,21 @@ Day-to-day:
 ```bash
 make lint              # check only
 make format            # auto-format
+make typecheck         # mypy on app/services and app/shared
+make test              # backend pytest (Docker)
 make pre-commit-run    # run all hooks on the full repo (CI-friendly)
 ```
 
+Backend tests live in `backend/tests/`. Type checking is incremental: mypy runs on `app/services/` and `app/shared/` only. Run with `make test` / `make typecheck`, or locally after `pip install -e "./backend[dev]"`:
+
+```bash
+cd backend && pytest
+cd backend && mypy app/services app/shared
+```
+
 When the frontend is added, extend `.pre-commit-config.yaml` with ESLint and Prettier hooks.
+
+Frontend ESLint and Prettier run via pre-commit (local hooks) and `make lint-frontend` / `make format-check-frontend`.
 
 ---
 
@@ -164,6 +185,18 @@ When the frontend is added, extend `.pre-commit-config.yaml` with ESLint and Pre
 - API calls go through a dedicated service layer, not inline in components.
 - All user-visible text goes through i18n translation keys.
 - Prioritize functionality over polish until the core game loop works (see [docs/overview.md](docs/overview.md)).
+
+### Linting and formatting
+
+ESLint (flat config in `frontend/eslint.config.js`) and Prettier (`frontend/prettier.config.js`). From repo root:
+
+```bash
+make lint-frontend           # ESLint
+make format-check-frontend   # Prettier check
+make format-frontend         # Prettier write
+```
+
+Or from `frontend/`: `npm run lint`, `npm run format:check`, `npm run format`.
 
 ---
 
@@ -268,13 +301,15 @@ See [docs/overview.md](docs/overview.md) for the product goal and done criteria.
 
 ## Agent checklist
 
-Before submitting changes, verify:
+Follow the full workflow in [docs/development-workflow.md](docs/development-workflow.md). Before submitting changes, verify:
 
 - [ ] Read [docs/overview.md](docs/overview.md) for product context
-- [ ] Read this file for technical conventions
+- [ ] Read this file and [docs/development-workflow.md](docs/development-workflow.md)
 - [ ] All code and identifiers are in English
 - [ ] User-facing strings are translatable (gettext / i18n keys)
 - [ ] PEP 8 followed for Python; `make pre-commit-run` passes
+- [ ] `make test` passes when backend behavior changes
+- [ ] `make typecheck` passes when backend services/shared change
 - [ ] Business logic in services, not routers
 - [ ] SQLAlchemy 2.0 + Pydantic v2 patterns used
 - [ ] UUID primary keys on new models
@@ -282,4 +317,6 @@ Before submitting changes, verify:
 - [ ] Reusable logic placed in `shared/` directories
 - [ ] Async used only when justified
 - [ ] REST responses follow [docs/rest-api-standards.md](docs/rest-api-standards.md)
+- [ ] `make lint-frontend` and `make format-check-frontend` pass (frontend changes)
+- [ ] `npm run build` passes (frontend changes)
 - [ ] Changes align with the current MVP milestone scope
