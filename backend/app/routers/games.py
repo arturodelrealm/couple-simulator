@@ -20,6 +20,15 @@ def create_game(
     return ok(game.model_dump())
 
 
+@router.get("/by-match-name/{match_name}")
+def get_game_by_match_name(
+    match_name: str,
+    db: Session = Depends(get_db),
+) -> dict:
+    game = game_service.get_game_by_match_name(db, match_name)
+    return ok(game.model_dump())
+
+
 @router.get("/{game_id}")
 def get_game(
     game_id: UUID,
