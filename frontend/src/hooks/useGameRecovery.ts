@@ -2,7 +2,10 @@ import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { getGame } from "../services/gameService";
-import { clearStoredGameId, getStoredGameId } from "../shared/gameStorage";
+import {
+  clearCurrentGame,
+  migrateLegacyGameStorage,
+} from "../shared/gameStorage";
 
 export function useGameRecovery() {
   const navigate = useNavigate();
@@ -13,19 +16,20 @@ export function useGameRecovery() {
       location.pathname === "/" || location.pathname === "/create";
     if (!isRecoveryRoute) return;
 
-    const storedId = getStoredGameId();
-    if (!storedId) return;
+    void migrateLegacyGameStorage()
+      .then((stored) => {
+        if (!stored) return;
 
-    getGame(storedId)
-      .then((game) => {
-        if (game.partner_a.avatar_config) {
-          navigate(`/games/${storedId}/confirm`, { replace: true });
-        } else {
-          navigate(`/games/${storedId}/avatar`, { replace: true });
-        }
+        return getGame(stored.game_id).then((game) => {
+          if (game.partner_a.avatar_config) {
+            navigate(`/games/${stored.game_id}/confirm`, { replace: true });
+          } else {
+            navigate(`/games/${stored.game_id}/avatar`, { replace: true });
+          }
+        });
       })
       .catch(() => {
-        clearStoredGameId();
+        clearCurrentGame();
       });
   }, [location.pathname, navigate]);
 }

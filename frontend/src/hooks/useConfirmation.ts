@@ -3,7 +3,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { getGame, type Game } from "../services/gameService";
-import { clearStoredGameId, saveGameId } from "../shared/gameStorage";
+import {
+  clearCurrentGame,
+  saveCurrentGameFromGame,
+  touchCurrentGame,
+} from "../shared/gameStorage";
 import { toErrorMessage } from "../shared/errors";
 
 export function useConfirmation() {
@@ -21,10 +25,10 @@ export function useConfirmation() {
       return;
     }
 
-    saveGameId(gameId);
-
     getGame(gameId)
       .then((loaded) => {
+        saveCurrentGameFromGame(loaded);
+        touchCurrentGame();
         if (!loaded.partner_a.avatar_config) {
           navigate(`/games/${gameId}/avatar`, { replace: true });
           return;
@@ -32,7 +36,7 @@ export function useConfirmation() {
         setGame(loaded);
       })
       .catch((err) => {
-        clearStoredGameId();
+        clearCurrentGame();
         setError(toErrorMessage(err, t));
       })
       .finally(() => setIsLoading(false));

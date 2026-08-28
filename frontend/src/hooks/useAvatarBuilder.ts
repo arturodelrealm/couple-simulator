@@ -5,7 +5,11 @@ import { useTranslation } from "react-i18next";
 import { getGame, updateGame } from "../services/gameService";
 import type { AvatarConfig } from "../shared/avatar/avataaarsVariants";
 import { DEFAULT_AVATAR_CONFIG } from "../shared/avatar/defaultAvatarConfig";
-import { clearStoredGameId, saveGameId } from "../shared/gameStorage";
+import {
+  clearCurrentGame,
+  saveCurrentGameFromGame,
+  touchCurrentGame,
+} from "../shared/gameStorage";
 import { toErrorMessage } from "../shared/errors";
 
 export function useAvatarBuilder() {
@@ -25,10 +29,9 @@ export function useAvatarBuilder() {
       return;
     }
 
-    saveGameId(gameId);
-
     getGame(gameId)
       .then((game) => {
+        saveCurrentGameFromGame(game);
         if (game.partner_a.avatar_config) {
           navigate(`/games/${gameId}/confirm`, { replace: true });
           return;
@@ -36,7 +39,7 @@ export function useAvatarBuilder() {
         setPartnerName(game.partner_a.name);
       })
       .catch((err) => {
-        clearStoredGameId();
+        clearCurrentGame();
         setError(toErrorMessage(err, t));
       })
       .finally(() => setIsLoading(false));
@@ -48,7 +51,9 @@ export function useAvatarBuilder() {
     setIsSaving(true);
     setError(null);
     try {
-      await updateGame(gameId, { avatar_config: config });
+      const game = await updateGame(gameId, { avatar_config: config });
+      saveCurrentGameFromGame(game);
+      touchCurrentGame();
       navigate(`/games/${gameId}/confirm`);
     } catch (err) {
       setError(toErrorMessage(err, t));

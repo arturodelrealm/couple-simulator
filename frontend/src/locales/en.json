@@ -42,6 +42,7 @@
     "invalidAvatarConfig": "Invalid avatar configuration.",
     "validationError": "Please check your input and try again.",
     "badRequest": "Invalid request.",
-    "nameRequired": "Name is required."
+    "nameRequired": "Name is required.",
+    "matchNameTaken": "This match name is already taken. Please choose another."
   }
 }
