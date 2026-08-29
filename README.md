@@ -1,6 +1,6 @@
 # Couple Life Simulator
 
-A life-simulation game for couples. **Current milestone: MVP 0** — create a game, build Partner A's avatar, persist state, and recover after refresh.
+A life-simulation game for couples. **Current milestone: MVP 0 (extended)** — lobby, create/join match by name, Partner A setup (name, sex, avatar), persistence, and recovery after refresh.
 
 ## Tech stack
 
@@ -101,6 +101,7 @@ couple-simulator/
 | [AGENTS.md](AGENTS.md) | Architecture, coding conventions, agent checklist |
 | [docs/development-workflow.md](docs/development-workflow.md) | Step-by-step workflow for agents and contributors |
 | [docs/overview.md](docs/overview.md) | Product goals and current milestone |
+| [docs/specs/game-lobby-and-player-a-setup.md](docs/specs/game-lobby-and-player-a-setup.md) | Lobby, match name, and Player A setup (implemented) |
 | [docs/rest-api-standards.md](docs/rest-api-standards.md) | HTTP API conventions |
 | [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md) | Engineering baseline audit and improvement backlog |
 | [docs/deployment.md](docs/deployment.md) | Backend deployment to Fly.io |

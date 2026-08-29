@@ -58,19 +58,38 @@
 
 The backend should return a structured list of actions so the frontend can render each one appropriately.
 
-## Current milestone: MVP 0
+## Current milestone: MVP 0 (extended)
 
-The first production goal is **not** the full game. It must allow:
+The first production goal validates end-to-end connectivity between frontend, backend, and database — now with a **game lobby** and unified Partner A setup.
 
+### Core flow
+
+```text
+/  →  recover current match or go to lobby
+Lobby  →  create match (match_name + couple mode)  |  join by match_name
+Player A setup  →  name + sex + avatar (create or edit)
+Confirmation  →  match summary; return to lobby at any time
 ```
-Create game → Enter partner A name → Create/select avatar → Save → Recover game after refresh
-```
 
-**Done when:** a game created from a browser persists partner A's name and avatar, survives a page refresh, and displays correctly.
+### Done when
+
+- A match can be created with a unique, human-readable `match_name`.
+- Partner A setup collects **name, sex, and avatar** in a single form.
+- Match state persists in the API and recovers on refresh (`localStorage` + `GET /api/games/{id}`).
+- Another browser or device can join the same match by `match_name`.
+- Partner A data can be edited after initial setup.
+- UI strings are translatable (English and Spanish locale files).
+
+See [game lobby spec](specs/game-lobby-and-player-a-setup.md) for the full acceptance criteria and API contract.
+
+### Legacy MVP 0 flow (replaced)
+
+The original slice (`/create` → name only → avatar → confirm) is superseded by the lobby flow. Old routes redirect to the new screens for compatibility.
 
 ## Further reading
 
 - [Backlog and milestone breakdown](backlog/backlog_simulador_vida_pareja.md) — full product backlog, domain model, and phased implementation plan.
+- [Game lobby spec](specs/game-lobby-and-player-a-setup.md) — lobby, match name, and Player A setup (implemented).
 - [AGENTS.md](../AGENTS.md) — technical conventions for agents and contributors.
 - [development-workflow.md](development-workflow.md) — step-by-step workflow for agents.
 - [engineering-baseline-backlog.md](backlog/engineering-baseline-backlog.md) — engineering baseline and CI/deployment backlog.
