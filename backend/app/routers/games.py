@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.database import get_db
 from app.schemas.game import GameCreate, GameUpdate
 from app.schemas.responses import ok
@@ -27,6 +28,19 @@ def get_game_by_match_name(
 ) -> dict:
     game = game_service.get_game_by_match_name(db, match_name)
     return ok(game.model_dump())
+
+
+@router.get("/{game_id}/invite")
+def get_game_invite(
+    game_id: UUID,
+    db: Session = Depends(get_db),
+) -> dict:
+    invite = game_service.get_game_invite(
+        db,
+        game_id,
+        frontend_public_url=settings.frontend_public_url,
+    )
+    return ok(invite.model_dump())
 
 
 @router.get("/{game_id}")

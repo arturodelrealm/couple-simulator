@@ -4,12 +4,27 @@ import { useTranslation } from "react-i18next";
 import { useJoinMatch } from "../hooks/useJoinMatch";
 import { GameLayout } from "../shared/ui/GameLayout";
 import { PrimaryButton } from "../shared/ui/PrimaryButton";
+import { LoadingState } from "../shared/ui/LoadingState";
 import { ErrorMessage } from "../shared/ui/ErrorMessage";
 
 export function JoinMatchPage() {
   const { t } = useTranslation();
-  const { matchName, setMatchName, onSubmit, isSubmitting, error } =
-    useJoinMatch();
+  const {
+    matchName,
+    setMatchName,
+    onSubmit,
+    isSubmitting,
+    isAutoJoining,
+    error,
+  } = useJoinMatch();
+
+  if (isAutoJoining) {
+    return (
+      <GameLayout>
+        <LoadingState message={t("game.join.joining")} />
+      </GameLayout>
+    );
+  }
 
   return (
     <GameLayout>

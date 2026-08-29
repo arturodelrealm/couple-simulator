@@ -184,3 +184,21 @@ def test_update_game_raises_not_found(db_session: Session):
 
     assert exc_info.value.code == "GAME_NOT_FOUND"
     assert exc_info.value.status_code == 404
+
+
+def test_get_game_invite_returns_path_and_url(db_session: Session):
+    game = game_service.create_game(
+        db_session,
+        GameCreate(match_name="share-me"),
+    )
+
+    invite = game_service.get_game_invite(
+        db_session,
+        game.id,
+        frontend_public_url="https://app.example.com",
+    )
+
+    assert invite.game_id == game.id
+    assert invite.match_name == "share-me"
+    assert invite.invite_path == "/games/join/share-me"
+    assert invite.invite_url == "https://app.example.com/games/join/share-me"

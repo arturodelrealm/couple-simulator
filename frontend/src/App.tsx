@@ -19,6 +19,7 @@ export function App() {
       <Route path="/lobby" element={<LobbyPage />} />
       <Route path="/games/new" element={<CreateMatchPage />} />
       <Route path="/games/join" element={<JoinMatchPage />} />
+      <Route path="/games/join/:matchName" element={<JoinMatchPage />} />
       <Route path="/games/:gameId/player-a" element={<PlayerASetupPage />} />
       <Route path="/games/:gameId/confirm" element={<ConfirmationPage />} />
       <Route path="/create" element={<Navigate to="/games/new" replace />} />

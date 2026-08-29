@@ -29,6 +29,7 @@
       "matchNameLabel": "Nombre de la partida",
       "matchNamePlaceholder": "boda-ana-luis",
       "submit": "Entrar",
+      "joining": "Entrando a la partida...",
       "notFound": "No se encontró ninguna partida con ese nombre."
     },
     "playerA": {
@@ -51,6 +52,10 @@
       "sexLabel": "Sexo",
       "editPlayerA": "Editar jugador A",
       "backToLobby": "Volver al lobby",
+      "inviteLabel": "Enlace de invitación",
+      "inviteHint": "Comparte este enlace para que otros puedan entrar a la partida.",
+      "copyInviteLink": "Copiar enlace de invitación",
+      "inviteCopied": "¡Enlace copiado!",
       "hint": "Puedes cerrar esta página y volver más tarde — tu partida se recuperará automáticamente."
     }
   },
@@ -83,6 +88,7 @@
     "matchNameTaken": "Ese nombre de partida ya está en uso. Elige otro.",
     "matchNameRequired": "El nombre de la partida es obligatorio.",
     "matchNameInvalid": "El nombre debe tener 3–32 caracteres: letras minúsculas, números, guiones y guiones bajos.",
-    "sexRequired": "Selecciona una opción de sexo."
+    "sexRequired": "Selecciona una opción de sexo.",
+    "inviteCopyFailed": "No se pudo copiar el enlace. Cópialo manualmente."
   }
 }

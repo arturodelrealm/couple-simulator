@@ -8,10 +8,11 @@ from sqlalchemy.orm import Session, selectinload
 from app.models.avatar_config import AvatarConfig
 from app.models.game import Game
 from app.models.player import Player
-from app.schemas.game import GameCreate, GameRead, GameUpdate, PartnerARead
+from app.schemas.game import GameCreate, GameRead, GameInviteRead, GameUpdate, PartnerARead
 from app.shared.avatar_validation import validate_avatar_config
 from app.shared.enums import GameStatus, PlayerRole
 from app.shared.exceptions import AppError
+from app.shared.game_invite import build_invite_path, build_invite_url
 from app.shared.match_name_validation import validate_match_name
 
 
@@ -178,3 +179,19 @@ def update_game(db: Session, game_id: UUID, payload: GameUpdate) -> GameRead:
     _apply_status(game, partner_a)
     db.commit()
     return get_game(db, game_id)
+
+
+def get_game_invite(
+    db: Session,
+    game_id: UUID,
+    *,
+    frontend_public_url: str | None = None,
+) -> GameInviteRead:
+    game = get_game(db, game_id)
+    invite_path = build_invite_path(game.match_name)
+    return GameInviteRead(
+        game_id=game.id,
+        match_name=game.match_name,
+        invite_path=invite_path,
+        invite_url=build_invite_url(invite_path, frontend_public_url),
+    )

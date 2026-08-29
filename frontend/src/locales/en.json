@@ -29,6 +29,7 @@
       "matchNameLabel": "Match name",
       "matchNamePlaceholder": "boda-ana-luis",
       "submit": "Join",
+      "joining": "Joining match...",
       "notFound": "No match found with that name."
     },
     "playerA": {
@@ -51,6 +52,10 @@
       "sexLabel": "Sex",
       "editPlayerA": "Edit player A",
       "backToLobby": "Back to lobby",
+      "inviteLabel": "Invitation link",
+      "inviteHint": "Share this link so others can join the match.",
+      "copyInviteLink": "Copy invitation link",
+      "inviteCopied": "Link copied!",
       "hint": "You can close this page and return later — your match will be recovered automatically."
     }
   },
@@ -83,6 +88,7 @@
     "matchNameTaken": "This match name is already taken. Please choose another.",
     "matchNameRequired": "Match name is required.",
     "matchNameInvalid": "Match name must be 3–32 characters: lowercase letters, numbers, hyphens, and underscores.",
-    "sexRequired": "Please select a sex option."
+    "sexRequired": "Please select a sex option.",
+    "inviteCopyFailed": "Could not copy the link. Please copy it manually."
   }
 }

@@ -34,6 +34,13 @@ export type UpdateGamePayload = {
   avatar_config?: AvatarConfig;
 };
 
+export type GameInvite = {
+  game_id: string;
+  match_name: string;
+  invite_path: string;
+  invite_url: string | null;
+};
+
 export function createGame(payload: CreateGamePayload): Promise<Game> {
   return apiRequest<Game>("/api/games", {
     method: "POST",
@@ -43,6 +50,10 @@ export function createGame(payload: CreateGamePayload): Promise<Game> {
 
 export function getGame(gameId: string): Promise<Game> {
   return apiRequest<Game>(`/api/games/${gameId}`);
+}
+
+export function getGameInvite(gameId: string): Promise<GameInvite> {
+  return apiRequest<GameInvite>(`/api/games/${gameId}/invite`);
 }
 
 export function getGameByMatchName(matchName: string): Promise<Game> {

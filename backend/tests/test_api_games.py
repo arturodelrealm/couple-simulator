@@ -1,5 +1,7 @@
 from fastapi.testclient import TestClient
 
+from app.config import settings
+
 
 def test_health_check(client: TestClient):
     response = client.get("/health")
@@ -168,3 +170,35 @@ def test_get_game_not_found_returns_structured_error(client: TestClient):
     assert response.status_code == 404
     errors = response.json()["errors"]
     assert errors[0]["code"] == "GAME_NOT_FOUND"
+
+
+def test_get_game_invite(client: TestClient):
+    create_response = client.post(
+        "/api/games",
+        json={"match_name": "invite-me"},
+    )
+    game_id = create_response.json()["data"]["id"]
+
+    response = client.get(f"/api/games/{game_id}/invite")
+
+    assert response.status_code == 200
+    body = response.json()["data"]
+    assert body["game_id"] == game_id
+    assert body["match_name"] == "invite-me"
+    assert body["invite_path"] == "/games/join/invite-me"
+    if settings.frontend_public_url:
+        expected_url = (
+            f"{settings.frontend_public_url.rstrip('/')}/games/join/invite-me"
+        )
+        assert body["invite_url"] == expected_url
+    else:
+        assert body["invite_url"] is None
+
+
+def test_get_game_invite_not_found(client: TestClient):
+    response = client.get(
+        "/api/games/00000000-0000-0000-0000-000000000000/invite",
+    )
+
+    assert response.status_code == 404
+    assert response.json()["errors"][0]["code"] == "GAME_NOT_FOUND"

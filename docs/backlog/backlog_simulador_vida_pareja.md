@@ -246,6 +246,7 @@ Spec: [game-lobby-and-player-a-setup.md](../specs/game-lobby-and-player-a-setup.
 -   [x] Setup / edición Jugador A unificado.
 -   [x] Migración `localStorage` desde UUID legacy.
 -   [x] Tests backend del contrato ampliado.
+-   [x] Enlace de invitación (`GET /api/games/{id}/invite`) y copia en confirmación.
 
 ------------------------------------------------------------------------
 

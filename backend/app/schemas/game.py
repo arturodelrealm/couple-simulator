@@ -62,3 +62,10 @@ class GameUpdate(BaseModel):
         if not stripped:
             raise ValueError("partner_a_name must not be empty")
         return stripped
+
+
+class GameInviteRead(BaseModel):
+    game_id: UUID
+    match_name: str
+    invite_path: str
+    invite_url: str | None = None

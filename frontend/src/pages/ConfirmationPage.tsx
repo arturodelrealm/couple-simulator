@@ -17,7 +17,16 @@ const SEX_LABEL_KEYS: Record<PlayerSex, string> = {
 
 export function ConfirmationPage() {
   const { t } = useTranslation();
-  const { game, gameId, isLoading, error } = useConfirmation();
+  const {
+    game,
+    gameId,
+    inviteUrl,
+    isLoading,
+    error,
+    onCopyInvite,
+    inviteCopied,
+    inviteCopyError,
+  } = useConfirmation();
 
   if (isLoading) {
     return (
@@ -79,6 +88,29 @@ export function ConfirmationPage() {
             </dd>
           </div>
         </dl>
+
+        {inviteUrl && (
+          <div className="space-y-2 rounded-lg border border-slate-200 bg-white p-4">
+            <p className="text-sm font-medium text-slate-700">
+              {t("game.confirm.inviteLabel")}
+            </p>
+            <p className="text-sm text-slate-600">
+              {t("game.confirm.inviteHint")}
+            </p>
+            <input
+              type="text"
+              readOnly
+              value={inviteUrl}
+              className="w-full rounded-lg border border-slate-300 bg-slate-50 px-3 py-2 font-mono text-sm text-slate-700"
+            />
+            <PrimaryButton onClick={onCopyInvite} className="w-full">
+              {inviteCopied
+                ? t("game.confirm.inviteCopied")
+                : t("game.confirm.copyInviteLink")}
+            </PrimaryButton>
+            {inviteCopyError && <ErrorMessage message={inviteCopyError} />}
+          </div>
+        )}
 
         <div className="space-y-4 text-center">
           <p className="text-lg font-medium text-slate-800">

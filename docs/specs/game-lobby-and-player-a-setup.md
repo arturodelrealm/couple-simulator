@@ -302,6 +302,28 @@ Incluir `match_name`, `game_mode`, `partner_a.sex` en la respuesta.
 - `match_name` y `game_mode` **no aceptados** (ignorar o 422 si se envían).
 - Actualiza estado según reglas de §5.3.
 
+#### `GET /api/games/{game_id}/invite` — Enlace de invitación
+
+Devuelve la ruta y URL pública para compartir la partida.
+
+**Response:**
+
+```json
+{
+  "data": {
+    "game_id": "uuid",
+    "match_name": "boda-ana-luis",
+    "invite_path": "/games/join/boda-ana-luis",
+    "invite_url": "http://localhost:5173/games/join/boda-ana-luis"
+  }
+}
+```
+
+- `invite_path`: ruta relativa del frontend; el cliente puede construir la URL con `window.location.origin` si `invite_url` es `null`.
+- `invite_url`: URL absoluta cuando `FRONTEND_PUBLIC_URL` está configurada en el backend.
+- 404 `GAME_NOT_FOUND` si la partida no existe.
+- El enlace abre `/games/join/{match_name}` y une automáticamente a la partida.
+
 ### 6.2 Compatibilidad con MVP 0
 
 El contrato actual (`POST` con solo `partner_a_name`) **dejará de ser válido** si `match_name` pasa a ser obligatorio. Es un **breaking change** aceptable post-MVP 0:
@@ -577,6 +599,7 @@ gantt
 - [x] Desde el lobby puedo crear o entrar a otra partida; eso actualiza la partida actual en `localStorage`.
 - [x] En el lobby, si hay partida guardada, veo un atajo **Continuar** con el `match_name`.
 - [x] Si la partida guardada ya no existe (404), se limpia el storage y veo el lobby.
+- [x] Puedo copiar un enlace de invitación desde la confirmación y compartirlo.
 
 ### Backend
 
