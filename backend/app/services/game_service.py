@@ -1,4 +1,3 @@
-from gettext import gettext as _
 from typing import Any
 from uuid import UUID
 
@@ -19,6 +18,7 @@ from app.shared.avatar_validation import validate_avatar_config
 from app.shared.enums import GameStatus, PlayerRole
 from app.shared.exceptions import AppError
 from app.shared.game_invite import build_invite_path, build_invite_url
+from app.shared.i18n import translate as _
 from app.shared.match_name_validation import validate_match_name
 
 

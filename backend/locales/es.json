@@ -1,0 +1,15 @@
+{
+  "Game not found": "Partida no encontrada.",
+  "Match name is already taken": "Ese nombre de partida ya está en uso. Elige otro.",
+  "Invalid match name format": "El nombre debe tener 3–32 caracteres: letras minúsculas, números, guiones y guiones bajos.",
+  "Partner A not found for this game": "No se encontró el jugador A en esta partida.",
+  "At least one field must be provided": "Debes proporcionar al menos un campo.",
+  "Avatar config must be an object": "La configuración del avatar debe ser un objeto.",
+  "Unknown avatar option: %(key)s": "Opción de avatar desconocida: %(key)s",
+  "Probability must be an integer between 0 and 100": "La probabilidad debe ser un entero entre 0 y 100.",
+  "Variant value must be a string": "El valor de la variante debe ser un texto.",
+  "Invalid value for %(key)s": "Valor no válido para %(key)s",
+  "Request failed": "La solicitud falló.",
+  "Validation error": "Revisa los datos e inténtalo de nuevo.",
+  "Internal server error": "Algo salió mal. Inténtalo de nuevo."
+}

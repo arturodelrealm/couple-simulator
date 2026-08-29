@@ -3,6 +3,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.config import settings
+from app.middleware.locale import LocaleMiddleware
 from app.routers.games import router as games_router
 from app.schemas.responses import ok
 from app.shared.exception_handlers import (
@@ -22,6 +23,7 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+app.add_middleware(LocaleMiddleware)
 
 app.add_exception_handler(AppError, app_error_handler)
 app.add_exception_handler(HTTPException, http_exception_handler)

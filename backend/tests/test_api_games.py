@@ -69,6 +69,23 @@ def test_create_game_duplicate_match_name_is_case_insensitive(client: TestClient
     assert second.status_code == 409
     errors = second.json()["errors"]
     assert errors[0]["code"] == "MATCH_NAME_TAKEN"
+    assert errors[0]["message"] == "Match name is already taken"
+
+
+def test_create_game_duplicate_match_name_returns_spanish_message(
+    client: TestClient,
+):
+    client.post("/api/games", json={"match_name": "spanish-name"})
+
+    response = client.post(
+        "/api/games",
+        json={"match_name": "spanish-name"},
+        headers={"Accept-Language": "es"},
+    )
+
+    assert response.status_code == 409
+    message = response.json()["errors"][0]["message"]
+    assert message == "Ese nombre de partida ya está en uso. Elige otro."
 
 
 def test_create_game_invalid_match_name_returns_422(client: TestClient):

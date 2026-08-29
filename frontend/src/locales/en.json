@@ -81,11 +81,7 @@
   "errors": {
     "generic": "Something went wrong. Please try again.",
     "gameNotFound": "Game not found.",
-    "invalidAvatarConfig": "Invalid avatar configuration.",
-    "validationError": "Please check your input and try again.",
-    "badRequest": "Invalid request.",
     "nameRequired": "Name is required.",
-    "matchNameTaken": "This match name is already taken. Please choose another.",
     "matchNameRequired": "Match name is required.",
     "matchNameInvalid": "Match name must be 3–32 characters: lowercase letters, numbers, hyphens, and underscores.",
     "sexRequired": "Please select a sex option.",

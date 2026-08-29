@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-import { ApiClientError } from "../services/apiClient";
 import { getGameByMatchName } from "../services/gameService";
 import { saveCurrentGameFromGame } from "../shared/gameStorage";
 import { toErrorMessage } from "../shared/errors";
@@ -39,11 +38,7 @@ export function useJoinMatch() {
         saveCurrentGameFromGame(game);
         navigate(getGameStepPath(game));
       } catch (err) {
-        if (err instanceof ApiClientError && err.code === "GAME_NOT_FOUND") {
-          setError(t("game.join.notFound"));
-        } else {
-          setError(toErrorMessage(err, t));
-        }
+        setError(toErrorMessage(err, t));
       } finally {
         setIsSubmitting(false);
       }

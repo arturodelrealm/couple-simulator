@@ -1,7 +1,7 @@
 import re
-from gettext import gettext as _
 
 from app.shared.exceptions import AppError
+from app.shared.i18n import translate as _
 
 _MATCH_NAME_PATTERN = re.compile(r"^[a-z0-9_-]{3,32}$")
 
