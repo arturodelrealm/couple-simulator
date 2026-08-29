@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     api_prefix: str = "/api"
     environment: str = "development"
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    frontend_public_url: str | None = None
 
     @field_validator("database_url", mode="before")
     @classmethod

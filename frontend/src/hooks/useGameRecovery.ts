@@ -1,31 +1,47 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+import { ApiClientError } from "../services/apiClient";
 import { getGame } from "../services/gameService";
-import { clearStoredGameId, getStoredGameId } from "../shared/gameStorage";
+import {
+  clearCurrentGame,
+  migrateLegacyGameStorage,
+} from "../shared/gameStorage";
+import { getGameStepPath } from "../shared/gameNavigation";
 
 export function useGameRecovery() {
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
-    const isRecoveryRoute =
-      location.pathname === "/" || location.pathname === "/create";
-    if (!isRecoveryRoute) return;
+    if (location.pathname !== "/") {
+      return;
+    }
 
-    const storedId = getStoredGameId();
-    if (!storedId) return;
-
-    getGame(storedId)
-      .then((game) => {
-        if (game.partner_a.avatar_config) {
-          navigate(`/games/${storedId}/confirm`, { replace: true });
-        } else {
-          navigate(`/games/${storedId}/avatar`, { replace: true });
+    void migrateLegacyGameStorage()
+      .then((stored) => {
+        if (!stored) {
+          navigate("/lobby", { replace: true });
+          return;
         }
+
+        return getGame(stored.game_id)
+          .then((game) => {
+            navigate(getGameStepPath(game), { replace: true });
+          })
+          .catch((error) => {
+            if (
+              error instanceof ApiClientError &&
+              error.code === "GAME_NOT_FOUND"
+            ) {
+              clearCurrentGame();
+            }
+            navigate("/lobby", { replace: true });
+          });
       })
       .catch(() => {
-        clearStoredGameId();
+        clearCurrentGame();
+        navigate("/lobby", { replace: true });
       });
   }, [location.pathname, navigate]);
 }

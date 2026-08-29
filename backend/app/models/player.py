@@ -24,6 +24,7 @@ class Player(Base):
     )
     role: Mapped[str] = mapped_column(String(32))
     name: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
+    sex: Mapped[Optional[str]] = mapped_column(String(32), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),

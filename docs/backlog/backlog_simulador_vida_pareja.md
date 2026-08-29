@@ -139,18 +139,20 @@ El primer milestone NO debe intentar implementar el juego completo.
 Debe permitir:
 
 ``` text
-Crear partida
+Lobby
     ↓
-Ingresar nombre de la novia
+Crear partida (match_name) o entrar por match_name
     ↓
-Crear/seleccionar avatar
+Setup Jugador A (nombre, sexo, avatar)
     ↓
-Guardar partida
+Confirmación
     ↓
-Recuperar partida
+Recuperar partida al recargar
 ```
 
 La idea es validar primero que todos los componentes están conectados.
+
+> **Extensión lobby (2026-08):** ver [spec lobby](../specs/game-lobby-and-player-a-setup.md). El flujo original solo con nombre de la novia quedó reemplazado.
 
 ------------------------------------------------------------------------
 
@@ -158,14 +160,14 @@ La idea es validar primero que todos los componentes están conectados.
 
 ### Partida
 
--   [ ] Crear modelo `Game`.
--   [ ] Generar identificador único de partida.
--   [ ] Guardar nombre de la novia.
--   [ ] Guardar estado de la partida.
--   [ ] Crear migraciones.
--   [ ] Crear endpoint para crear partida.
--   [ ] Crear endpoint para obtener una partida.
--   [ ] Crear endpoint para actualizar datos de la novia.
+-   [x] Crear modelo `Game`.
+-   [x] Generar identificador único de partida.
+-   [x] Guardar nombre de la novia.
+-   [x] Guardar estado de la partida.
+-   [x] Crear migraciones.
+-   [x] Crear endpoint para crear partida.
+-   [x] Crear endpoint para obtener una partida.
+-   [x] Crear endpoint para actualizar datos de la novia.
 
 Propuesta inicial:
 
@@ -187,13 +189,13 @@ Ejemplo:
 
 ## 4.2 Avatar mínimo
 
--   [ ] Definir `AvatarConfig`.
--   [ ] Integrar DiceBear Avataaars.
--   [ ] Definir un subconjunto pequeño de opciones permitidas.
--   [ ] Implementar preview del avatar.
--   [ ] Permitir seleccionar opciones visualmente mediante tarjetas.
--   [ ] Guardar la configuración del avatar en backend.
--   [ ] Recuperar avatar desde backend.
+-   [x] Definir `AvatarConfig`.
+-   [x] Integrar DiceBear Avataaars.
+-   [x] Definir un subconjunto pequeño de opciones permitidas.
+-   [x] Implementar preview del avatar.
+-   [x] Permitir seleccionar opciones visualmente mediante tarjetas.
+-   [x] Guardar la configuración del avatar en backend.
+-   [x] Recuperar avatar desde backend.
 
 Inicialmente limitar a:
 
@@ -208,54 +210,43 @@ No intentar exponer todas las opciones disponibles en DiceBear.
 
 ## 4.3 Frontend mínimo
 
-Pantallas:
+Pantallas (flujo actual — ver spec lobby):
 
-### Crear partida
+### Lobby (`/lobby`)
 
-``` text
-Crear una nueva partida
+-   Crear nueva partida / entrar a partida / continuar partida guardada.
 
-Nombre de la novia:
-[________________]
+### Crear partida (`/games/new`)
 
-[Comenzar]
-```
+-   Nombre de partida (`match_name`) y modo (couple).
 
-### Crear avatar
+### Setup Jugador A (`/games/{id}/player-a`)
 
-``` text
-Crea tu personaje
+-   Nombre, sexo y avatar en un solo formulario (crear y editar).
 
-             [ AVATAR ]
+### Confirmación (`/games/{id}/confirm`)
 
-Cabello
-[ avatar ] [ avatar ] [ avatar ]
+-   Resumen de partida y Jugador A; volver al lobby.
 
-Ojos
-[ avatar ] [ avatar ] [ avatar ]
+-   [x] Pantallas de flujo MVP 0 (sustituidas por lobby + setup unificado).
+-   [x] Recuperación de partida al recargar (`/` + `localStorage`).
+-   [x] i18n (EN + ES).
 
-Ropa
-[ avatar ] [ avatar ] [ avatar ]
+------------------------------------------------------------------------
 
-Accesorios
-[ avatar ] [ avatar ]
+## 4.5 Lobby y setup Jugador A (extensión MVP 0)
 
-[Guardar personaje]
-```
+Spec: [game-lobby-and-player-a-setup.md](../specs/game-lobby-and-player-a-setup.md)
 
-### Confirmación
-
-``` text
-Partida creada
-
-María
-
-[Avatar]
-
-Partida: ABC123
-
-[Continuar]
-```
+-   [x] `match_name` único, legible, inmutable.
+-   [x] `game_mode` (couple).
+-   [x] Campo `sex` en Jugador A; obligatorio para `PLAYER_A_READY`.
+-   [x] `GET /api/games/by-match-name/{match_name}`.
+-   [x] Lobby, crear partida, entrar por nombre, continuar partida actual.
+-   [x] Setup / edición Jugador A unificado.
+-   [x] Migración `localStorage` desde UUID legacy.
+-   [x] Tests backend del contrato ampliado.
+-   [x] Enlace de invitación (`GET /api/games/{id}/invite`) y copia en confirmación.
 
 ------------------------------------------------------------------------
 
@@ -276,12 +267,12 @@ Partida: ABC123
 
 Una partida creada desde internet debe poder:
 
-1.  Crear una partida.
-2.  Registrar el nombre de la novia.
-3.  Crear un avatar.
-4.  Guardar el avatar.
-5.  Cerrar/recargar la página.
-6.  Recuperar la partida y mostrar el avatar.
+1.  Crear una partida con `match_name` único (modo couple).
+2.  Configurar Jugador A (nombre, sexo, avatar).
+3.  Guardar y mostrar confirmación.
+4.  Cerrar/recargar la página y recuperar la partida sin reescribir el `match_name`.
+5.  Entrar a una partida existente desde otro navegador por `match_name`.
+6.  Editar Jugador A tras el setup inicial.
 
 ------------------------------------------------------------------------
 

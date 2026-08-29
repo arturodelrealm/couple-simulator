@@ -3,6 +3,7 @@ import { ApiClientError } from "../services/apiClient";
 export function getErrorI18nKey(code: string): string {
   const map: Record<string, string> = {
     GAME_NOT_FOUND: "errors.gameNotFound",
+    MATCH_NAME_TAKEN: "errors.matchNameTaken",
     INVALID_AVATAR_CONFIG: "errors.invalidAvatarConfig",
     VALIDATION_ERROR: "errors.validationError",
     BAD_REQUEST: "errors.badRequest",

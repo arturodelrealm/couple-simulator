@@ -139,6 +139,32 @@ cd frontend && npm run build # TypeScript + Vite build
 
 With a local Python 3.12 environment: `pip install -e "./backend[dev]"` then `cd backend && pytest` and `mypy app/services app/shared`.
 
+### Hot reload on Windows (Docker)
+
+Docker bind mounts on Windows (especially under **OneDrive**) often do not propagate file-change events into Linux containers. Symptoms: Vite HMR and backend `--reload` do not pick up edits until you restart `./task.sh runserver`.
+
+**Default fix (already configured in `docker-compose.yml`):**
+
+- Frontend: `VITE_USE_POLLING=true` → Vite polls the filesystem every second.
+- Backend: `WATCHFILES_FORCE_POLLING=true` → Uvicorn reload uses polling.
+
+After changing `docker-compose.yml` or `vite.config.ts`, restart the stack **once**:
+
+```bash
+./task.sh runserver
+```
+
+Then saves should hot-reload without further restarts.
+
+**Faster alternative for frontend work:** run only DB + API in Docker, and Vite on the host:
+
+```bash
+docker compose up db backend
+cd frontend && npm install && npm run dev
+```
+
+Open http://localhost:5173 — the API proxy targets `http://localhost:8001` by default. Native Vite uses OS file watchers (no polling needed).
+
 Future checks (ESLint, CI) are listed in [engineering-baseline-backlog.md](backlog/engineering-baseline-backlog.md).
 
 ---

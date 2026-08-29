@@ -6,7 +6,7 @@ from sqlalchemy import DateTime, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
-from app.shared.enums import GameStatus
+from app.shared.enums import GameMode, GameStatus
 
 if TYPE_CHECKING:
     from app.models.player import Player
@@ -16,6 +16,12 @@ class Game(Base):
     __tablename__ = "games"
 
     id: Mapped[UUID] = mapped_column(primary_key=True, default=uuid4)
+    match_name: Mapped[str] = mapped_column(String(32), unique=True, index=True)
+    game_mode: Mapped[str] = mapped_column(
+        String(32),
+        default=GameMode.COUPLE.value,
+        server_default=GameMode.COUPLE.value,
+    )
     status: Mapped[str] = mapped_column(
         String(32),
         default=GameStatus.CREATED.value,

@@ -33,7 +33,7 @@ case "$task" in
     echo "PowerShell: .\\tasks.ps1 <task>"
     ;;
   runserver)
-    $COMPOSE up --build
+    $COMPOSE up
     ;;
   build-server)
     $COMPOSE build backend

@@ -3,18 +3,60 @@
     "loading": "Loading..."
   },
   "game": {
+    "lobby": {
+      "title": "Couple Life Simulator",
+      "createButton": "Create new match",
+      "joinButton": "Join a match",
+      "continueCurrent": "Continue",
+      "currentMatchLabel": "Current match"
+    },
+    "nav": {
+      "backToLobby": "Back to lobby"
+    },
     "create": {
-      "title": "Create a new game",
-      "description": "Enter partner A's name to start.",
-      "nameLabel": "Partner A name",
+      "title": "Create a new match",
+      "matchNameLabel": "Match name",
+      "matchNameHint": "3–32 characters: lowercase letters, numbers, hyphens, and underscores.",
+      "matchNamePlaceholder": "boda-ana-luis",
+      "gameModeLabel": "Game mode",
+      "gameMode": {
+        "couple": "Couple mode"
+      },
+      "submit": "Create match"
+    },
+    "join": {
+      "title": "Join a match",
+      "matchNameLabel": "Match name",
+      "matchNamePlaceholder": "boda-ana-luis",
+      "submit": "Join",
+      "joining": "Joining match...",
+      "notFound": "No match found with that name."
+    },
+    "playerA": {
+      "title": "Set up your character",
+      "editTitle": "Edit your character",
+      "nameLabel": "Name",
       "namePlaceholder": "Name",
-      "submit": "Start"
+      "sexLabel": "Sex",
+      "sex": {
+        "male": "Male",
+        "female": "Female",
+        "preferNotToSay": "Prefer not to say"
+      },
+      "save": "Save"
     },
     "confirm": {
-      "title": "Game created",
-      "gameIdLabel": "Game ID",
-      "hint": "You can close this page and return later — your game will be recovered automatically.",
-      "backToCreate": "Create a new game"
+      "title": "Match ready",
+      "matchName": "Match name",
+      "gameMode": "Game mode",
+      "sexLabel": "Sex",
+      "editPlayerA": "Edit player A",
+      "backToLobby": "Back to lobby",
+      "inviteLabel": "Invitation link",
+      "inviteHint": "Share this link so others can join the match.",
+      "copyInviteLink": "Copy invitation link",
+      "inviteCopied": "Link copied!",
+      "hint": "You can close this page and return later — your match will be recovered automatically."
     }
   },
   "avatar": {
@@ -42,6 +84,11 @@
     "invalidAvatarConfig": "Invalid avatar configuration.",
     "validationError": "Please check your input and try again.",
     "badRequest": "Invalid request.",
-    "nameRequired": "Name is required."
+    "nameRequired": "Name is required.",
+    "matchNameTaken": "This match name is already taken. Please choose another.",
+    "matchNameRequired": "Match name is required.",
+    "matchNameInvalid": "Match name must be 3–32 characters: lowercase letters, numbers, hyphens, and underscores.",
+    "sexRequired": "Please select a sex option.",
+    "inviteCopyFailed": "Could not copy the link. Please copy it manually."
   }
 }
