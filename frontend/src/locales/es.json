@@ -81,11 +81,7 @@
   "errors": {
     "generic": "Algo salió mal. Inténtalo de nuevo.",
     "gameNotFound": "Partida no encontrada.",
-    "invalidAvatarConfig": "Configuración de avatar no válida.",
-    "validationError": "Revisa los datos e inténtalo de nuevo.",
-    "badRequest": "Solicitud no válida.",
     "nameRequired": "El nombre es obligatorio.",
-    "matchNameTaken": "Ese nombre de partida ya está en uso. Elige otro.",
     "matchNameRequired": "El nombre de la partida es obligatorio.",
     "matchNameInvalid": "El nombre debe tener 3–32 caracteres: letras minúsculas, números, guiones y guiones bajos.",
     "sexRequired": "Selecciona una opción de sexo.",

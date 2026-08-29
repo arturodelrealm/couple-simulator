@@ -191,8 +191,8 @@ Extend with resource-oriented endpoints as features are added.
 API client code in `frontend/src/services/` should:
 
 1. On success — read the payload from `response.data`.
-2. On failure — read `response.errors` and handle by `code`.
-3. Map `code` to i18n translation keys when the UI needs localized copy beyond the server `message`.
+2. On failure — read `response.errors` and display `message` (already localized via `Accept-Language`).
+3. Use `code` only for programmatic handling (e.g. clearing stale local state on `GAME_NOT_FOUND`).
 
 Example TypeScript shapes:
 

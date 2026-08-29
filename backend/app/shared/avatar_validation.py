@@ -1,9 +1,9 @@
 import json
-from gettext import gettext as _
 from pathlib import Path
 from typing import Any
 
 from app.shared.exceptions import AppError
+from app.shared.i18n import translate as _
 
 _VARIANTS_PATH = Path(__file__).parent / "avataaars_variants.json"
 _ALLOWED_VARIANTS: dict[str, list[str]] = json.loads(_VARIANTS_PATH.read_text())

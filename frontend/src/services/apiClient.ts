@@ -1,3 +1,5 @@
+import i18n from "../i18n";
+
 export type ApiSuccess<T> = { data: T };
 export type ApiErrorDetail = { code: string; message: string; field?: string };
 export type ApiError = { errors: ApiErrorDetail[] };
@@ -39,6 +41,7 @@ export async function apiRequest<T>(
     ...options,
     headers: {
       "Content-Type": "application/json",
+      "Accept-Language": i18n.language,
       ...options.headers,
     },
   });

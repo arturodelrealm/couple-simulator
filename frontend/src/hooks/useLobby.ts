@@ -36,10 +36,8 @@ export function useLobby() {
     } catch (err) {
       if (err instanceof ApiClientError && err.code === "GAME_NOT_FOUND") {
         clearCurrentGame();
-        setError(t("errors.gameNotFound"));
-      } else {
-        setError(toErrorMessage(err, t));
       }
+      setError(toErrorMessage(err, t));
     } finally {
       setIsContinuing(false);
     }

@@ -1,10 +1,9 @@
-from gettext import gettext as _
-
 from fastapi import HTTPException, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 
 from app.shared.exceptions import AppError
+from app.shared.i18n import translate as _
 
 DEFAULT_ERROR_CODES: dict[int, str] = {
     400: "BAD_REQUEST",
