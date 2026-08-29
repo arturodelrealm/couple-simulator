@@ -8,7 +8,13 @@ from sqlalchemy.orm import Session, selectinload
 from app.models.avatar_config import AvatarConfig
 from app.models.game import Game
 from app.models.player import Player
-from app.schemas.game import GameCreate, GameRead, GameInviteRead, GameUpdate, PartnerARead
+from app.schemas.game import (
+    GameCreate,
+    GameInviteRead,
+    GameRead,
+    GameUpdate,
+    PartnerARead,
+)
 from app.shared.avatar_validation import validate_avatar_config
 from app.shared.enums import GameStatus, PlayerRole
 from app.shared.exceptions import AppError
