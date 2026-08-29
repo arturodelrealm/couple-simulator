@@ -1,23 +1,29 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
-import { useGameRecovery } from "./hooks/useGameRecovery";
-import { CreateGamePage } from "./pages/CreateGamePage";
-import { AvatarBuilderPage } from "./pages/AvatarBuilderPage";
 import { ConfirmationPage } from "./pages/ConfirmationPage";
+import { CreateMatchPage } from "./pages/CreateMatchPage";
+import { EntryPage } from "./pages/EntryPage";
+import { JoinMatchPage } from "./pages/JoinMatchPage";
+import { LobbyPage } from "./pages/LobbyPage";
+import { PlayerASetupPage } from "./pages/PlayerASetupPage";
 
-function CreateGameRoute() {
-  useGameRecovery();
-  return <CreateGamePage />;
+function AvatarRedirect() {
+  const { gameId } = useParams<{ gameId: string }>();
+  return <Navigate to={`/games/${gameId}/player-a`} replace />;
 }
 
 export function App() {
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/create" replace />} />
-      <Route path="/create" element={<CreateGameRoute />} />
-      <Route path="/games/:gameId/avatar" element={<AvatarBuilderPage />} />
+      <Route path="/" element={<EntryPage />} />
+      <Route path="/lobby" element={<LobbyPage />} />
+      <Route path="/games/new" element={<CreateMatchPage />} />
+      <Route path="/games/join" element={<JoinMatchPage />} />
+      <Route path="/games/:gameId/player-a" element={<PlayerASetupPage />} />
       <Route path="/games/:gameId/confirm" element={<ConfirmationPage />} />
-      <Route path="*" element={<Navigate to="/create" replace />} />
+      <Route path="/create" element={<Navigate to="/games/new" replace />} />
+      <Route path="/games/:gameId/avatar" element={<AvatarRedirect />} />
+      <Route path="*" element={<Navigate to="/lobby" replace />} />
     </Routes>
   );
 }

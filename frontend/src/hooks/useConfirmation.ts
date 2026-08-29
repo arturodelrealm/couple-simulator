@@ -9,6 +9,7 @@ import {
   touchCurrentGame,
 } from "../shared/gameStorage";
 import { toErrorMessage } from "../shared/errors";
+import { isPlayerASetupComplete } from "../shared/gameNavigation";
 
 export function useConfirmation() {
   const { t } = useTranslation();
@@ -29,8 +30,8 @@ export function useConfirmation() {
       .then((loaded) => {
         saveCurrentGameFromGame(loaded);
         touchCurrentGame();
-        if (!loaded.partner_a.avatar_config) {
-          navigate(`/games/${gameId}/avatar`, { replace: true });
+        if (!isPlayerASetupComplete(loaded)) {
+          navigate(`/games/${gameId}/player-a`, { replace: true });
           return;
         }
         setGame(loaded);

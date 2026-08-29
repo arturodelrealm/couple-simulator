@@ -1,0 +1,88 @@
+{
+  "common": {
+    "loading": "Cargando..."
+  },
+  "game": {
+    "lobby": {
+      "title": "Vida en pareja",
+      "createButton": "Crear nueva partida",
+      "joinButton": "Entrar a una partida",
+      "continueCurrent": "Continuar",
+      "currentMatchLabel": "Partida actual"
+    },
+    "nav": {
+      "backToLobby": "Volver al lobby"
+    },
+    "create": {
+      "title": "Crear nueva partida",
+      "matchNameLabel": "Nombre de la partida",
+      "matchNameHint": "3–32 caracteres: letras minúsculas, números, guiones y guiones bajos.",
+      "matchNamePlaceholder": "boda-ana-luis",
+      "gameModeLabel": "Modo de juego",
+      "gameMode": {
+        "couple": "Modo en pareja"
+      },
+      "submit": "Crear partida"
+    },
+    "join": {
+      "title": "Entrar a una partida",
+      "matchNameLabel": "Nombre de la partida",
+      "matchNamePlaceholder": "boda-ana-luis",
+      "submit": "Entrar",
+      "notFound": "No se encontró ninguna partida con ese nombre."
+    },
+    "playerA": {
+      "title": "Configura tu personaje",
+      "editTitle": "Editar personaje",
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Nombre",
+      "sexLabel": "Sexo",
+      "sex": {
+        "male": "Hombre",
+        "female": "Mujer",
+        "preferNotToSay": "Prefiero no decirlo"
+      },
+      "save": "Guardar"
+    },
+    "confirm": {
+      "title": "Partida lista",
+      "matchName": "Nombre de la partida",
+      "gameMode": "Modo de juego",
+      "sexLabel": "Sexo",
+      "editPlayerA": "Editar jugador A",
+      "backToLobby": "Volver al lobby",
+      "hint": "Puedes cerrar esta página y volver más tarde — tu partida se recuperará automáticamente."
+    }
+  },
+  "avatar": {
+    "builder": {
+      "title": "Crea tu personaje",
+      "forPartner": "Avatar de {{name}}",
+      "save": "Guardar personaje"
+    },
+    "section": {
+      "hair": "Pelo",
+      "eyes": "Ojos",
+      "eyebrows": "Cejas",
+      "mouth": "Boca",
+      "facialHair": "Vello facial",
+      "clothes": "Ropa",
+      "accessories": "Accesorios"
+    },
+    "option": {
+      "none": "Ninguno"
+    }
+  },
+  "errors": {
+    "generic": "Algo salió mal. Inténtalo de nuevo.",
+    "gameNotFound": "Partida no encontrada.",
+    "invalidAvatarConfig": "Configuración de avatar no válida.",
+    "validationError": "Revisa los datos e inténtalo de nuevo.",
+    "badRequest": "Solicitud no válida.",
+    "nameRequired": "El nombre es obligatorio.",
+    "matchNameTaken": "Ese nombre de partida ya está en uso. Elige otro.",
+    "matchNameRequired": "El nombre de la partida es obligatorio.",
+    "matchNameInvalid": "El nombre debe tener 3–32 caracteres: letras minúsculas, números, guiones y guiones bajos.",
+    "sexRequired": "Selecciona una opción de sexo."
+  }
+}
