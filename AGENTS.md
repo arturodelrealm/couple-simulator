@@ -8,9 +8,12 @@ Technical guidance for AI agents and contributors. **Read this file before makin
 | [docs/development-workflow.md](docs/development-workflow.md) | Step-by-step agent workflow and pre-submit checklist |
 | [docs/overview.md](docs/overview.md) | Product context, game flow, current milestone |
 | [docs/rest-api-standards.md](docs/rest-api-standards.md) | HTTP API shape, errors, REST conventions |
+| [docs/apge-workflow.md](docs/apge-workflow.md) | APGE planner / generator / evaluator loop in this repo |
 | [docs/backlog/engineering-baseline-backlog.md](docs/backlog/engineering-baseline-backlog.md) | Engineering baseline audit and improvement backlog |
 
 **Cursor rules** in [`.cursor/rules/`](.cursor/rules/) supplement this file — especially `general.mdc`, `backend.mdc`, `frontend.mdc`, `database.mdc`, `testing.mdc`, and `game-engine.mdc`.
+
+**APGE skills** in [`.cursor/skills/`](.cursor/skills/) (`apge_planner`, `apge_generator`, `apge_evaluator`, `apge_researcher`, `apge_execution_mapper`) orchestrate local plan-driven runs. Plans and PE artifacts live under **`.apge/`** at the repo root (gitignored). Product specs stay in **`docs/specs/`**. See [docs/apge-workflow.md](docs/apge-workflow.md).
 
 ---
 
