@@ -89,6 +89,11 @@ The original slice (`/create` → name only → avatar → confirm) is supersede
 ## Further reading
 
 - [Backlog and milestone breakdown](backlog/backlog_simulador_vida_pareja.md) — full product backlog, domain model, and phased implementation plan.
+- [Game engine design](specs/game-engine-design.md) — standalone engine architecture, domain model, game loop, and open questions (draft).
+- [Engine package skeleton](specs/couple-simulator-engine-package-skeleton.md) — directory layout, modules, and implementation order.
+- [Event content model](specs/game-event-content-model.md) — events, questions, conditions, action templates (draft).
+- [Rules evaluator implementation plan](specs/rules-evaluator-implementation-plan.md) — phased plan for the standalone `rules_evaluator` package (ConditionExpr, tests, engine integration).
+- [Rules evaluator plan prompt](specs/rules-evaluator-implementation-plan-prompt.md) — prompt used to generate the implementation plan above.
 - [Game lobby spec](specs/game-lobby-and-player-a-setup.md) — lobby, match name, and Player A setup (implemented).
 - [AGENTS.md](../AGENTS.md) — technical conventions for agents and contributors.
 - [development-workflow.md](development-workflow.md) — step-by-step workflow for agents.
