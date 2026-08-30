@@ -13,6 +13,24 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  changes:
+    name: Detect changes
+    runs-on: ubuntu-latest
+    outputs:
+      frontend: ${{ steps.filter.outputs.frontend }}
+      rules_evaluator: ${{ steps.filter.outputs.rules_evaluator }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            frontend:
+              - 'frontend/**'
+            rules_evaluator:
+              - 'rules_evaluator/**'
+
   backend:
     name: Backend
     runs-on: ubuntu-latest
@@ -45,6 +63,8 @@ jobs:
 
   frontend:
     name: Frontend
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -69,6 +89,35 @@ jobs:
 
       - name: Build
         run: npm run build
+
+  rules_evaluator:
+    name: Rules evaluator
+    needs: changes
+    if: ${{ needs.changes.outputs.rules_evaluator == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: rules_evaluator
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: rules_evaluator/pyproject.toml
+
+      - name: Install dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Ruff lint
+        run: ruff check .
+
+      - name: Ruff format
+        run: ruff format --check .
+
+      - name: pytest
+        run: pytest
 
   migrations:
     name: Migration consistency
