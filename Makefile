@@ -4,10 +4,13 @@ BACKEND_DIR := backend
 FRONTEND_DIR := frontend
 
 RULES_EVALUATOR_DIR := rules_evaluator
+COUPLE_SIMULATOR_ENGINE_DIR := couple_simulator_engine
 
 .PHONY: help runserver build-server build-frontend migrate makemigrations check-migrations \
-        lint lint-frontend lint-rules-evaluator format format-frontend format-check-frontend \
-        typecheck test test-rules-evaluator pre-commit-install pre-commit-run
+        lint lint-frontend lint-rules-evaluator lint-couple-simulator-engine \
+        format format-frontend format-check-frontend \
+        typecheck test test-rules-evaluator test-couple-simulator-engine \
+        pre-commit-install pre-commit-run
 
 help:
 	@echo "Available targets:"
@@ -19,6 +22,7 @@ help:
 	@echo "  make check-migrations    Verify models match applied migrations"
 	@echo "  make lint                Run Ruff linter on backend"
 	@echo "  make lint-rules-evaluator  Run Ruff linter on rules_evaluator"
+	@echo "  make lint-couple-simulator-engine  Run Ruff linter on couple_simulator_engine"
 	@echo "  make lint-frontend       Run ESLint on frontend"
 	@echo "  make format              Run Ruff formatter on backend"
 	@echo "  make format-frontend     Run Prettier on frontend"
@@ -26,6 +30,7 @@ help:
 	@echo "  make typecheck           Run mypy on backend services and shared"
 	@echo "  make test                Run backend pytest suite"
 	@echo "  make test-rules-evaluator  Run rules_evaluator pytest suite"
+	@echo "  make test-couple-simulator-engine  Run couple_simulator_engine pytest suite"
 	@echo "  make pre-commit-install  Install git pre-commit hooks"
 	@echo "  make pre-commit-run      Run all pre-commit hooks on every file"
 	@echo ""
@@ -61,6 +66,9 @@ lint:
 lint-rules-evaluator:
 	cd $(RULES_EVALUATOR_DIR) && ruff check .
 
+lint-couple-simulator-engine:
+	cd $(COUPLE_SIMULATOR_ENGINE_DIR) && ruff check .
+
 lint-frontend:
 	cd $(FRONTEND_DIR) && npm run lint
 
@@ -81,6 +89,9 @@ test:
 
 test-rules-evaluator:
 	cd $(RULES_EVALUATOR_DIR) && pip install -e ".[dev]" -q && pytest
+
+test-couple-simulator-engine:
+	cd $(COUPLE_SIMULATOR_ENGINE_DIR) && pip install -e ".[dev]" -q && pytest
 
 pre-commit-install:
 	pre-commit install
