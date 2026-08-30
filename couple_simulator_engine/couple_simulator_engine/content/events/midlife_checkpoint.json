@@ -1,0 +1,74 @@
+{
+  "id": "midlife_checkpoint",
+  "title": "Midlife checkpoint",
+  "description": "A chance to step into a new life stage.",
+  "tags": ["life_stage"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/age",
+    "op": "gte",
+    "value": 38
+  },
+  "questions": [
+    {
+      "id": "midlife_stance",
+      "text": "How do you meet this turning point?",
+      "options": [
+        {
+          "id": "embrace",
+          "text": "Embrace it",
+          "actions": []
+        },
+        {
+          "id": "resist",
+          "text": "Resist it",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "grow",
+      "when": {
+        "type": "compare",
+        "path": "answers/midlife_stance",
+        "op": "eq",
+        "value": "embrace"
+      },
+      "actions": [
+        {
+          "type": "advance_life_stage",
+          "args": { "to": "adult" }
+        },
+        {
+          "type": "modify_stat",
+          "args": { "variable": "age", "delta": 5 }
+        }
+      ]
+    },
+    {
+      "id": "stagnate",
+      "when": {
+        "type": "compare",
+        "path": "answers/midlife_stance",
+        "op": "eq",
+        "value": "resist"
+      },
+      "actions": [
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text": "Maybe we are not ready to call this a new chapter."
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

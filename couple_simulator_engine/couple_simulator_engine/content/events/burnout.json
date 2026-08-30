@@ -1,0 +1,70 @@
+{
+  "id": "burnout",
+  "title": "Burnout",
+  "description": "Work pressure reaches a breaking point.",
+  "tags": ["career"],
+  "life_stage": null,
+  "eligibility": null,
+  "questions": [
+    {
+      "id": "burnout_choice",
+      "text": "How do you respond to burnout?",
+      "options": [
+        {
+          "id": "quit_job",
+          "text": "Quit the job",
+          "actions": []
+        },
+        {
+          "id": "push_through",
+          "text": "Push through",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "quit",
+      "when": {
+        "type": "compare",
+        "path": "answers/burnout_choice",
+        "op": "eq",
+        "value": "quit_job"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": { "variable": "career", "delta": -30 }
+        },
+        {
+          "type": "end_game",
+          "args": { "reason": "burnout" }
+        }
+      ]
+    },
+    {
+      "id": "persist",
+      "when": {
+        "type": "compare",
+        "path": "answers/burnout_choice",
+        "op": "eq",
+        "value": "push_through"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": { "variable": "career", "delta": 5 }
+        },
+        {
+          "type": "modify_stat",
+          "args": { "variable": "quality_of_life", "delta": -10 }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

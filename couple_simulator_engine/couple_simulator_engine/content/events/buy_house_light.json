@@ -1,0 +1,147 @@
+{
+  "id": "buy_house_light",
+  "title": "Buy a house?",
+  "description": null,
+  "tags": ["financial", "housing"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/finances",
+    "op": "gte",
+    "value": 40
+  },
+  "questions": [
+    {
+      "id": "want_to_buy",
+      "text": "Would you like to buy a house?",
+      "options": [
+        {
+          "id": "yes",
+          "text": "Yes",
+          "actions": [
+            {
+              "type": "set_event_var",
+              "args": { "variable": "home_desire", "value": 3 }
+            }
+          ]
+        },
+        {
+          "id": "no",
+          "text": "No",
+          "actions": [
+            {
+              "type": "set_event_var",
+              "args": { "variable": "home_desire", "value": -2 }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "budget_ready",
+      "text": "Do you have the budget?",
+      "options": [
+        {
+          "id": "yes",
+          "text": "Yes",
+          "actions": [
+            {
+              "type": "set_event_var",
+              "args": { "variable": "home_budget", "value": 2 }
+            }
+          ]
+        },
+        {
+          "id": "no",
+          "text": "No",
+          "actions": [
+            {
+              "type": "set_event_var",
+              "args": { "variable": "home_budget", "value": 0 }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "purchase",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "event_variables/home_desire",
+            "op": "gte",
+            "value": 2
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/home_budget",
+            "op": "gte",
+            "value": 2
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": { "variable": "finances", "delta": -15 }
+        },
+        {
+          "type": "modify_stat",
+          "args": { "variable": "quality_of_life", "delta": 10 }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text": "We are buying a home."
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title": "Bought a house",
+            "category": "housing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "keep_renting",
+      "when": {
+        "type": "compare",
+        "path": "event_variables/home_desire",
+        "op": "lt",
+        "value": 2
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": { "variable": "finances", "delta": 3 }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text": "Renting still works for us."
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text": "We leave the housing question open for now."
+      }
+    }
+  ],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

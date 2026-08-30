@@ -23,6 +23,9 @@ allow-direct-references = true
 [tool.hatch.build.targets.wheel]
 packages = ["couple_simulator_engine"]
 
+[tool.hatch.build.targets.wheel.force-include]
+"couple_simulator_engine/content/events" = "couple_simulator_engine/content/events"
+
 [tool.ruff]
 line-length = 88
 target-version = "py312"
