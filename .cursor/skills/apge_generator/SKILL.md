@@ -55,7 +55,7 @@ The **APGE (Planner–Generator–Evaluator)** workflow tracks work in markdown 
 - **Game engine package:** `couple_simulator_engine/` at repo root (console engine V0+).
 - **Rules evaluator:** `rules_evaluator/` at repo root (shared condition evaluation).
 - **Layer skills:** [`.cursor/skills/fastapi/SKILL.md`](../fastapi/SKILL.md) for backend work; [`.cursor/skills/react/SKILL.md`](../react/SKILL.md) for frontend work.
-- **Quality checks** (from repo root unless the task says otherwise). Target names match the Makefile. Use `make <target>` when `make` is available; otherwise `./task.sh <target>` (Git Bash) or `.\tasks.ps1 <target>` (PowerShell):
+- **Quality checks** (from repo root unless the task says otherwise). Target names match the Makefile. Use `make <target>` when `make` is available; otherwise `./task.sh <target>` (Git Bash) or `.\tasks.ps1 <target>` (PowerShell). Engine and rules-evaluator lint/test run in Docker (Python 3.12); do not invoke host `pip` for those targets.
 
   | Area | Target(s) |
   |------|-----------|

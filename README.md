@@ -69,8 +69,8 @@ Each row is a Makefile **target**. Equivalent without `make`: `./task.sh <target
 | Backend format | `make format` |
 | Backend typecheck | `make typecheck` |
 | Backend tests | `make test` |
-| Rules evaluator lint / tests | `make lint-rules-evaluator` / `make test-rules-evaluator` |
-| Game engine lint / tests | `make lint-couple-simulator-engine` / `make test-couple-simulator-engine` |
+| Rules evaluator lint / tests | `make lint-rules-evaluator` / `make test-rules-evaluator` (Docker, Python 3.12) |
+| Game engine lint / tests | `make lint-couple-simulator-engine` / `make test-couple-simulator-engine` (Docker, Python 3.12) |
 | Frontend lint | `make lint-frontend` |
 | Frontend format | `make format-frontend` |
 | Frontend format check | `make format-check-frontend` |

@@ -76,17 +76,11 @@ switch ($Task) {
     }
 
     "lint-rules-evaluator" {
-        Push-Location rules_evaluator
-        & ruff check .
-        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
-        Pop-Location
+        Run-Compose @("run", "--rm", "--no-deps", "python-tools", "sh", "-c", "pip install -e './rules_evaluator[dev]' -q && ruff check rules_evaluator")
     }
 
     "lint-couple-simulator-engine" {
-        Push-Location couple_simulator_engine
-        & ruff check .
-        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
-        Pop-Location
+        Run-Compose @("run", "--rm", "--no-deps", "python-tools", "sh", "-c", "pip install -e './couple_simulator_engine[dev]' -q && ruff check couple_simulator_engine")
     }
 
     "lint-frontend" {
@@ -126,21 +120,11 @@ switch ($Task) {
     }
 
     "test-rules-evaluator" {
-        Push-Location rules_evaluator
-        & pip install -e ".[dev]" -q
-        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
-        & pytest
-        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
-        Pop-Location
+        Run-Compose @("run", "--rm", "--no-deps", "python-tools", "sh", "-c", "pip install -e './rules_evaluator[dev]' -q && pytest rules_evaluator")
     }
 
     "test-couple-simulator-engine" {
-        Push-Location couple_simulator_engine
-        & pip install -e ".[dev]" -q
-        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
-        & pytest
-        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
-        Pop-Location
+        Run-Compose @("run", "--rm", "--no-deps", "python-tools", "sh", "-c", "pip install -e './couple_simulator_engine[dev]' -q && pytest couple_simulator_engine")
     }
 
     "pre-commit-install" {

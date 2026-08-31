@@ -130,8 +130,10 @@ Run what exists today before submitting changes. Target names are the same as in
 ```bash
 make pre-commit-run          # Ruff + file hooks (backend)
 make lint                    # Ruff check only
-make typecheck               # mypy on app/services and app/shared
+make typecheck               # mypy on app/services and app/shared (Docker)
 make test                    # backend pytest (Docker)
+make lint-couple-simulator-engine  # Ruff in Docker (Python 3.12)
+make test-couple-simulator-engine  # pytest in Docker (Python 3.12)
 make lint-frontend           # ESLint
 make format-check-frontend   # Prettier check
 cd frontend && npm run build # TypeScript + Vite build
@@ -142,7 +144,7 @@ cd frontend && npm run build # TypeScript + Vite build
 ./task.sh lint
 ```
 
-With a local Python 3.12 environment: `pip install -e "./backend[dev]"` then `cd backend && pytest` and `mypy app/services app/shared`.
+With a local Python 3.12 environment you may still run backend `pytest`/`mypy` on the host. Game engine and rules evaluator **make / task.sh targets use Docker** (`python-tools` service, image `python:3.12-slim`) so they do not depend on the host interpreter.
 
 ### Hot reload on Windows (Docker)
 

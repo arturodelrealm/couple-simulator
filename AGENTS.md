@@ -165,17 +165,18 @@ Day-to-day:
 ```bash
 make lint              # check only  (or ./task.sh lint)
 make format            # auto-format
-make typecheck         # mypy on app/services and app/shared
+make typecheck         # mypy on app/services and app/shared (Docker)
 make test              # backend pytest (Docker)
+make lint-rules-evaluator
+make test-rules-evaluator
+make lint-couple-simulator-engine
+make test-couple-simulator-engine
 make pre-commit-run    # run all hooks on the full repo (CI-friendly)
 ```
 
-Backend tests live in `backend/tests/`. Type checking is incremental: mypy runs on `app/services/` and `app/shared/` only. Run with `make test` / `make typecheck`, or locally after `pip install -e "./backend[dev]"`:
+`typecheck`, `test`, `lint-rules-evaluator`, `test-rules-evaluator`, `lint-couple-simulator-engine`, and `test-couple-simulator-engine` run in Docker with **Python 3.12**. Do not use the host `pip`/`python` for those targets (host Python may be 3.11).
 
-```bash
-cd backend && pytest
-cd backend && mypy app/services app/shared
-```
+Backend tests live in `backend/tests/`. Type checking is incremental: mypy runs on `app/services/` and `app/shared/` only. Run with `make test` / `make typecheck`. Optional local Python 3.12: `pip install -e "./backend[dev]"` then `cd backend && pytest`.
 
 When the frontend is added, extend `.pre-commit-config.yaml` with ESLint and Prettier hooks.
 
@@ -316,6 +317,7 @@ Follow the full workflow in [docs/development-workflow.md](docs/development-work
 - [ ] PEP 8 followed for Python; `make pre-commit-run` (or `./task.sh pre-commit-run`) passes
 - [ ] `make test` (or `./task.sh test`) passes when backend behavior changes
 - [ ] `make typecheck` (or `./task.sh typecheck`) passes when backend services/shared change
+- [ ] `make lint-couple-simulator-engine` and `make test-couple-simulator-engine` pass when the game engine changes (Docker, Python 3.12)
 - [ ] Business logic in services, not routers
 - [ ] SQLAlchemy 2.0 + Pydantic v2 patterns used
 - [ ] UUID primary keys on new models

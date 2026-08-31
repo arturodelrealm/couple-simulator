@@ -9,8 +9,7 @@ COMPOSE="docker compose"
 MSG="${2:-describe the change}"
 BACKEND_DIR="backend"
 FRONTEND_DIR="frontend"
-RULES_EVALUATOR_DIR="rules_evaluator"
-COUPLE_SIMULATOR_ENGINE_DIR="couple_simulator_engine"
+PYTHON_TOOLS="$COMPOSE run --rm --no-deps python-tools"
 
 task="${1:-help}"
 
@@ -60,10 +59,10 @@ case "$task" in
     cd "$BACKEND_DIR" && ruff check .
     ;;
   lint-rules-evaluator)
-    cd "$RULES_EVALUATOR_DIR" && ruff check .
+    $PYTHON_TOOLS sh -c "pip install -e './rules_evaluator[dev]' -q && ruff check rules_evaluator"
     ;;
   lint-couple-simulator-engine)
-    cd "$COUPLE_SIMULATOR_ENGINE_DIR" && ruff check .
+    $PYTHON_TOOLS sh -c "pip install -e './couple_simulator_engine[dev]' -q && ruff check couple_simulator_engine"
     ;;
   lint-frontend)
     cd "$FRONTEND_DIR" && npm run lint
@@ -84,10 +83,10 @@ case "$task" in
     $COMPOSE run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && pytest"
     ;;
   test-rules-evaluator)
-    cd "$RULES_EVALUATOR_DIR" && pip install -e ".[dev]" -q && pytest
+    $PYTHON_TOOLS sh -c "pip install -e './rules_evaluator[dev]' -q && pytest rules_evaluator"
     ;;
   test-couple-simulator-engine)
-    cd "$COUPLE_SIMULATOR_ENGINE_DIR" && pip install -e ".[dev]" -q && pytest
+    $PYTHON_TOOLS sh -c "pip install -e './couple_simulator_engine[dev]' -q && pytest couple_simulator_engine"
     ;;
   pre-commit-install)
     pre-commit install
