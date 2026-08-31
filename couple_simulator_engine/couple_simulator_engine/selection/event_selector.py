@@ -22,11 +22,20 @@ def _is_eligible(session: GameSession, event: EventDefinition) -> bool:
     return should_apply(event.eligibility, ctx)
 
 
+def eligible_events(
+    session: GameSession, catalog: ContentCatalog
+) -> tuple[EventDefinition, ...]:
+    """Events that pass eligibility, occurrence, and life-stage filters."""
+    return tuple(
+        event for event in catalog.all_events() if _is_eligible(session, event)
+    )
+
+
 def select_next_event(
     session: GameSession, catalog: ContentCatalog
 ) -> EventDefinition | None:
     """Return one eligible event by weight, or ``None`` if none remain."""
-    eligible = [event for event in catalog.all_events() if _is_eligible(session, event)]
+    eligible = eligible_events(session, catalog)
     if not eligible:
         return None
     pairs = [(event, event.weight) for event in eligible]

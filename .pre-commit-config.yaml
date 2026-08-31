@@ -11,10 +11,10 @@ repos:
     rev: v0.8.6
     hooks:
       - id: ruff
-        files: ^backend/
+        files: ^(backend|couple_simulator_engine)/
         args: [--fix]
       - id: ruff-format
-        files: ^backend/
+        files: ^(backend|couple_simulator_engine)/
 
   - repo: local
     hooks:

@@ -6,6 +6,7 @@ import couple_simulator_engine
 def test_package_importable() -> None:
     assert couple_simulator_engine.__all__ == [
         "GameConfig",
+        "GameEngine",
         "Player",
         "SeededRNG",
         "SimulationState",
