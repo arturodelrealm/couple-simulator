@@ -26,12 +26,16 @@ switch ($Task) {
         Write-Host "  .\tasks.ps1 makemigrations -Msg 'your message'"
         Write-Host "  .\tasks.ps1 check-migrations"
         Write-Host "  .\tasks.ps1 lint"
+        Write-Host "  .\tasks.ps1 lint-rules-evaluator"
+        Write-Host "  .\tasks.ps1 lint-couple-simulator-engine"
         Write-Host "  .\tasks.ps1 lint-frontend"
         Write-Host "  .\tasks.ps1 format"
         Write-Host "  .\tasks.ps1 format-frontend"
         Write-Host "  .\tasks.ps1 format-check-frontend"
         Write-Host "  .\tasks.ps1 typecheck"
         Write-Host "  .\tasks.ps1 test"
+        Write-Host "  .\tasks.ps1 test-rules-evaluator"
+        Write-Host "  .\tasks.ps1 test-couple-simulator-engine"
         Write-Host "  .\tasks.ps1 pre-commit-install"
         Write-Host "  .\tasks.ps1 pre-commit-run"
         Write-Host ""
@@ -71,6 +75,14 @@ switch ($Task) {
         Pop-Location
     }
 
+    "lint-rules-evaluator" {
+        Run-Compose @("run", "--rm", "--no-deps", "python-tools", "sh", "-c", "pip install -e './rules_evaluator[dev]' -q && ruff check rules_evaluator")
+    }
+
+    "lint-couple-simulator-engine" {
+        Run-Compose @("run", "--rm", "--no-deps", "python-tools", "sh", "-c", "pip install -e './couple_simulator_engine[dev]' -q && ruff check couple_simulator_engine")
+    }
+
     "lint-frontend" {
         Push-Location frontend
         & npm run lint
@@ -105,6 +117,14 @@ switch ($Task) {
 
     "test" {
         Run-Compose @("run", "--rm", "--no-deps", "backend", "sh", "-c", "pip install -e '.[dev]' -q && pytest")
+    }
+
+    "test-rules-evaluator" {
+        Run-Compose @("run", "--rm", "--no-deps", "python-tools", "sh", "-c", "pip install -e './rules_evaluator[dev]' -q && pytest rules_evaluator")
+    }
+
+    "test-couple-simulator-engine" {
+        Run-Compose @("run", "--rm", "--no-deps", "python-tools", "sh", "-c", "pip install -e './couple_simulator_engine[dev]' -q && pytest couple_simulator_engine")
     }
 
     "pre-commit-install" {

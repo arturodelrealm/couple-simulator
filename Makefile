@@ -2,12 +2,13 @@ COMPOSE := docker compose
 MSG ?= describe the change
 BACKEND_DIR := backend
 FRONTEND_DIR := frontend
-
-RULES_EVALUATOR_DIR := rules_evaluator
+PYTHON_TOOLS := $(COMPOSE) run --rm --no-deps python-tools
 
 .PHONY: help runserver build-server build-frontend migrate makemigrations check-migrations \
-        lint lint-frontend lint-rules-evaluator format format-frontend format-check-frontend \
-        typecheck test test-rules-evaluator pre-commit-install pre-commit-run
+        lint lint-frontend lint-rules-evaluator lint-couple-simulator-engine \
+        format format-frontend format-check-frontend \
+        typecheck test test-rules-evaluator test-couple-simulator-engine \
+        pre-commit-install pre-commit-run
 
 help:
 	@echo "Available targets:"
@@ -18,14 +19,16 @@ help:
 	@echo "  make makemigrations      Autogenerate migration (MSG='your message')"
 	@echo "  make check-migrations    Verify models match applied migrations"
 	@echo "  make lint                Run Ruff linter on backend"
-	@echo "  make lint-rules-evaluator  Run Ruff linter on rules_evaluator"
+	@echo "  make lint-rules-evaluator  Run Ruff on rules_evaluator (Docker, Python 3.12)"
+	@echo "  make lint-couple-simulator-engine  Run Ruff on couple_simulator_engine (Docker, Python 3.12)"
 	@echo "  make lint-frontend       Run ESLint on frontend"
 	@echo "  make format              Run Ruff formatter on backend"
 	@echo "  make format-frontend     Run Prettier on frontend"
 	@echo "  make format-check-frontend  Check Prettier formatting on frontend"
 	@echo "  make typecheck           Run mypy on backend services and shared"
 	@echo "  make test                Run backend pytest suite"
-	@echo "  make test-rules-evaluator  Run rules_evaluator pytest suite"
+	@echo "  make test-rules-evaluator  Run rules_evaluator pytest (Docker, Python 3.12)"
+	@echo "  make test-couple-simulator-engine  Run couple_simulator_engine pytest (Docker, Python 3.12)"
 	@echo "  make pre-commit-install  Install git pre-commit hooks"
 	@echo "  make pre-commit-run      Run all pre-commit hooks on every file"
 	@echo ""
@@ -59,7 +62,10 @@ lint:
 	cd $(BACKEND_DIR) && ruff check .
 
 lint-rules-evaluator:
-	cd $(RULES_EVALUATOR_DIR) && ruff check .
+	$(PYTHON_TOOLS) sh -c "pip install -e './rules_evaluator[dev]' -q && ruff check rules_evaluator"
+
+lint-couple-simulator-engine:
+	$(PYTHON_TOOLS) sh -c "pip install -e './couple_simulator_engine[dev]' -q && ruff check couple_simulator_engine"
 
 lint-frontend:
 	cd $(FRONTEND_DIR) && npm run lint
@@ -80,7 +86,10 @@ test:
 	$(COMPOSE) run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && pytest"
 
 test-rules-evaluator:
-	cd $(RULES_EVALUATOR_DIR) && pip install -e ".[dev]" -q && pytest
+	$(PYTHON_TOOLS) sh -c "pip install -e './rules_evaluator[dev]' -q && pytest rules_evaluator"
+
+test-couple-simulator-engine:
+	$(PYTHON_TOOLS) sh -c "pip install -e './couple_simulator_engine[dev]' -q && pytest couple_simulator_engine"
 
 pre-commit-install:
 	pre-commit install

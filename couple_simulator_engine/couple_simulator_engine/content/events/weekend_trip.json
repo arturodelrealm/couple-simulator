@@ -1,0 +1,61 @@
+{
+  "id": "weekend_trip",
+  "title": "Weekend plans",
+  "description": "Decide how to spend the weekend together.",
+  "tags": ["leisure", "adventure"],
+  "life_stage": null,
+  "eligibility": null,
+  "questions": [
+    {
+      "id": "weekend_plan",
+      "text": "What should we do this weekend?",
+      "options": [
+        {
+          "id": "stay_home",
+          "text": "Stay home",
+          "actions": []
+        },
+        {
+          "id": "road_trip",
+          "text": "Take a road trip",
+          "actions": [
+            {
+              "type": "modify_stat",
+              "args": { "variable": "adventures", "delta": 15 }
+            },
+            {
+              "type": "modify_stat",
+              "args": { "variable": "finances", "delta": -5 }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "went_out",
+      "when": null,
+      "actions": [
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text": "Whatever we picked, it was our weekend."
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title": "Weekend together",
+            "category": "leisure"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

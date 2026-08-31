@@ -251,3 +251,6 @@ coverage/
 .env.development.local
 .env.test.local
 .env.production.local
+
+# --- APGE harness — local workspace only (never commit) ---
+.apge/

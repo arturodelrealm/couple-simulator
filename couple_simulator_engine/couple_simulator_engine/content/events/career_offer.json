@@ -1,0 +1,70 @@
+{
+  "id": "career_offer",
+  "title": "Career offer",
+  "description": "A promotion with longer hours.",
+  "tags": ["career"],
+  "life_stage": null,
+  "eligibility": null,
+  "questions": [
+    {
+      "id": "career_choice",
+      "text": "Do you accept the promotion with more hours?",
+      "options": [
+        {
+          "id": "accept",
+          "text": "Accept",
+          "actions": []
+        },
+        {
+          "id": "decline",
+          "text": "Decline",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "accepted",
+      "when": {
+        "type": "compare",
+        "path": "answers/career_choice",
+        "op": "eq",
+        "value": "accept"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": { "variable": "career", "delta": 20 }
+        },
+        {
+          "type": "modify_stat",
+          "args": { "variable": "quality_of_life", "delta": -5 }
+        }
+      ]
+    },
+    {
+      "id": "declined",
+      "when": {
+        "type": "compare",
+        "path": "answers/career_choice",
+        "op": "eq",
+        "value": "decline"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": { "variable": "career", "delta": -5 }
+        },
+        {
+          "type": "modify_stat",
+          "args": { "variable": "quality_of_life", "delta": 5 }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

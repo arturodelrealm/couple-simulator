@@ -1,0 +1,25 @@
+"""Reproducibility tests for SeededRNG and GameConfig defaults."""
+
+from couple_simulator_engine.config import GameConfig
+from couple_simulator_engine.rng import SeededRNG
+
+
+def test_game_config_default_max_events() -> None:
+    assert GameConfig().max_events == 5
+
+
+def test_weighted_choice_reproducible() -> None:
+    pairs = [("a", 1.0), ("b", 2.0), ("c", 3.0)]
+    first = SeededRNG(42)
+    second = SeededRNG(42)
+    samples_first = [first.weighted_choice(pairs) for _ in range(30)]
+    samples_second = [second.weighted_choice(pairs) for _ in range(30)]
+    assert samples_first == samples_second
+
+
+def test_normal_reproducible() -> None:
+    first = SeededRNG(7)
+    second = SeededRNG(7)
+    samples_first = [first.normal(10, 2) for _ in range(20)]
+    samples_second = [second.normal(10, 2) for _ in range(20)]
+    assert samples_first == samples_second

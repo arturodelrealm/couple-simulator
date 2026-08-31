@@ -9,6 +9,7 @@ COMPOSE="docker compose"
 MSG="${2:-describe the change}"
 BACKEND_DIR="backend"
 FRONTEND_DIR="frontend"
+PYTHON_TOOLS="$COMPOSE run --rm --no-deps python-tools"
 
 task="${1:-help}"
 
@@ -21,12 +22,16 @@ case "$task" in
     echo "  ./task.sh makemigrations 'your message'"
     echo "  ./task.sh check-migrations"
     echo "  ./task.sh lint"
+    echo "  ./task.sh lint-rules-evaluator"
+    echo "  ./task.sh lint-couple-simulator-engine"
     echo "  ./task.sh lint-frontend"
     echo "  ./task.sh format"
     echo "  ./task.sh format-frontend"
     echo "  ./task.sh format-check-frontend"
     echo "  ./task.sh typecheck"
     echo "  ./task.sh test"
+    echo "  ./task.sh test-rules-evaluator"
+    echo "  ./task.sh test-couple-simulator-engine"
     echo "  ./task.sh pre-commit-install"
     echo "  ./task.sh pre-commit-run"
     echo ""
@@ -53,6 +58,12 @@ case "$task" in
   lint)
     cd "$BACKEND_DIR" && ruff check .
     ;;
+  lint-rules-evaluator)
+    $PYTHON_TOOLS sh -c "pip install -e './rules_evaluator[dev]' -q && ruff check rules_evaluator"
+    ;;
+  lint-couple-simulator-engine)
+    $PYTHON_TOOLS sh -c "pip install -e './couple_simulator_engine[dev]' -q && ruff check couple_simulator_engine"
+    ;;
   lint-frontend)
     cd "$FRONTEND_DIR" && npm run lint
     ;;
@@ -70,6 +81,12 @@ case "$task" in
     ;;
   test)
     $COMPOSE run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && pytest"
+    ;;
+  test-rules-evaluator)
+    $PYTHON_TOOLS sh -c "pip install -e './rules_evaluator[dev]' -q && pytest rules_evaluator"
+    ;;
+  test-couple-simulator-engine)
+    $PYTHON_TOOLS sh -c "pip install -e './couple_simulator_engine[dev]' -q && pytest couple_simulator_engine"
     ;;
   pre-commit-install)
     pre-commit install
