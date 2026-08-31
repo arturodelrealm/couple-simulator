@@ -21,9 +21,7 @@ def test_fixed_kind_unwraps_value() -> None:
 
 
 def test_normal_distribution_is_reproducible() -> None:
-    spec = {
-        "distribution": {"kind": "normal", "params": {"median": 10, "std": 2}}
-    }
+    spec = {"distribution": {"kind": "normal", "params": {"median": 10, "std": 2}}}
     first_rng = SeededRNG(7)
     second_rng = SeededRNG(7)
     first = [resolve_value(spec, first_rng) for _ in range(20)]
@@ -33,9 +31,7 @@ def test_normal_distribution_is_reproducible() -> None:
 
 
 def test_uniform_respects_min_max_inclusive() -> None:
-    spec = {
-        "distribution": {"kind": "uniform", "params": {"min": 1, "max": 3}}
-    }
+    spec = {"distribution": {"kind": "uniform", "params": {"min": 1, "max": 3}}}
     rng = SeededRNG(99)
     samples = [resolve_value(spec, rng) for _ in range(80)]
     assert all(1 <= sample <= 3 for sample in samples)

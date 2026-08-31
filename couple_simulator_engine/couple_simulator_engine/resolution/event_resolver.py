@@ -77,9 +77,7 @@ def _apply_actions(
     for action in actions:
         ctx = build_evaluation_context(session, event, current_answers)
         if should_apply(action.when, ctx):
-            client_actions.extend(
-                apply_action(action, ctx, session, session.rng)
-            )
+            client_actions.extend(apply_action(action, ctx, session, session.rng))
 
 
 def _game_finished(
@@ -105,9 +103,7 @@ def resolve_event(
     for question in event.questions:
         answer = by_question[question.id]
         option = _option_for(question, answer.option_id)
-        _apply_actions(
-            option.actions, session, event, ordered_answers, client_actions
-        )
+        _apply_actions(option.actions, session, event, ordered_answers, client_actions)
 
     ctx = build_evaluation_context(session, event, ordered_answers)
     applied = matching_outcomes(event, ctx)

@@ -116,9 +116,9 @@ def test_weighted_selection_favors_higher_weight() -> None:
     catalog = ContentCatalog([low, high])
     session = _session()
     mock_rng = MagicMock()
-    mock_rng.weighted_choice.side_effect = (
-        lambda pairs: max(pairs, key=lambda item: item[1])[0]
-    )
+    mock_rng.weighted_choice.side_effect = lambda pairs: max(
+        pairs, key=lambda item: item[1]
+    )[0]
     session.rng = mock_rng
     chosen = select_next_event(session, catalog)
     assert chosen is high

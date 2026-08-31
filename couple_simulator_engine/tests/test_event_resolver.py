@@ -166,8 +166,7 @@ def test_default_actions_when_no_outcome_matches() -> None:
     assert session.state.finances == 50
     assert any(
         action.type == "add_conversation"
-        and action.args.get("text")
-        == "We leave the housing question open for now."
+        and action.args.get("text") == "We leave the housing question open for now."
         for action in resolution.client_actions
     )
 
