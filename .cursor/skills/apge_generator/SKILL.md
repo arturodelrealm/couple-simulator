@@ -55,18 +55,19 @@ The **APGE (Planner–Generator–Evaluator)** workflow tracks work in markdown 
 - **Game engine package:** `couple_simulator_engine/` at repo root (console engine V0+).
 - **Rules evaluator:** `rules_evaluator/` at repo root (shared condition evaluation).
 - **Layer skills:** [`.cursor/skills/fastapi/SKILL.md`](../fastapi/SKILL.md) for backend work; [`.cursor/skills/react/SKILL.md`](../react/SKILL.md) for frontend work.
-- **Quality checks** (from repo root unless the task says otherwise):
+- **Quality checks** (from repo root unless the task says otherwise). Target names match the Makefile. Use `make <target>` when `make` is available; otherwise `./task.sh <target>` (Git Bash) or `.\tasks.ps1 <target>` (PowerShell):
 
-  | Area | Commands |
-  |------|----------|
-  | Backend lint/format | `make lint`, `make format` |
-  | Backend types | `make typecheck` |
-  | Backend tests | `make test` |
-  | Rules evaluator | `make lint-rules-evaluator`, `make test-rules-evaluator` |
-  | Frontend | `make lint-frontend`, `make format-check-frontend`, `cd frontend && npm run build` |
-  | Full pre-commit | `make pre-commit-run` |
+  | Area | Target(s) |
+  |------|-----------|
+  | Backend lint/format | `lint`, `format` |
+  | Backend types | `typecheck` |
+  | Backend tests | `test` |
+  | Rules evaluator | `lint-rules-evaluator`, `test-rules-evaluator` |
+  | Game engine | `lint-couple-simulator-engine`, `test-couple-simulator-engine` |
+  | Frontend | `lint-frontend`, `format-check-frontend`; then `cd frontend && npm run build` |
+  | Full pre-commit | `pre-commit-run` |
 
-- **Migrations:** change SQLAlchemy models first; tell the operator to run `make makemigrations MSG='describe the change'`. **Do not** hand-write files under `backend/alembic/versions/` or run DB commands yourself.
+- **Migrations:** change SQLAlchemy models first; tell the operator to run `make makemigrations MSG='describe the change'` or `./task.sh makemigrations 'describe the change'`. **Do not** hand-write files under `backend/alembic/versions/` or run DB commands yourself.
 - **i18n:** gettext (`_()`) on backend errors; `react-i18next` on frontend.
 - **All code, identifiers, and comments in English.**
 

@@ -26,12 +26,16 @@ switch ($Task) {
         Write-Host "  .\tasks.ps1 makemigrations -Msg 'your message'"
         Write-Host "  .\tasks.ps1 check-migrations"
         Write-Host "  .\tasks.ps1 lint"
+        Write-Host "  .\tasks.ps1 lint-rules-evaluator"
+        Write-Host "  .\tasks.ps1 lint-couple-simulator-engine"
         Write-Host "  .\tasks.ps1 lint-frontend"
         Write-Host "  .\tasks.ps1 format"
         Write-Host "  .\tasks.ps1 format-frontend"
         Write-Host "  .\tasks.ps1 format-check-frontend"
         Write-Host "  .\tasks.ps1 typecheck"
         Write-Host "  .\tasks.ps1 test"
+        Write-Host "  .\tasks.ps1 test-rules-evaluator"
+        Write-Host "  .\tasks.ps1 test-couple-simulator-engine"
         Write-Host "  .\tasks.ps1 pre-commit-install"
         Write-Host "  .\tasks.ps1 pre-commit-run"
         Write-Host ""
@@ -71,6 +75,20 @@ switch ($Task) {
         Pop-Location
     }
 
+    "lint-rules-evaluator" {
+        Push-Location rules_evaluator
+        & ruff check .
+        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
+        Pop-Location
+    }
+
+    "lint-couple-simulator-engine" {
+        Push-Location couple_simulator_engine
+        & ruff check .
+        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
+        Pop-Location
+    }
+
     "lint-frontend" {
         Push-Location frontend
         & npm run lint
@@ -105,6 +123,24 @@ switch ($Task) {
 
     "test" {
         Run-Compose @("run", "--rm", "--no-deps", "backend", "sh", "-c", "pip install -e '.[dev]' -q && pytest")
+    }
+
+    "test-rules-evaluator" {
+        Push-Location rules_evaluator
+        & pip install -e ".[dev]" -q
+        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
+        & pytest
+        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
+        Pop-Location
+    }
+
+    "test-couple-simulator-engine" {
+        Push-Location couple_simulator_engine
+        & pip install -e ".[dev]" -q
+        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
+        & pytest
+        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
+        Pop-Location
     }
 
     "pre-commit-install" {

@@ -125,7 +125,7 @@ Flag destructive migrations (`drop_table`, `drop_column`, data loss) in the PR d
 
 ## Quality checks
 
-Run what exists today before submitting changes:
+Run what exists today before submitting changes. Target names are the same as in the Makefile; if `make` is not installed, use `./task.sh <target>` (Git Bash) or `.\tasks.ps1 <target>` (PowerShell):
 
 ```bash
 make pre-commit-run          # Ruff + file hooks (backend)
@@ -135,6 +135,11 @@ make test                    # backend pytest (Docker)
 make lint-frontend           # ESLint
 make format-check-frontend   # Prettier check
 cd frontend && npm run build # TypeScript + Vite build
+```
+
+```bash
+./task.sh pre-commit-run
+./task.sh lint
 ```
 
 With a local Python 3.12 environment: `pip install -e "./backend[dev]"` then `cd backend && pytest` and `mypy app/services app/shared`.
@@ -199,7 +204,7 @@ Agents **cannot** complete these without the user:
 - Fly.io login, app creation, PostgreSQL provisioning, production secrets
 - GitHub repository secrets and branch protection
 - First production deployment and migration verification
-- Running `make migrate` / `make makemigrations` on the user's machine (provide the command; user runs it)
+- Running `make migrate` / `make makemigrations` (or `./task.sh migrate` / `./task.sh makemigrations`) on the user's machine (provide the command; user runs it)
 
 ---
 
@@ -213,10 +218,10 @@ Before finishing a task, verify:
 - [ ] User-facing strings use gettext (backend) or i18n keys (frontend)
 - [ ] Model changes have a migration path documented for the user
 - [ ] No secrets or unrelated edits in the diff
-- [ ] `make pre-commit-run` passes (backend changes)
-- [ ] `make test` passes (backend changes)
-- [ ] `make typecheck` passes (backend services/shared changes)
-- [ ] `make lint-frontend` and `make format-check-frontend` pass (frontend changes)
+- [ ] `make pre-commit-run` (or `./task.sh pre-commit-run`) passes (backend changes)
+- [ ] `make test` (or `./task.sh test`) passes (backend changes)
+- [ ] `make typecheck` (or `./task.sh typecheck`) passes (backend services/shared changes)
+- [ ] `make lint-frontend` and `make format-check-frontend` pass (frontend changes; or `./task.sh` with the same names)
 - [ ] `npm run build` passes (frontend changes)
 - [ ] Documentation updated if behavior or setup changed
 

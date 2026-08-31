@@ -62,12 +62,13 @@ Manual runs in Cursor do not require the external **autonomous-pge** CLI. For au
 
 ## Generator verification (this repo)
 
-From the repository root:
+From the repository root, run Makefile **target names**. Use `make <target>` when `make` is installed; otherwise `./task.sh <target>` (Git Bash) or `.\tasks.ps1 <target>` (PowerShell):
 
-| Area | Commands |
-|------|----------|
-| Backend | `make lint`, `make format`, `make typecheck`, `make test` |
-| Rules evaluator | `make lint-rules-evaluator`, `make test-rules-evaluator` |
-| Frontend | `make lint-frontend`, `make format-check-frontend`, `cd frontend && npm run build` |
+| Area | Target(s) |
+|------|-----------|
+| Backend | `lint`, `format`, `typecheck`, `test` |
+| Rules evaluator | `lint-rules-evaluator`, `test-rules-evaluator` |
+| Game engine | `lint-couple-simulator-engine`, `test-couple-simulator-engine` |
+| Frontend | `lint-frontend`, `format-check-frontend`; then `cd frontend && npm run build` |
 
-Agents must **not** run database migrations or SQL — tell the operator to run `make makemigrations` / `make migrate` when models change.
+Agents must **not** run database migrations or SQL — tell the operator to run `make makemigrations` / `make migrate` (or `./task.sh` with those names) when models change.

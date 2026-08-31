@@ -9,6 +9,8 @@ COMPOSE="docker compose"
 MSG="${2:-describe the change}"
 BACKEND_DIR="backend"
 FRONTEND_DIR="frontend"
+RULES_EVALUATOR_DIR="rules_evaluator"
+COUPLE_SIMULATOR_ENGINE_DIR="couple_simulator_engine"
 
 task="${1:-help}"
 
@@ -21,12 +23,16 @@ case "$task" in
     echo "  ./task.sh makemigrations 'your message'"
     echo "  ./task.sh check-migrations"
     echo "  ./task.sh lint"
+    echo "  ./task.sh lint-rules-evaluator"
+    echo "  ./task.sh lint-couple-simulator-engine"
     echo "  ./task.sh lint-frontend"
     echo "  ./task.sh format"
     echo "  ./task.sh format-frontend"
     echo "  ./task.sh format-check-frontend"
     echo "  ./task.sh typecheck"
     echo "  ./task.sh test"
+    echo "  ./task.sh test-rules-evaluator"
+    echo "  ./task.sh test-couple-simulator-engine"
     echo "  ./task.sh pre-commit-install"
     echo "  ./task.sh pre-commit-run"
     echo ""
@@ -53,6 +59,12 @@ case "$task" in
   lint)
     cd "$BACKEND_DIR" && ruff check .
     ;;
+  lint-rules-evaluator)
+    cd "$RULES_EVALUATOR_DIR" && ruff check .
+    ;;
+  lint-couple-simulator-engine)
+    cd "$COUPLE_SIMULATOR_ENGINE_DIR" && ruff check .
+    ;;
   lint-frontend)
     cd "$FRONTEND_DIR" && npm run lint
     ;;
@@ -70,6 +82,12 @@ case "$task" in
     ;;
   test)
     $COMPOSE run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && pytest"
+    ;;
+  test-rules-evaluator)
+    cd "$RULES_EVALUATOR_DIR" && pip install -e ".[dev]" -q && pytest
+    ;;
+  test-couple-simulator-engine)
+    cd "$COUPLE_SIMULATOR_ENGINE_DIR" && pip install -e ".[dev]" -q && pytest
     ;;
   pre-commit-install)
     pre-commit install
