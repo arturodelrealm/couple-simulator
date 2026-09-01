@@ -2,7 +2,7 @@
 
 Technical reference for the Couple Life Simulator HTTP API. All backend endpoints and frontend API clients must follow these conventions.
 
-**Base path:** `/api`  
+**Base path:** `/api`
 **Content type:** `application/json` for all request and response bodies.
 
 ---
@@ -180,6 +180,10 @@ Query parameters:
 POST   /api/games
 GET    /api/games/{game_id}
 PATCH  /api/games/{game_id}
+POST   /api/games/{game_id}/simulation/runs
+GET    /api/games/{game_id}/simulation/runs
+GET    /api/games/{game_id}/simulation/runs/{run_id}
+GET    /api/games/{game_id}/simulation/runs/{run_id}/events/current
 ```
 
 Extend with resource-oriented endpoints as features are added.
