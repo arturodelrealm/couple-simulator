@@ -8,6 +8,18 @@ def test_game_config_default_max_events() -> None:
     assert GameConfig().max_events == 5
 
 
+def test_omitted_seed_is_stored_as_int() -> None:
+    rng = SeededRNG(None)
+    assert isinstance(rng.seed, int)
+    assert rng.seed >= 0
+    reconstructed = SeededRNG(rng.seed)
+    assert reconstructed.seed == rng.seed
+
+
+def test_explicit_seed_is_unchanged() -> None:
+    assert SeededRNG(42).seed == 42
+
+
 def test_weighted_choice_reproducible() -> None:
     pairs = [("a", 1.0), ("b", 2.0), ("c", 3.0)]
     first = SeededRNG(42)

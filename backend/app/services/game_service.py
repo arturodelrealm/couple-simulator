@@ -20,6 +20,12 @@ from app.shared.exceptions import AppError
 from app.shared.game_invite import build_invite_path, build_invite_url
 from app.shared.i18n import translate as _
 from app.shared.match_name_validation import validate_match_name
+from app.shared.player_game_stats import (
+    GAME_AGE_DEFAULT,
+    GAME_RELATION_HAPPINESS_DEFAULT,
+    validate_game_age,
+    validate_game_relation_happiness,
+)
 
 
 def _partner_a_from_game(game: Game) -> PartnerARead:
@@ -28,7 +34,13 @@ def _partner_a_from_game(game: Game) -> PartnerARead:
         None,
     )
     if partner_a is None:
-        return PartnerARead(name=None, sex=None, avatar_config=None)
+        return PartnerARead(
+            name=None,
+            sex=None,
+            avatar_config=None,
+            game_age=GAME_AGE_DEFAULT,
+            game_relation_happiness=GAME_RELATION_HAPPINESS_DEFAULT,
+        )
 
     avatar_config: dict[str, Any] | None = None
     if partner_a.avatar_config is not None:
@@ -38,6 +50,8 @@ def _partner_a_from_game(game: Game) -> PartnerARead:
         name=partner_a.name,
         sex=partner_a.sex,
         avatar_config=avatar_config,
+        game_age=partner_a.game_age,
+        game_relation_happiness=partner_a.game_relation_happiness,
     )
 
 
@@ -130,10 +144,26 @@ def create_game(db: Session, payload: GameCreate) -> GameRead:
         game_mode=payload.game_mode.value,
         status=GameStatus.CREATED.value,
     )
+    game_age = GAME_AGE_DEFAULT
+    if payload.partner_a_game_age is not None:
+        game_age = validate_game_age(
+            payload.partner_a_game_age,
+            field="body.partner_a_game_age",
+        )
+
+    game_relation_happiness = GAME_RELATION_HAPPINESS_DEFAULT
+    if payload.partner_a_game_relation_happiness is not None:
+        game_relation_happiness = validate_game_relation_happiness(
+            payload.partner_a_game_relation_happiness,
+            field="body.partner_a_game_relation_happiness",
+        )
+
     partner_a = Player(
         role=PlayerRole.PARTNER_A.value,
         name=payload.partner_a_name,
         sex=payload.partner_a_sex.value if payload.partner_a_sex is not None else None,
+        game_age=game_age,
+        game_relation_happiness=game_relation_happiness,
     )
 
     if payload.avatar_config is not None:
@@ -152,6 +182,8 @@ def update_game(db: Session, game_id: UUID, payload: GameUpdate) -> GameRead:
         payload.partner_a_name is None
         and payload.partner_a_sex is None
         and payload.avatar_config is None
+        and payload.partner_a_game_age is None
+        and payload.partner_a_game_relation_happiness is None
     ):
         raise AppError(
             "BAD_REQUEST",
@@ -181,6 +213,18 @@ def update_game(db: Session, game_id: UUID, payload: GameUpdate) -> GameRead:
             partner_a.avatar_config = AvatarConfig(config=validated)
         else:
             partner_a.avatar_config.config = validated
+
+    if payload.partner_a_game_age is not None:
+        partner_a.game_age = validate_game_age(
+            payload.partner_a_game_age,
+            field="body.partner_a_game_age",
+        )
+
+    if payload.partner_a_game_relation_happiness is not None:
+        partner_a.game_relation_happiness = validate_game_relation_happiness(
+            payload.partner_a_game_relation_happiness,
+            field="body.partner_a_game_relation_happiness",
+        )
 
     _apply_status(game, partner_a)
     db.commit()

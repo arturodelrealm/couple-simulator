@@ -23,6 +23,13 @@ from couple_simulator_engine.session import (
     OptionPresentation,
     QuestionPresentation,
 )
+from couple_simulator_engine.snapshot import (
+    GameSnapshot,
+    LoadedGame,
+    export_loaded_game,
+    hydrate_loaded_game,
+    validate_game_snapshot,
+)
 from couple_simulator_engine.state import SimulationState
 
 END_REASON_MAX_EVENTS = "max_events"
@@ -36,14 +43,25 @@ class GameEngine:
         self.catalog = catalog
         self.config = config if config is not None else GameConfig()
 
-    def new_session(self, player: Player, *, seed: int | None = None) -> GameSession:
-        state = SimulationState()
+    def new_session(
+        self,
+        player: Player,
+        *,
+        seed: int | None = None,
+        max_events: int | None = None,
+    ) -> GameSession:
+        config = GameConfig(
+            max_events=(
+                max_events if max_events is not None else self.config.max_events
+            )
+        )
+        state = SimulationState(partner_a=player)
         state.begin_simulation()
         return GameSession(
             session_id=str(uuid4()),
             player=player,
             state=state,
-            config=self.config,
+            config=config,
             rng=SeededRNG(seed),
             events_played=0,
             events_played_ids=[],
@@ -51,6 +69,13 @@ class GameEngine:
             status=SessionStatus.ACTIVE,
             current_event_id=None,
         )
+
+    def load_game(self, snapshot: GameSnapshot) -> LoadedGame:
+        validate_game_snapshot(snapshot)
+        return hydrate_loaded_game(snapshot)
+
+    def export_snapshot(self, loaded: LoadedGame) -> GameSnapshot:
+        return export_loaded_game(loaded)
 
     def select_next_event(self, session: GameSession) -> EventDefinition | None:
         return event_selector.select_next_event(session, self.catalog)

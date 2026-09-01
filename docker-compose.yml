@@ -17,7 +17,13 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    # Build from the repo root so the image can install couple_simulator_engine
+    # and rules_evaluator. Mount the engine tree (not only backend/) so an
+    # editable install still sees content/events JSON.
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    working_dir: /workspace/backend
     command: ["sh", "scripts/start.sh"]
     restart: unless-stopped
     depends_on:
@@ -32,7 +38,9 @@ services:
     ports:
       - "8001:8000"
     volumes:
-      - ./backend:/app
+      - ./backend:/workspace/backend
+      - ./couple_simulator_engine:/workspace/couple_simulator_engine
+      - ./rules_evaluator:/workspace/rules_evaluator
 
   frontend:
     build: ./frontend

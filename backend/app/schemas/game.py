@@ -11,6 +11,8 @@ class PartnerARead(BaseModel):
     name: str | None = None
     sex: str | None = None
     avatar_config: dict[str, Any] | None = None
+    game_age: int
+    game_relation_happiness: int
 
 
 class GameRead(BaseModel):
@@ -29,6 +31,8 @@ class GameCreate(BaseModel):
     partner_a_name: str | None = Field(default=None, min_length=1, max_length=255)
     partner_a_sex: PlayerSex | None = None
     avatar_config: dict[str, Any] | None = None
+    partner_a_game_age: int | None = None
+    partner_a_game_relation_happiness: int | None = None
 
     @field_validator("match_name")
     @classmethod
@@ -52,6 +56,8 @@ class GameUpdate(BaseModel):
     partner_a_name: str | None = Field(default=None, min_length=1, max_length=255)
     partner_a_sex: PlayerSex | None = None
     avatar_config: dict[str, Any] | None = None
+    partner_a_game_age: int | None = None
+    partner_a_game_relation_happiness: int | None = None
 
     @field_validator("partner_a_name")
     @classmethod

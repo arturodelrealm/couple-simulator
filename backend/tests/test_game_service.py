@@ -23,6 +23,8 @@ def test_create_game_stores_match_name_and_optional_partner_a(db_session: Sessio
     assert game.status == GameStatus.CREATED.value
     assert game.partner_a.avatar_config is None
     assert game.partner_a.sex is None
+    assert game.partner_a.game_age == 22
+    assert game.partner_a.game_relation_happiness == 100
 
 
 def test_create_game_with_complete_setup_is_player_a_ready(
@@ -202,3 +204,112 @@ def test_get_game_invite_returns_path_and_url(db_session: Session):
     assert invite.match_name == "share-me"
     assert invite.invite_path == "/games/join/share-me"
     assert invite.invite_url == "https://app.example.com/games/join/share-me"
+
+
+def test_create_game_with_custom_game_stats(db_session: Session):
+    game = game_service.create_game(
+        db_session,
+        GameCreate(
+            match_name="custom-stats",
+            partner_a_game_age=30,
+            partner_a_game_relation_happiness=80,
+        ),
+    )
+
+    assert game.partner_a.game_age == 30
+    assert game.partner_a.game_relation_happiness == 80
+    assert game.status == GameStatus.CREATED.value
+
+
+def test_create_game_rejects_game_age_below_18(db_session: Session):
+    with pytest.raises(AppError) as exc_info:
+        game_service.create_game(
+            db_session,
+            GameCreate(match_name="too-young", partner_a_game_age=17),
+        )
+
+    assert exc_info.value.code == "VALIDATION_ERROR"
+    assert exc_info.value.status_code == 400
+    assert exc_info.value.field == "body.partner_a_game_age"
+
+
+def test_create_game_rejects_happiness_out_of_range(db_session: Session):
+    with pytest.raises(AppError) as exc_info:
+        game_service.create_game(
+            db_session,
+            GameCreate(
+                match_name="too-happy",
+                partner_a_game_relation_happiness=101,
+            ),
+        )
+
+    assert exc_info.value.code == "VALIDATION_ERROR"
+    assert exc_info.value.field == "body.partner_a_game_relation_happiness"
+
+
+def test_update_game_stats_only_does_not_require_name_sex_or_avatar(
+    db_session: Session,
+):
+    created = game_service.create_game(
+        db_session,
+        GameCreate(match_name="stats-only-patch"),
+    )
+
+    updated = game_service.update_game(
+        db_session,
+        created.id,
+        GameUpdate(
+            partner_a_game_age=25,
+            partner_a_game_relation_happiness=40,
+        ),
+    )
+
+    assert updated.partner_a.game_age == 25
+    assert updated.partner_a.game_relation_happiness == 40
+    assert updated.status == GameStatus.CREATED.value
+    assert updated.partner_a.name is None
+    assert updated.partner_a.sex is None
+    assert updated.partner_a.avatar_config is None
+
+
+def test_update_game_stats_does_not_make_player_a_ready_without_setup(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    created = game_service.create_game(
+        db_session,
+        GameCreate(
+            match_name="stats-not-ready",
+            partner_a_name="Alex",
+            partner_a_sex=PlayerSex.MALE,
+            avatar_config=valid_avatar_config,
+        ),
+    )
+    assert created.status == GameStatus.PLAYER_A_READY.value
+
+    updated = game_service.update_game(
+        db_session,
+        created.id,
+        GameUpdate(partner_a_game_age=40),
+    )
+
+    assert updated.status == GameStatus.PLAYER_A_READY.value
+    assert updated.partner_a.game_age == 40
+    assert updated.partner_a.name == "Alex"
+
+
+def test_update_game_rejects_invalid_game_age(db_session: Session):
+    created = game_service.create_game(
+        db_session,
+        GameCreate(match_name="invalid-age-patch"),
+    )
+
+    with pytest.raises(AppError) as exc_info:
+        game_service.update_game(
+            db_session,
+            created.id,
+            GameUpdate(partner_a_game_age=10),
+        )
+
+    assert exc_info.value.code == "VALIDATION_ERROR"
+    assert exc_info.value.field == "body.partner_a_game_age"

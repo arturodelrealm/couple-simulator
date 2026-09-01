@@ -13,8 +13,10 @@ class SeededRNG:
     """Wraps ``random.Random`` with an explicit seed and typed sampling helpers."""
 
     def __init__(self, seed: int | None = None) -> None:
+        if seed is None:
+            seed = random.SystemRandom().randrange(2**31)
         self.seed = seed
-        self._random = random.Random(seed)
+        self._random = random.Random(self.seed)
 
     def random(self) -> float:
         return self._random.random()

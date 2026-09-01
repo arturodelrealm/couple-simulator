@@ -26,6 +26,8 @@ def test_create_and_get_game(client: TestClient):
     assert created["game_mode"] == "couple"
     assert created["status"] == "CREATED"
     assert created["partner_a"]["name"] == "Alex"
+    assert created["partner_a"]["game_age"] == 22
+    assert created["partner_a"]["game_relation_happiness"] == 100
 
     get_response = client.get(f"/api/games/{created['id']}")
 
@@ -219,3 +221,60 @@ def test_get_game_invite_not_found(client: TestClient):
 
     assert response.status_code == 404
     assert response.json()["errors"][0]["code"] == "GAME_NOT_FOUND"
+
+
+def test_patch_game_updates_game_stats_without_setup_fields(client: TestClient):
+    create_response = client.post(
+        "/api/games",
+        json={"match_name": "patch-stats-only"},
+    )
+    game_id = create_response.json()["data"]["id"]
+    assert create_response.json()["data"]["partner_a"]["game_age"] == 22
+
+    patch_response = client.patch(
+        f"/api/games/{game_id}",
+        json={
+            "partner_a_game_age": 28,
+            "partner_a_game_relation_happiness": 55,
+        },
+    )
+
+    assert patch_response.status_code == 200
+    body = patch_response.json()["data"]
+    assert body["status"] == "CREATED"
+    assert body["partner_a"]["game_age"] == 28
+    assert body["partner_a"]["game_relation_happiness"] == 55
+
+
+def test_patch_game_rejects_game_age_below_18(client: TestClient):
+    create_response = client.post(
+        "/api/games",
+        json={"match_name": "patch-age-invalid"},
+    )
+    game_id = create_response.json()["data"]["id"]
+
+    patch_response = client.patch(
+        f"/api/games/{game_id}",
+        json={"partner_a_game_age": 17},
+    )
+
+    assert patch_response.status_code == 400
+    error = patch_response.json()["errors"][0]
+    assert error["code"] == "VALIDATION_ERROR"
+    assert error["field"] == "body.partner_a_game_age"
+
+
+def test_create_game_with_game_stats(client: TestClient):
+    response = client.post(
+        "/api/games",
+        json={
+            "match_name": "create-with-stats",
+            "partner_a_game_age": 35,
+            "partner_a_game_relation_happiness": 70,
+        },
+    )
+
+    assert response.status_code == 201
+    partner_a = response.json()["data"]["partner_a"]
+    assert partner_a["game_age"] == 35
+    assert partner_a["game_relation_happiness"] == 70

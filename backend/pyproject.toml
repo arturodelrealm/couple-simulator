@@ -10,6 +10,9 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "alembic>=1.14.0",
     "pydantic-settings>=2.6.0",
+    # Sibling package (CI working-directory is backend/). Hatch {root:uri} is
+    # not expanded by setuptools; file: matches that relative layout.
+    "couple-simulator-engine @ file:../couple_simulator_engine",
 ]
 
 [project.optional-dependencies]
@@ -35,6 +38,9 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+"alembic/versions/*" = ["E501", "I001"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
