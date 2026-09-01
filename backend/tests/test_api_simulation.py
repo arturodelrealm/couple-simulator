@@ -1,0 +1,174 @@
+from uuid import uuid4
+
+from fastapi.testclient import TestClient
+
+
+def _create_ready_game(
+    client: TestClient, match_name: str, avatar: dict[str, str]
+) -> str:
+    response = client.post(
+        "/api/games",
+        json={
+            "match_name": match_name,
+            "partner_a_name": "Alex",
+            "partner_a_sex": "female",
+            "avatar_config": avatar,
+        },
+    )
+    assert response.status_code == 201
+    return response.json()["data"]["id"]
+
+
+def test_post_then_get_run_includes_timeline_and_answers(
+    client: TestClient,
+    valid_avatar_config: dict[str, str],
+):
+    game_id = _create_ready_game(client, "api-sim-get", valid_avatar_config)
+
+    post_response = client.post(
+        f"/api/games/{game_id}/simulation/runs",
+        json={"player_role": "partner_a", "seed": 21},
+    )
+    assert post_response.status_code == 201
+    created = post_response.json()["data"]
+    run_id = created["run_id"]
+    assert created["status"] == "ACTIVE"
+    assert created["events_played"] == 0
+    assert "state" in created
+    assert "age" in created["state"]
+    assert "current_event" not in created
+    assert "event" not in created
+
+    get_response = client.get(f"/api/games/{game_id}/simulation/runs/{run_id}")
+    assert get_response.status_code == 200
+    body = get_response.json()["data"]
+    assert body["run_id"] == run_id
+    assert body["timeline"] == []
+    assert body["answers"] == []
+    assert body["rng_seed"] == 21
+
+    lobby = client.get(f"/api/games/{game_id}")
+    assert lobby.status_code == 200
+    assert lobby.json()["data"]["status"] == "PLAYER_A_READY"
+    assert "simulation" not in lobby.json()["data"]
+    assert lobby.json()["data"]["partner_a"]["name"] == "Alex"
+
+
+def test_post_without_seed_persists_numeric_seed(
+    client: TestClient,
+    valid_avatar_config: dict[str, str],
+):
+    game_id = _create_ready_game(client, "api-sim-random-seed", valid_avatar_config)
+
+    post_response = client.post(
+        f"/api/games/{game_id}/simulation/runs",
+        json={"player_role": "partner_a"},
+    )
+    assert post_response.status_code == 201
+    run_id = post_response.json()["data"]["run_id"]
+
+    get_response = client.get(f"/api/games/{game_id}/simulation/runs/{run_id}")
+    seed = get_response.json()["data"]["rng_seed"]
+    assert isinstance(seed, int)
+
+
+def test_post_created_game_returns_409(
+    client: TestClient,
+):
+    create_response = client.post(
+        "/api/games",
+        json={"match_name": "api-sim-not-ready", "partner_a_name": "Alex"},
+    )
+    game_id = create_response.json()["data"]["id"]
+
+    response = client.post(
+        f"/api/games/{game_id}/simulation/runs",
+        json={"player_role": "partner_a"},
+    )
+
+    assert response.status_code == 409
+    assert response.json()["errors"][0]["code"] == "GAME_NOT_READY"
+
+
+def test_list_runs_returns_both_and_status_filter(
+    client: TestClient,
+    valid_avatar_config: dict[str, str],
+):
+    game_id = _create_ready_game(client, "api-sim-list", valid_avatar_config)
+
+    first = client.post(
+        f"/api/games/{game_id}/simulation/runs",
+        json={"player_role": "partner_a", "seed": 1},
+    )
+    second = client.post(
+        f"/api/games/{game_id}/simulation/runs",
+        json={"player_role": "partner_a", "seed": 2},
+    )
+    assert first.status_code == 201
+    assert second.status_code == 201
+
+    listed = client.get(f"/api/games/{game_id}/simulation/runs")
+    assert listed.status_code == 200
+    payload = listed.json()["data"]
+    assert "items" in payload
+    assert "pagination" in payload
+    assert payload["pagination"]["total"] == 2
+    assert {item["run_id"] for item in payload["items"]} == {
+        first.json()["data"]["run_id"],
+        second.json()["data"]["run_id"],
+    }
+    for item in payload["items"]:
+        assert "run_number" in item
+        assert "created_at" in item
+        assert item["player_role"] == "partner_a"
+
+    active = client.get(
+        f"/api/games/{game_id}/simulation/runs",
+        params={"status": "ACTIVE"},
+    )
+    assert active.status_code == 200
+    assert active.json()["data"]["pagination"]["total"] == 2
+
+
+def test_get_current_event_after_start(
+    client: TestClient,
+    valid_avatar_config: dict[str, str],
+):
+    game_id = _create_ready_game(client, "api-sim-current", valid_avatar_config)
+    started = client.post(
+        f"/api/games/{game_id}/simulation/runs",
+        json={"player_role": "partner_a", "seed": 15},
+    )
+    run_id = started.json()["data"]["run_id"]
+
+    current = client.get(
+        f"/api/games/{game_id}/simulation/runs/{run_id}/events/current",
+    )
+    assert current.status_code == 200
+    event = current.json()["data"]["event"]
+    assert event["event_id"]
+    assert event["questions"]
+    assert "options" in event["questions"][0]
+
+    run = client.get(f"/api/games/{game_id}/simulation/runs/{run_id}")
+    assert run.json()["data"]["current_event_id"] == event["event_id"]
+    events_played = run.json()["data"]["events_played"]
+
+    again = client.get(
+        f"/api/games/{game_id}/simulation/runs/{run_id}/events/current",
+    )
+    assert again.json()["data"]["event"]["event_id"] == event["event_id"]
+    run_again = client.get(f"/api/games/{game_id}/simulation/runs/{run_id}")
+    assert run_again.json()["data"]["events_played"] == events_played
+
+
+def test_get_current_event_unknown_run_is_404(
+    client: TestClient,
+    valid_avatar_config: dict[str, str],
+):
+    game_id = _create_ready_game(client, "api-sim-missing-run", valid_avatar_config)
+    response = client.get(
+        f"/api/games/{game_id}/simulation/runs/{uuid4()}/events/current",
+    )
+    assert response.status_code == 404
+    assert response.json()["errors"][0]["code"] == "RUN_NOT_FOUND"

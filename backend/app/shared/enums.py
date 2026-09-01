@@ -21,3 +21,8 @@ class PlayerSex(str, Enum):
     MALE = "male"
     FEMALE = "female"
     PREFER_NOT_TO_SAY = "prefer_not_to_say"
+
+
+class SimulationRunStatus(str, Enum):
+    ACTIVE = "ACTIVE"
+    FINISHED = "FINISHED"

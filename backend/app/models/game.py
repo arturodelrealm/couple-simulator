@@ -10,6 +10,7 @@ from app.shared.enums import GameMode, GameStatus
 
 if TYPE_CHECKING:
     from app.models.player import Player
+    from app.models.simulation_run import SimulationRun
 
 
 class Game(Base):
@@ -38,6 +39,10 @@ class Game(Base):
     )
 
     players: Mapped[list["Player"]] = relationship(
+        back_populates="game",
+        cascade="all, delete-orphan",
+    )
+    simulation_runs: Mapped[list["SimulationRun"]] = relationship(
         back_populates="game",
         cascade="all, delete-orphan",
     )
