@@ -22,11 +22,10 @@ Local development still uses Docker Compose (`make runserver`); production paths
 
 ### Repository layout
 
-`fly.toml` lives in **`backend/`**, not the repo root. Deploy from that directory:
+`fly.toml` lives in **`backend/`**, but the Docker image needs the **repo root** as build context (the Dockerfile copies `rules_evaluator`, `couple_simulator_engine`, and `backend/`). Deploy from the repository root:
 
 ```bash
-cd backend
-fly deploy
+fly deploy . --config backend/fly.toml --dockerfile backend/Dockerfile
 ```
 
 ### One-time setup
@@ -73,8 +72,7 @@ Notes:
 #### 4. First manual deploy
 
 ```bash
-cd backend
-fly deploy
+fly deploy . --config backend/fly.toml --dockerfile backend/Dockerfile
 curl https://couple-simulator.fly.dev/health
 ```
 

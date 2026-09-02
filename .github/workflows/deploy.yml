@@ -24,7 +24,8 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
 
       - name: Deploy backend
-        run: flyctl deploy --remote-only
-        working-directory: backend
+        # Dockerfile copies rules_evaluator, couple_simulator_engine, and backend
+        # from the repo root — build context must be "." not backend/.
+        run: flyctl deploy . --remote-only --config backend/fly.toml --dockerfile backend/Dockerfile
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
