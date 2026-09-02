@@ -197,9 +197,7 @@ def resolve_event(
 ) -> EventResolution:
     """Run option actions, matching outcomes, then defaults; update session."""
     live_by_question = _validate_answers(event, answers)
-    submitted_ordered = [
-        live_by_question[question.id] for question in event.questions
-    ]
+    submitted_ordered = [live_by_question[question.id] for question in event.questions]
     _open_event_if_needed(session, event)
 
     partner_a_by_question = (

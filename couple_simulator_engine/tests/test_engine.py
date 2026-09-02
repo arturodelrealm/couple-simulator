@@ -456,9 +456,7 @@ def test_loaded_partner_b_submit_conflict_applies_winner_and_penalties() -> None
     )
     loaded = engine.load_game(snapshot)
     loaded.session.rng.weighted_choice = MagicMock(return_value="opt_a")
-    engine.submit_answers(
-        loaded, event, [Answer(question_id="q1", option_id="opt_b")]
-    )
+    engine.submit_answers(loaded, event, [Answer(question_id="q1", option_id="opt_b")])
     session = loaded.session
     assert session.state.finances == 51
     assert session.state.partner_a.simulation_relation_happiness == 62
@@ -476,9 +474,7 @@ def test_loaded_partner_b_empty_bank_skips_config_deltas() -> None:
     event = _duo_choice_event()
     engine = _duo_engine(event)
     loaded = engine.load_game(_partner_b_snapshot([]))
-    engine.submit_answers(
-        loaded, event, [Answer(question_id="q1", option_id="opt_b")]
-    )
+    engine.submit_answers(loaded, event, [Answer(question_id="q1", option_id="opt_b")])
     session = loaded.session
     assert session.state.finances == 70
     assert session.state.partner_a.simulation_relation_happiness == 70

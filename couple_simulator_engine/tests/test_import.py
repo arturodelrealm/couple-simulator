@@ -16,9 +16,7 @@ def test_package_importable() -> None:
         "SeededRNG",
         "SimulationState",
     ]
-    assert (
-        couple_simulator_engine.PlayerRole.PARTNER_B.value == "partner_b"
-    )
+    assert couple_simulator_engine.PlayerRole.PARTNER_B.value == "partner_b"
     assert (
         couple_simulator_engine.ConflictStrategy.WEIGHTED_PLAYER.value
         == "weighted_player"
