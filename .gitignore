@@ -254,3 +254,4 @@ coverage/
 
 # --- APGE harness — local workspace only (never commit) ---
 .apge/
+docs/specs/

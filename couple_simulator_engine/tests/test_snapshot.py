@@ -1,6 +1,12 @@
 """Round-trip tests for GameSnapshot helpers (no GameEngine)."""
 
 from couple_simulator_engine.config import GameConfig
+from couple_simulator_engine.content.definitions import (
+    EventDefinition,
+    OptionDefinition,
+    OutcomeDefinition,
+    QuestionDefinition,
+)
 from couple_simulator_engine.enums import PlayerSex, SessionStatus
 from couple_simulator_engine.player import Player
 from couple_simulator_engine.session import RecordedAnswer, TimelineEntry
@@ -166,16 +172,53 @@ def test_hydrate_active_run_restores_session_fields() -> None:
     assert session.current_event_id == "buy_house_light"
     assert session.events_played == 1
     assert session.player.name == "Alex"
+    assert loaded.prefer_answer_bank_events is False
 
 
 def test_answer_bank_unions_partner_a_runs_and_active_a_answers() -> None:
     snapshot = _snapshot()
     loaded = hydrate_loaded_game(snapshot)
     bank = loaded.answer_bank
-    assert bank.has_coverage_for("weekend_trip")
-    assert bank.has_coverage_for("burnout")
     event_ids = {entry.event_id for entry in bank.entries}
     assert event_ids == {"weekend_trip", "burnout"}
+    weekend = EventDefinition(
+        id="weekend_trip",
+        title="Weekend",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="go",
+                text="Go?",
+                options=(OptionDefinition(id="yes", text="Yes"),),
+            ),
+        ),
+        outcomes=(OutcomeDefinition(id="ok", when=None, actions=()),),
+        default_actions=(),
+        mismatch_actions=(),
+    )
+    burnout = EventDefinition(
+        id="burnout",
+        title="Burnout",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="burnout_choice",
+                text="How?",
+                options=(OptionDefinition(id="push_through", text="Push"),),
+            ),
+        ),
+        outcomes=(OutcomeDefinition(id="ok", when=None, actions=()),),
+        default_actions=(),
+        mismatch_actions=(),
+    )
+    assert bank.has_coverage_for(weekend) is True
+    assert bank.has_coverage_for(burnout) is True
 
 
 def test_export_then_hydrate_is_lossless_except_answer_state_snapshot() -> None:
