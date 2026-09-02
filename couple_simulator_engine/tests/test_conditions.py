@@ -2,6 +2,7 @@
 
 from couple_simulator_engine.conditions import (
     build_evaluation_context,
+    evaluation_mode,
     should_apply,
 )
 from couple_simulator_engine.config import GameConfig
@@ -115,6 +116,37 @@ def test_answers_career_choice_compare() -> None:
     declined = next(outcome for outcome in event.outcomes if outcome.id == "declined")
     assert should_apply(accepted.when, ctx) is True
     assert should_apply(declined.when, ctx) is False
+
+
+def test_partner_b_session_uses_couple_mode() -> None:
+    session = _session()
+    session.player = session.state.partner_b
+    event = _catalog_event("career_offer")
+    ctx = build_evaluation_context(session, event, [])
+    assert evaluation_mode(session) == "couple"
+    assert ctx["mode"] == "couple"
+    assert ctx["flags"] == {}
+
+
+def test_caller_supplied_flags_reach_rules_evaluator_context() -> None:
+    event = _catalog_event("career_offer")
+    ctx = build_evaluation_context(
+        _session(),
+        event,
+        [],
+        flags={"has_mismatch": True, "answers_match": False},
+    )
+    assert ctx["flags"]["has_mismatch"] is True
+    assert ctx["flags"]["answers_match"] is False
+    assert should_apply(
+        {
+            "type": "compare",
+            "path": "flags/has_mismatch",
+            "op": "eq",
+            "value": True,
+        },
+        ctx,
+    )
 
 
 def test_event_variables_home_desire_compare() -> None:

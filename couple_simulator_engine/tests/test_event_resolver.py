@@ -1,5 +1,7 @@
 """Event resolution pipeline (spec §6.4, P2)."""
 
+from unittest.mock import MagicMock
+
 import pytest
 
 from couple_simulator_engine.config import GameConfig
@@ -201,3 +203,224 @@ def test_end_game_action_sets_game_finished() -> None:
     assert session.status == SessionStatus.FINISHED
     assert session.end_reason == "burnout"
     assert any(action.type == "end_game" for action in resolution.client_actions)
+
+
+def _partner_b_session(*, happiness: int = 70) -> GameSession:
+    partner_a = Player(id="p-a", name="Alex", sex=PlayerSex.FEMALE)
+    partner_b = Player(id="p-b", name="Sam", sex=PlayerSex.MALE)
+    state = SimulationState(partner_a=partner_a, partner_b=partner_b)
+    state.begin_simulation()
+    partner_a.set_simulation_relation_happiness(happiness)
+    partner_b.set_simulation_relation_happiness(happiness)
+    return GameSession(
+        session_id="s-b",
+        player=partner_b,
+        state=state,
+        config=GameConfig(),
+        rng=SeededRNG(1),
+    )
+
+
+def _choice_event(
+    *,
+    mismatch_actions: tuple[ActionDefinition, ...] = (),
+    outcomes: tuple[OutcomeDefinition, ...] = (),
+    default_actions: tuple[ActionDefinition, ...] = (),
+) -> EventDefinition:
+    return EventDefinition(
+        id="duo_choice",
+        title="Duo",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="q1",
+                text="Choose",
+                options=(
+                    OptionDefinition(
+                        id="opt_a",
+                        text="A",
+                        actions=(
+                            ActionDefinition(
+                                type="modify_stat",
+                                args={"variable": "finances", "delta": 1},
+                            ),
+                        ),
+                    ),
+                    OptionDefinition(
+                        id="opt_b",
+                        text="B",
+                        actions=(
+                            ActionDefinition(
+                                type="modify_stat",
+                                args={"variable": "finances", "delta": 20},
+                            ),
+                        ),
+                    ),
+                ),
+            ),
+        ),
+        outcomes=outcomes,
+        default_actions=default_actions,
+        mismatch_actions=mismatch_actions,
+    )
+
+
+def test_partner_b_matching_bank_applies_match_bonus_not_personal() -> None:
+    event = _choice_event()
+    session = _partner_b_session()
+    resolution = resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_b")],
+    )
+    assert session.state.partner_a.simulation_relation_happiness == 75
+    assert session.state.partner_b.simulation_relation_happiness == 75
+    assert session.state.finances == 70
+    assert session.answers[0].option_id == "opt_b"
+    assert any(
+        action.type == "modify_stat"
+        and action.args.get("variable") == "compatibility"
+        and action.args.get("delta") == 5
+        for action in resolution.client_actions
+    )
+
+
+def test_partner_b_disagreeing_bank_uses_winner_option_and_penalties() -> None:
+    event = _choice_event()
+    session = _partner_b_session()
+    session.rng = MagicMock()
+    session.rng.weighted_choice.return_value = "opt_a"
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
+    )
+    assert session.state.finances == 51
+    assert session.state.partner_a.simulation_relation_happiness == 62
+    assert session.state.partner_b.simulation_relation_happiness == 58
+    assert session.answers[0].option_id == "opt_b"
+
+
+def test_partner_b_no_bank_skips_couple_and_personal_deltas() -> None:
+    event = _choice_event()
+    session = _partner_b_session()
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=None,
+    )
+    assert session.state.finances == 70
+    assert session.state.partner_a.simulation_relation_happiness == 70
+    assert session.state.partner_b.simulation_relation_happiness == 70
+
+
+def test_partner_a_ignores_bank_and_couple_deltas() -> None:
+    event = _choice_event()
+    session = _session()
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
+    )
+    assert session.state.finances == 70
+    assert session.state.partner_a.simulation_relation_happiness == 100
+    assert session.state.partner_b.simulation_relation_happiness == 100
+
+
+def test_mismatch_actions_run_when_partners_disagree() -> None:
+    event = _choice_event(
+        mismatch_actions=(
+            ActionDefinition(
+                type="modify_stat",
+                args={"variable": "adventures", "delta": 7},
+            ),
+        )
+    )
+    session = _partner_b_session()
+    session.rng = MagicMock()
+    session.rng.weighted_choice.return_value = "opt_b"
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
+    )
+    assert session.state.adventures == 57
+    assert session.state.finances == 70
+
+
+def test_partner_b_incomplete_bank_is_solo() -> None:
+    event = _choice_event()
+    session = _partner_b_session()
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=[],
+    )
+    assert session.state.finances == 70
+    assert session.state.partner_a.simulation_relation_happiness == 70
+
+
+def test_outcomes_use_effective_option_not_discarded() -> None:
+    event = _choice_event(
+        outcomes=(
+            OutcomeDefinition(
+                id="a_won",
+                when={
+                    "type": "compare",
+                    "path": "answers/q1",
+                    "op": "eq",
+                    "value": "opt_a",
+                },
+                actions=(),
+            ),
+            OutcomeDefinition(
+                id="b_won",
+                when={
+                    "type": "compare",
+                    "path": "answers/q1",
+                    "op": "eq",
+                    "value": "opt_b",
+                },
+                actions=(),
+            ),
+        )
+    )
+    session = _partner_b_session()
+    session.rng = MagicMock()
+    session.rng.weighted_choice.return_value = "opt_a"
+    resolution = resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
+    )
+    assert resolution.applied_outcome_ids == ["a_won"]
+
+
+def test_mismatch_actions_skipped_when_answers_match() -> None:
+    event = _choice_event(
+        mismatch_actions=(
+            ActionDefinition(
+                type="modify_stat",
+                args={"variable": "adventures", "delta": 7},
+            ),
+        )
+    )
+    session = _partner_b_session()
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_a")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
+    )
+    assert session.state.adventures == 50
+    assert session.state.finances == 51

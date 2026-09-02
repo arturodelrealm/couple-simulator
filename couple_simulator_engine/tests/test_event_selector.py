@@ -3,17 +3,27 @@
 from unittest.mock import MagicMock
 
 from couple_simulator_engine.config import GameConfig
+from couple_simulator_engine.content.answers import AnswerBank
 from couple_simulator_engine.content.catalog import ContentCatalog
 from couple_simulator_engine.content.definitions import (
     EventDefinition,
     OptionDefinition,
     QuestionDefinition,
 )
+from couple_simulator_engine.engine import GameEngine
 from couple_simulator_engine.enums import LifeStage, PlayerSex
 from couple_simulator_engine.player import Player
 from couple_simulator_engine.rng import SeededRNG
-from couple_simulator_engine.selection.event_selector import select_next_event
-from couple_simulator_engine.session import GameSession
+from couple_simulator_engine.selection.event_selector import (
+    select_next_event,
+    select_next_event_for_loaded,
+)
+from couple_simulator_engine.session import GameSession, RecordedAnswer
+from couple_simulator_engine.snapshot import (
+    LoadedGame,
+    PlayerRoleName,
+    sequential_prefer_answer_bank_events,
+)
 from couple_simulator_engine.state import SimulationState
 
 
@@ -126,4 +136,205 @@ def test_weighted_selection_favors_higher_weight() -> None:
     assert {(event.id, weight) for event, weight in pairs} == {
         ("low", 1.0),
         ("high", 99.0),
+    }
+
+
+def _loaded(
+    session: GameSession,
+    *,
+    player_role: PlayerRoleName,
+    answers: list[RecordedAnswer] | None = None,
+) -> LoadedGame:
+    return LoadedGame(
+        game_id="g1",
+        mode="couple",
+        session=session,
+        answer_bank=AnswerBank.from_recorded_answers(answers or []),
+        partner_a_runs=[],
+        player_role=player_role,
+        run_number=1,
+        prefer_answer_bank_events=sequential_prefer_answer_bank_events(player_role),
+    )
+
+
+def test_loaded_partner_b_boosts_covered_event_weight() -> None:
+    uncovered = _event("uncovered", weight=1.0)
+    covered = _event("covered", weight=1.0)
+    catalog = ContentCatalog([uncovered, covered])
+    session = _session()
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    loaded = _loaded(
+        session,
+        player_role="partner_b",
+        answers=[
+            RecordedAnswer(event_id="covered", question_id="q", option_id="a"),
+        ],
+    )
+    assert select_next_event_for_loaded(loaded, catalog) is not None
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert {(event.id, weight) for event, weight in pairs} == {
+        ("uncovered", 1.0),
+        ("covered", 2.0),
+    }
+
+
+def test_prefer_answer_bank_events_boosts_regardless_of_player_role() -> None:
+    uncovered = _event("uncovered", weight=1.0)
+    covered = _event("covered", weight=1.0)
+    catalog = ContentCatalog([uncovered, covered])
+    session = _session()
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    loaded = _loaded(
+        session,
+        player_role="partner_a",
+        answers=[
+            RecordedAnswer(event_id="covered", question_id="q", option_id="a"),
+        ],
+    )
+    loaded.prefer_answer_bank_events = True
+    assert select_next_event_for_loaded(loaded, catalog) is not None
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert {(event.id, weight) for event, weight in pairs} == {
+        ("uncovered", 1.0),
+        ("covered", 2.0),
+    }
+
+
+def test_cleared_prefer_flag_skips_boost_on_partner_b() -> None:
+    uncovered = _event("uncovered", weight=1.0)
+    covered = _event("covered", weight=1.0)
+    catalog = ContentCatalog([uncovered, covered])
+    session = _session()
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    loaded = _loaded(
+        session,
+        player_role="partner_b",
+        answers=[
+            RecordedAnswer(event_id="covered", question_id="q", option_id="a"),
+        ],
+    )
+    loaded.prefer_answer_bank_events = False
+    assert select_next_event_for_loaded(loaded, catalog) is not None
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert {(event.id, weight) for event, weight in pairs} == {
+        ("uncovered", 1.0),
+        ("covered", 1.0),
+    }
+
+
+def test_loaded_partner_a_does_not_boost_covered_event_weight() -> None:
+    uncovered = _event("uncovered", weight=1.0)
+    covered = _event("covered", weight=1.0)
+    catalog = ContentCatalog([uncovered, covered])
+    session = _session()
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    loaded = _loaded(
+        session,
+        player_role="partner_a",
+        answers=[
+            RecordedAnswer(event_id="covered", question_id="q", option_id="a"),
+        ],
+    )
+    assert select_next_event_for_loaded(loaded, catalog) is not None
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert {(event.id, weight) for event, weight in pairs} == {
+        ("uncovered", 1.0),
+        ("covered", 1.0),
+    }
+
+
+def test_loaded_incomplete_coverage_keeps_unboosted_weight() -> None:
+    two_q = EventDefinition(
+        id="two_q",
+        title="two_q",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="q1",
+                text="Q1",
+                options=(OptionDefinition(id="a", text="A"),),
+            ),
+            QuestionDefinition(
+                id="q2",
+                text="Q2",
+                options=(OptionDefinition(id="b", text="B"),),
+            ),
+        ),
+        outcomes=(),
+        default_actions=(),
+        mismatch_actions=(),
+        weight=3.0,
+        max_occurrences=1,
+    )
+    catalog = ContentCatalog([two_q])
+    session = _session()
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    loaded = _loaded(
+        session,
+        player_role="partner_b",
+        answers=[RecordedAnswer(event_id="two_q", question_id="q1", option_id="a")],
+    )
+    assert select_next_event_for_loaded(loaded, catalog) is two_q
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert pairs == [(two_q, 3.0)]
+
+
+def test_loaded_empty_eligible_returns_none() -> None:
+    adult_only = _event("adult_only", life_stage=LifeStage.ADULT)
+    catalog = ContentCatalog([adult_only])
+    loaded = _loaded(_session(life_stage=LifeStage.YOUTH), player_role="partner_b")
+    assert select_next_event_for_loaded(loaded, catalog) is None
+
+
+def test_engine_select_next_event_session_stays_unboosted() -> None:
+    uncovered = _event("uncovered", weight=1.0)
+    covered = _event("covered", weight=1.0)
+    catalog = ContentCatalog([uncovered, covered])
+    engine = GameEngine(catalog)
+    session = _session()
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    assert engine.select_next_event(session) is not None
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert {(event.id, weight) for event, weight in pairs} == {
+        ("uncovered", 1.0),
+        ("covered", 1.0),
+    }
+
+
+def test_engine_select_next_event_loaded_partner_b_boosts() -> None:
+    uncovered = _event("uncovered", weight=1.0)
+    covered = _event("covered", weight=1.0)
+    catalog = ContentCatalog([uncovered, covered])
+    engine = GameEngine(catalog)
+    session = _session()
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    loaded = _loaded(
+        session,
+        player_role="partner_b",
+        answers=[
+            RecordedAnswer(event_id="covered", question_id="q", option_id="a"),
+        ],
+    )
+    assert engine.select_next_event(loaded) is not None
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert {(event.id, weight) for event, weight in pairs} == {
+        ("uncovered", 1.0),
+        ("covered", 2.0),
     }

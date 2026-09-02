@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from typing import Any
 
 from rules_evaluator import evaluate
@@ -11,12 +11,27 @@ from couple_simulator_engine.content.definitions import EventDefinition
 from couple_simulator_engine.session import Answer, GameSession, RecordedAnswer
 
 
+def evaluation_mode(session: GameSession) -> str:
+    """``solo`` for Partner A runs, ``couple`` when the active player is Partner B."""
+    if session.player is session.state.partner_b:
+        return "couple"
+    return "solo"
+
+
 def build_evaluation_context(
     session: GameSession,
     event: EventDefinition,
     current_answers: Sequence[Answer | RecordedAnswer],
+    *,
+    flags: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build the dict passed to ``rules_evaluator.evaluate`` (spec §11.2)."""
+    if flags is None:
+        flags_dict: dict[str, Any] = {}
+    else:
+        flags_dict = dict(flags)
+        flags_dict.setdefault("has_mismatch", False)
+        flags_dict.setdefault("answers_match", False)
     return {
         "state": session.state.to_dict(),
         "event_variables": session.event_variables,
@@ -27,8 +42,8 @@ def build_evaluation_context(
             "sex": session.player.sex.value,
         },
         "tags": list(event.tags),
-        "flags": {},
-        "mode": "solo",
+        "flags": flags_dict,
+        "mode": evaluation_mode(session),
     }
 
 

@@ -19,14 +19,20 @@ class AnswerBank:
     def from_recorded_answers(cls, answers: Sequence[RecordedAnswer]) -> AnswerBank:
         return cls(entries=list(answers))
 
-    def has_coverage_for(self, event_id: str) -> bool:
-        return any(entry.event_id == event_id for entry in self.entries)
+    def has_coverage_for(self, event: EventDefinition) -> bool:
+        """True only when every event question has a bank row (same as resolve)."""
+        return self.resolve_for_event(event) is not None
+
+    def partner_a_answers(self, event: EventDefinition) -> list[Answer] | None:
+        """Alias for ``resolve_for_event`` — the only Partner A lookup."""
+        return self.resolve_for_event(event)
 
     def resolve_for_event(self, event: EventDefinition) -> list[Answer] | None:
         """Return answers for every event question, or None if any is missing.
 
-        When several rows share the same ``(event_id, question_id)``, the last
-        entry in ``entries`` wins.
+        Lookup is exact ``event_id`` + ``question_id`` only. When several rows
+        share the same ``(event_id, question_id)``, the last entry in
+        ``entries`` wins.
         """
         option_by_question: dict[str, str] = {}
         for entry in self.entries:

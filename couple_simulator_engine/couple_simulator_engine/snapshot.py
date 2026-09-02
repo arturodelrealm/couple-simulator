@@ -160,18 +160,29 @@ def _answers_for_bank(snapshot: GameSnapshot) -> list[RecordedAnswer]:
     return collected
 
 
+def sequential_prefer_answer_bank_events(player_role: PlayerRoleName) -> bool:
+    """Default for A-then-B couple play: only the bank-consuming run prefers coverage.
+
+    Simultaneous couple play should set ``LoadedGame.prefer_answer_bank_events``
+    explicitly (typically ``False`` while both partners answer live).
+    """
+    return player_role == "partner_b"
+
+
 def hydrate_loaded_game(snapshot: GameSnapshot) -> LoadedGame:
     """Build an in-memory ``LoadedGame`` from a RAM ``GameSnapshot``."""
     validate_game_snapshot(snapshot)
     session = session_from_run_snapshot(snapshot.active_run)
+    player_role = snapshot.active_run.player_role
     return LoadedGame(
         game_id=snapshot.game_id,
         mode=snapshot.mode,
         session=session,
         answer_bank=AnswerBank.from_recorded_answers(_answers_for_bank(snapshot)),
         partner_a_runs=[copy_run_snapshot(run) for run in snapshot.partner_a_runs],
-        player_role=snapshot.active_run.player_role,
+        player_role=player_role,
         run_number=snapshot.active_run.run_number,
+        prefer_answer_bank_events=sequential_prefer_answer_bank_events(player_role),
     )
 
 
@@ -239,3 +250,4 @@ class LoadedGame:
     partner_a_runs: list[RunSnapshot]
     player_role: PlayerRoleName
     run_number: int
+    prefer_answer_bank_events: bool = False

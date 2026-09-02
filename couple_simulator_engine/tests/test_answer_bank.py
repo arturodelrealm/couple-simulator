@@ -85,9 +85,58 @@ def test_resolve_for_event_last_entry_wins_for_same_question() -> None:
     assert resolved[1].option_id == "city"
 
 
-def test_has_coverage_for_is_true_iff_any_entry_has_event_id() -> None:
-    bank = AnswerBank.from_recorded_answers(
+def test_has_coverage_for_matches_resolve_completeness() -> None:
+    event = _event_two_questions()
+    incomplete = AnswerBank.from_recorded_answers(
         [RecordedAnswer(event_id="weekend_trip", question_id="go", option_id="yes")]
     )
-    assert bank.has_coverage_for("weekend_trip") is True
-    assert bank.has_coverage_for("burnout") is False
+    assert incomplete.has_coverage_for(event) is False
+    complete = AnswerBank.from_recorded_answers(
+        [
+            RecordedAnswer(event_id="weekend_trip", question_id="go", option_id="yes"),
+            RecordedAnswer(
+                event_id="weekend_trip", question_id="where", option_id="beach"
+            ),
+        ]
+    )
+    assert complete.has_coverage_for(event) is True
+    other = EventDefinition(
+        id="burnout",
+        title="Burnout",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="burnout_choice",
+                text="How?",
+                options=(OptionDefinition(id="quit", text="Quit"),),
+            ),
+        ),
+        outcomes=(OutcomeDefinition(id="ok", when=None, actions=()),),
+        default_actions=(),
+        mismatch_actions=(),
+    )
+    assert complete.has_coverage_for(other) is False
+
+
+def test_partner_a_answers_alias_matches_resolve_for_event() -> None:
+    event = _event_two_questions()
+    bank = AnswerBank.from_recorded_answers(
+        [
+            RecordedAnswer(event_id="weekend_trip", question_id="go", option_id="yes"),
+            RecordedAnswer(
+                event_id="weekend_trip", question_id="where", option_id="beach"
+            ),
+        ]
+    )
+    assert bank.partner_a_answers(event) == bank.resolve_for_event(event)
+    incomplete = AnswerBank.from_recorded_answers(
+        [RecordedAnswer(event_id="weekend_trip", question_id="go", option_id="yes")]
+    )
+    assert incomplete.partner_a_answers(event) is None
+
+
+def test_question_definition_has_no_decision_key() -> None:
+    assert "decision_key" not in QuestionDefinition.__dataclass_fields__

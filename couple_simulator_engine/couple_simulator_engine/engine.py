@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 from collections.abc import Sequence
+from dataclasses import replace
 from uuid import uuid4
 
 from couple_simulator_engine.config import GameConfig
 from couple_simulator_engine.content.catalog import ContentCatalog
 from couple_simulator_engine.content.definitions import EventDefinition
-from couple_simulator_engine.enums import SessionStatus
+from couple_simulator_engine.enums import PlayerRole, SessionStatus
 from couple_simulator_engine.player import Player
 from couple_simulator_engine.resolution.event_resolver import resolve_event
 from couple_simulator_engine.rng import SeededRNG
@@ -47,19 +48,29 @@ class GameEngine:
         self,
         player: Player,
         *,
+        partner_b: Player | None = None,
+        player_role: PlayerRole | str = PlayerRole.PARTNER_A,
         seed: int | None = None,
         max_events: int | None = None,
     ) -> GameSession:
-        config = GameConfig(
+        config = replace(
+            self.config,
             max_events=(
                 max_events if max_events is not None else self.config.max_events
-            )
+            ),
         )
-        state = SimulationState(partner_a=player)
+        if partner_b is None:
+            state = SimulationState(partner_a=player)
+        else:
+            state = SimulationState(partner_a=player, partner_b=partner_b)
         state.begin_simulation()
+        role = PlayerRole(player_role)
+        active_player = (
+            state.partner_b if role == PlayerRole.PARTNER_B else state.partner_a
+        )
         return GameSession(
             session_id=str(uuid4()),
-            player=player,
+            player=active_player,
             state=state,
             config=config,
             rng=SeededRNG(seed),
@@ -70,6 +81,12 @@ class GameEngine:
             current_event_id=None,
         )
 
+    def partner_a_answers(
+        self, loaded: LoadedGame, event: EventDefinition
+    ) -> list[Answer] | None:
+        """Partner A answers for ``event``, or None if any question is missing."""
+        return loaded.answer_bank.resolve_for_event(event)
+
     def load_game(self, snapshot: GameSnapshot) -> LoadedGame:
         validate_game_snapshot(snapshot)
         return hydrate_loaded_game(snapshot)
@@ -77,8 +94,14 @@ class GameEngine:
     def export_snapshot(self, loaded: LoadedGame) -> GameSnapshot:
         return export_loaded_game(loaded)
 
-    def select_next_event(self, session: GameSession) -> EventDefinition | None:
-        return event_selector.select_next_event(session, self.catalog)
+    def select_next_event(
+        self, session_or_loaded: GameSession | LoadedGame
+    ) -> EventDefinition | None:
+        if isinstance(session_or_loaded, LoadedGame):
+            return event_selector.select_next_event_for_loaded(
+                session_or_loaded, self.catalog
+            )
+        return event_selector.select_next_event(session_or_loaded, self.catalog)
 
     def present_event(self, event: EventDefinition) -> EventPresentation:
         questions = [
@@ -101,10 +124,25 @@ class GameEngine:
 
     def submit_answers(
         self,
-        session: GameSession,
+        session_or_loaded: GameSession | LoadedGame,
         event: EventDefinition,
         answers: Sequence[Answer],
     ) -> EventResolution:
+        if isinstance(session_or_loaded, LoadedGame):
+            loaded = session_or_loaded
+            session = loaded.session
+            partner_a_answers = (
+                self.partner_a_answers(loaded, event)
+                if loaded.player_role == PlayerRole.PARTNER_B
+                else None
+            )
+            if session.current_event_id != event.id:
+                session.event_variables.clear()
+            session.current_event_id = event.id
+            return resolve_event(
+                session, event, answers, partner_a_answers=partner_a_answers
+            )
+        session = session_or_loaded
         if session.current_event_id != event.id:
             session.event_variables.clear()
         session.current_event_id = event.id

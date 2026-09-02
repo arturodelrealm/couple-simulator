@@ -24,3 +24,12 @@ class PlayerSex(StrEnum):
 class SessionStatus(StrEnum):
     ACTIVE = "ACTIVE"
     FINISHED = "FINISHED"
+
+
+class PlayerRole(StrEnum):
+    PARTNER_A = "partner_a"
+    PARTNER_B = "partner_b"
+
+
+class ConflictStrategy(StrEnum):
+    WEIGHTED_PLAYER = "weighted_player"

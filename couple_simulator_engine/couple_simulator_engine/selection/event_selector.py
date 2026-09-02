@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 from couple_simulator_engine.conditions import build_evaluation_context, should_apply
+from couple_simulator_engine.content.answers import AnswerBank
 from couple_simulator_engine.content.catalog import ContentCatalog
 from couple_simulator_engine.content.definitions import EventDefinition
 from couple_simulator_engine.session import GameSession
+from couple_simulator_engine.snapshot import LoadedGame
 
 
 def occurrences_in_session(session: GameSession, event_id: str) -> int:
@@ -31,12 +33,43 @@ def eligible_events(
     )
 
 
+def _selection_weight(
+    event: EventDefinition,
+    *,
+    bank: AnswerBank | None,
+    boost: float,
+) -> float:
+    if bank is None or bank.partner_a_answers(event) is None:
+        return event.weight
+    return event.weight * boost
+
+
+def _pick_weighted(
+    session: GameSession,
+    catalog: ContentCatalog,
+    loaded: LoadedGame | None,
+) -> EventDefinition | None:
+    eligible = eligible_events(session, catalog)
+    if not eligible:
+        return None
+    prefer_bank = loaded is not None and loaded.prefer_answer_bank_events
+    bank = loaded.answer_bank if prefer_bank else None
+    boost = session.config.answer_bank_preference_boost if prefer_bank else 1.0
+    pairs = [
+        (event, _selection_weight(event, bank=bank, boost=boost)) for event in eligible
+    ]
+    return session.rng.weighted_choice(pairs)
+
+
 def select_next_event(
     session: GameSession, catalog: ContentCatalog
 ) -> EventDefinition | None:
     """Return one eligible event by weight, or ``None`` if none remain."""
-    eligible = eligible_events(session, catalog)
-    if not eligible:
-        return None
-    pairs = [(event, event.weight) for event in eligible]
-    return session.rng.weighted_choice(pairs)
+    return _pick_weighted(session, catalog, loaded=None)
+
+
+def select_next_event_for_loaded(
+    loaded: LoadedGame, catalog: ContentCatalog
+) -> EventDefinition | None:
+    """Weighted pick; boost covered events when ``prefer_answer_bank_events``."""
+    return _pick_weighted(loaded.session, catalog, loaded)
