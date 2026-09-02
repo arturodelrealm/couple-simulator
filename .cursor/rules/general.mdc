@@ -27,7 +27,7 @@ Do not replace Ruff, pre-commit, Alembic, FastAPI layout, or Docker Compose with
 - Backend: `pre-commit-run` when applicable. `typecheck` and `test` run in Docker.
 - Game engine / rules evaluator: `lint-couple-simulator-engine`, `test-couple-simulator-engine`, `lint-rules-evaluator`, `test-rules-evaluator` run in Docker (Python 3.12). Do not use host `pip` for those targets.
 - Use `make <target>` or `./task.sh <target>` if `make` is missing.
-- Frontend: `lint-frontend`, `format-check-frontend`, and `npm run build` before finishing (when applicable). Same `make` / `./task.sh` choice.
+- Frontend: `lint-frontend`, `format-check-frontend`, and `build-check-frontend` run in Docker. Do not use host `npm` for those targets. Same `make` / `./task.sh` choice.
 - Tell the user which migration commands to run; do not run DB operations yourself
 
 See [docs/backlog/engineering-baseline-backlog.md](../../docs/backlog/engineering-baseline-backlog.md) for planned CI and deployment work.

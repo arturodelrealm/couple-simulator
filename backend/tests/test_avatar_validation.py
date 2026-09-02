@@ -39,6 +39,25 @@ def test_validate_avatar_config_rejects_invalid_variant_value():
     assert exc_info.value.field == "body.avatar_config.topVariant"
 
 
+def test_validate_avatar_config_accepts_standard_colors():
+    config = {
+        "skinColor": "edb98a",
+        "hairColor": "4a312c",
+        "facialHairColor": "2c1b18",
+        "clothesColor": "5199e4",
+    }
+
+    assert validate_avatar_config(config) == config
+
+
+def test_validate_avatar_config_rejects_invalid_color():
+    with pytest.raises(AppError) as exc_info:
+        validate_avatar_config({"skinColor": "ffffff"})
+
+    assert exc_info.value.code == "INVALID_AVATAR_CONFIG"
+    assert exc_info.value.field == "body.avatar_config.skinColor"
+
+
 def test_validate_avatar_config_rejects_invalid_probability():
     with pytest.raises(AppError) as exc_info:
         validate_avatar_config({"accessoriesProbability": 101})

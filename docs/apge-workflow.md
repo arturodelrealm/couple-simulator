@@ -69,6 +69,6 @@ From the repository root, run Makefile **target names**. Use `make <target>` whe
 | Backend | `lint`, `format`, `typecheck`, `test` |
 | Rules evaluator | `lint-rules-evaluator`, `test-rules-evaluator` (Docker, Python 3.12) |
 | Game engine | `lint-couple-simulator-engine`, `test-couple-simulator-engine` (Docker, Python 3.12) |
-| Frontend | `lint-frontend`, `format-check-frontend`; then `cd frontend && npm run build` |
+| Frontend | `lint-frontend`, `format-check-frontend`, `build-check-frontend` (Docker) |
 
 Agents must **not** run database migrations or SQL — tell the operator to run `make makemigrations` / `make migrate` (or `./task.sh` with those names) when models change.

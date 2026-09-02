@@ -176,11 +176,11 @@ make pre-commit-run    # run all hooks on the full repo (CI-friendly)
 
 `typecheck`, `test`, `lint-rules-evaluator`, `test-rules-evaluator`, `lint-couple-simulator-engine`, and `test-couple-simulator-engine` run in Docker with **Python 3.12**. Do not use the host `pip`/`python` for those targets (host Python may be 3.11).
 
+`lint-frontend`, `format-frontend`, `format-check-frontend`, and `build-check-frontend` run in Docker (`frontend` Compose service). Do not use host `npm` for those targets.
+
 Backend tests live in `backend/tests/`. Type checking is incremental: mypy runs on `app/services/` and `app/shared/` only. Run with `make test` / `make typecheck`. Optional local Python 3.12: `pip install -e "./backend[dev]"` then `cd backend && pytest`.
 
-When the frontend is added, extend `.pre-commit-config.yaml` with ESLint and Prettier hooks.
-
-Frontend ESLint and Prettier run via pre-commit (local hooks) and `make lint-frontend` / `make format-check-frontend`.
+Frontend ESLint and Prettier also run via pre-commit (Compose, same as the Make targets) and `make lint-frontend` / `make format-check-frontend`.
 
 ---
 
@@ -198,12 +198,11 @@ Frontend ESLint and Prettier run via pre-commit (local hooks) and `make lint-fro
 ESLint (flat config in `frontend/eslint.config.js`) and Prettier (`frontend/prettier.config.js`). From repo root:
 
 ```bash
-make lint-frontend           # ESLint
-make format-check-frontend   # Prettier check
-make format-frontend         # Prettier write
+make lint-frontend           # ESLint (Docker)
+make format-check-frontend   # Prettier check (Docker)
+make format-frontend         # Prettier write (Docker)
+make build-check-frontend    # tsc + Vite production build (Docker)
 ```
-
-Or from `frontend/`: `npm run lint`, `npm run format:check`, `npm run format`.
 
 ---
 
@@ -326,5 +325,5 @@ Follow the full workflow in [docs/development-workflow.md](docs/development-work
 - [ ] Async used only when justified
 - [ ] REST responses follow [docs/rest-api-standards.md](docs/rest-api-standards.md)
 - [ ] `make lint-frontend` and `make format-check-frontend` pass (frontend changes; or `./task.sh` with the same names)
-- [ ] `npm run build` passes (frontend changes)
+- [ ] `make build-check-frontend` passes (frontend changes; or `./task.sh build-check-frontend`)
 - [ ] Changes align with the current MVP milestone scope

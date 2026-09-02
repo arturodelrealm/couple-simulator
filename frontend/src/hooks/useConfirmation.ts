@@ -9,6 +9,10 @@ import {
   type GameInvite,
 } from "../services/gameService";
 import {
+  listSimulationRuns,
+  type SimulationRunList,
+} from "../services/simulationService";
+import {
   clearCurrentGame,
   saveCurrentGameFromGame,
   touchCurrentGame,
@@ -27,6 +31,7 @@ export function useConfirmation() {
   const [error, setError] = useState<string | null>(null);
   const [inviteCopied, setInviteCopied] = useState(false);
   const [inviteCopyError, setInviteCopyError] = useState<string | null>(null);
+  const [hasActiveRun, setHasActiveRun] = useState(false);
 
   useEffect(() => {
     if (!gameId) {
@@ -35,8 +40,21 @@ export function useConfirmation() {
       return;
     }
 
-    Promise.all([getGame(gameId), getGameInvite(gameId)])
-      .then(([loaded, loadedInvite]) => {
+    const emptyRunList: SimulationRunList = {
+      items: [],
+      pagination: { page: 1, per_page: 1, total: 0 },
+    };
+
+    Promise.all([
+      getGame(gameId),
+      getGameInvite(gameId),
+      listSimulationRuns(gameId, {
+        status: "ACTIVE",
+        page: 1,
+        per_page: 1,
+      }).catch(() => emptyRunList),
+    ])
+      .then(([loaded, loadedInvite, runs]) => {
         saveCurrentGameFromGame(loaded);
         touchCurrentGame();
         if (!isPlayerASetupComplete(loaded)) {
@@ -45,6 +63,7 @@ export function useConfirmation() {
         }
         setGame(loaded);
         setInvite(loadedInvite);
+        setHasActiveRun(runs.items.length > 0);
       })
       .catch((err) => {
         clearCurrentGame();
@@ -78,6 +97,7 @@ export function useConfirmation() {
     inviteUrl,
     isLoading,
     error,
+    hasActiveRun,
     onCopyInvite,
     inviteCopied,
     inviteCopyError,

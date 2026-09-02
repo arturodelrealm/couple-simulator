@@ -1,7 +1,26 @@
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap");
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
+  font-family: "DM Sans", ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: Nunito, ui-sans-serif, system-ui, sans-serif;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d8d3f0;
+  border-radius: 3px;
 }

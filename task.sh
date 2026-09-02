@@ -8,8 +8,8 @@ set -euo pipefail
 COMPOSE="docker compose"
 MSG="${2:-describe the change}"
 BACKEND_DIR="backend"
-FRONTEND_DIR="frontend"
 PYTHON_TOOLS="$COMPOSE run --rm --no-deps python-tools"
+FRONTEND_TOOLS="$COMPOSE run --rm --no-deps -T frontend"
 
 task="${1:-help}"
 
@@ -28,6 +28,7 @@ case "$task" in
     echo "  ./task.sh format"
     echo "  ./task.sh format-frontend"
     echo "  ./task.sh format-check-frontend"
+    echo "  ./task.sh build-check-frontend"
     echo "  ./task.sh typecheck"
     echo "  ./task.sh test"
     echo "  ./task.sh test-rules-evaluator"
@@ -65,16 +66,19 @@ case "$task" in
     $PYTHON_TOOLS sh -c "pip install -e './couple_simulator_engine[dev]' -q && ruff check couple_simulator_engine"
     ;;
   lint-frontend)
-    cd "$FRONTEND_DIR" && npm run lint
+    $FRONTEND_TOOLS npm run lint
     ;;
   format)
     cd "$BACKEND_DIR" && ruff format .
     ;;
   format-frontend)
-    cd "$FRONTEND_DIR" && npm run format
+    $FRONTEND_TOOLS npm run format
     ;;
   format-check-frontend)
-    cd "$FRONTEND_DIR" && npm run format:check
+    $FRONTEND_TOOLS npm run format:check
+    ;;
+  build-check-frontend)
+    $FRONTEND_TOOLS npm run build
     ;;
   typecheck)
     $COMPOSE run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && mypy app/services app/shared"

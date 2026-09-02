@@ -19,5 +19,8 @@
   "Invalid player sex": "El sexo del jugador no es válido.",
   "Simulation run not found": "No se encontró la simulación.",
   "This simulation run has finished": "Esta simulación ya ha terminado.",
-  "No eligible events remain": "No quedan eventos elegibles."
+  "No eligible events remain": "No quedan eventos elegibles.",
+  "Event does not match the open event": "El evento no coincide con el evento abierto.",
+  "Event not found": "Evento no encontrado.",
+  "Invalid event answers": "Las respuestas del evento no son válidas."
 }

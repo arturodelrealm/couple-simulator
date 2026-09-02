@@ -55,7 +55,7 @@ The **APGE (Planner–Generator–Evaluator)** workflow tracks work in markdown 
 - **Game engine package:** `couple_simulator_engine/` at repo root (console engine V0+).
 - **Rules evaluator:** `rules_evaluator/` at repo root (shared condition evaluation).
 - **Layer skills:** [`.cursor/skills/fastapi/SKILL.md`](../fastapi/SKILL.md) for backend work; [`.cursor/skills/react/SKILL.md`](../react/SKILL.md) for frontend work.
-- **Quality checks** (from repo root unless the task says otherwise). Target names match the Makefile. Use `make <target>` when `make` is available; otherwise `./task.sh <target>` (Git Bash) or `.\tasks.ps1 <target>` (PowerShell). Engine and rules-evaluator lint/test run in Docker (Python 3.12); do not invoke host `pip` for those targets.
+- **Quality checks** (from repo root unless the task says otherwise). Target names match the Makefile. Use `make <target>` when `make` is available; otherwise `./task.sh <target>` (Git Bash) or `.\tasks.ps1 <target>` (PowerShell). Engine and rules-evaluator lint/test run in Docker (Python 3.12); do not invoke host `pip` for those targets. Frontend lint, format, and production build run in Docker (`frontend` Compose service); do not invoke host `npm` for those targets.
 
   | Area | Target(s) |
   |------|-----------|
@@ -64,7 +64,7 @@ The **APGE (Planner–Generator–Evaluator)** workflow tracks work in markdown 
   | Backend tests | `test` |
   | Rules evaluator | `lint-rules-evaluator`, `test-rules-evaluator` |
   | Game engine | `lint-couple-simulator-engine`, `test-couple-simulator-engine` |
-  | Frontend | `lint-frontend`, `format-check-frontend`; then `cd frontend && npm run build` |
+  | Frontend | `lint-frontend`, `format-check-frontend`, `build-check-frontend` |
   | Full pre-commit | `pre-commit-run` |
 
 - **Migrations:** change SQLAlchemy models first; tell the operator to run `make makemigrations MSG='describe the change'` or `./task.sh makemigrations 'describe the change'`. **Do not** hand-write files under `backend/alembic/versions/` or run DB commands yourself.

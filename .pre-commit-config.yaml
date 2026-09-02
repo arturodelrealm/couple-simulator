@@ -20,14 +20,14 @@ repos:
     hooks:
       - id: frontend-eslint
         name: frontend eslint
-        entry: bash -c 'cd frontend && npm run lint'
+        entry: docker compose run --rm --no-deps -T frontend npm run lint
         language: system
         files: ^frontend/src/.*\.(ts|tsx)$
         pass_filenames: false
 
       - id: frontend-prettier
         name: frontend prettier check
-        entry: bash -c 'cd frontend && npm run format:check'
+        entry: docker compose run --rm --no-deps -T frontend npm run format:check
         language: system
         files: ^frontend/
         exclude: ^frontend/package-lock\.json$

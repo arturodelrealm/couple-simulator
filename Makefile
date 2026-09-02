@@ -1,12 +1,12 @@
 COMPOSE := docker compose
 MSG ?= describe the change
 BACKEND_DIR := backend
-FRONTEND_DIR := frontend
 PYTHON_TOOLS := $(COMPOSE) run --rm --no-deps python-tools
+FRONTEND_TOOLS := $(COMPOSE) run --rm --no-deps -T frontend
 
 .PHONY: help runserver build-server build-frontend migrate makemigrations check-migrations \
         lint lint-frontend lint-rules-evaluator lint-couple-simulator-engine \
-        format format-frontend format-check-frontend \
+        format format-frontend format-check-frontend build-check-frontend \
         typecheck test test-rules-evaluator test-couple-simulator-engine \
         pre-commit-install pre-commit-run
 
@@ -21,10 +21,11 @@ help:
 	@echo "  make lint                Run Ruff linter on backend"
 	@echo "  make lint-rules-evaluator  Run Ruff on rules_evaluator (Docker, Python 3.12)"
 	@echo "  make lint-couple-simulator-engine  Run Ruff on couple_simulator_engine (Docker, Python 3.12)"
-	@echo "  make lint-frontend       Run ESLint on frontend"
+	@echo "  make lint-frontend       Run ESLint on frontend (Docker)"
 	@echo "  make format              Run Ruff formatter on backend"
-	@echo "  make format-frontend     Run Prettier on frontend"
-	@echo "  make format-check-frontend  Check Prettier formatting on frontend"
+	@echo "  make format-frontend     Run Prettier on frontend (Docker)"
+	@echo "  make format-check-frontend  Check Prettier formatting on frontend (Docker)"
+	@echo "  make build-check-frontend   TypeScript + Vite production build (Docker)"
 	@echo "  make typecheck           Run mypy on backend services and shared"
 	@echo "  make test                Run backend pytest suite"
 	@echo "  make test-rules-evaluator  Run rules_evaluator pytest (Docker, Python 3.12)"
@@ -68,16 +69,19 @@ lint-couple-simulator-engine:
 	$(PYTHON_TOOLS) sh -c "pip install -e './couple_simulator_engine[dev]' -q && ruff check couple_simulator_engine"
 
 lint-frontend:
-	cd $(FRONTEND_DIR) && npm run lint
+	$(FRONTEND_TOOLS) npm run lint
 
 format:
 	cd $(BACKEND_DIR) && ruff format .
 
 format-frontend:
-	cd $(FRONTEND_DIR) && npm run format
+	$(FRONTEND_TOOLS) npm run format
 
 format-check-frontend:
-	cd $(FRONTEND_DIR) && npm run format:check
+	$(FRONTEND_TOOLS) npm run format:check
+
+build-check-frontend:
+	$(FRONTEND_TOOLS) npm run build
 
 typecheck:
 	$(COMPOSE) run --rm --no-deps backend sh -c "pip install -e '.[dev]' -q && mypy app/services app/shared"

@@ -88,7 +88,7 @@ Verify **`.cursor/skills/apge_generator/SKILL.md`** conventions that apply to th
 
 - **[AGENTS.md](../../../AGENTS.md)** and **[docs/development-workflow.md](../../../docs/development-workflow.md)** — service-layer layout, i18n, sync endpoints, REST envelope.
 - **`.cursor/rules/`** — especially `no-database-queries.mdc`, `no-framework-scaffolding.mdc`, `game-engine.mdc` when the task touches the engine.
-- **Quality commands** the acceptance criteria name (typical targets: `test`, `typecheck`, `lint`, `lint-frontend`, `test-rules-evaluator`, `lint-couple-simulator-engine`, `test-couple-simulator-engine`). Run `make <target>` or, if `make` is unavailable, `./task.sh <target>` from the **repository root**. Engine and rules-evaluator targets use Docker (Python 3.12); do not use host `pip` for them.
+- **Quality commands** the acceptance criteria name (typical targets: `test`, `typecheck`, `lint`, `lint-frontend`, `format-check-frontend`, `build-check-frontend`, `test-rules-evaluator`, `lint-couple-simulator-engine`, `test-couple-simulator-engine`). Run `make <target>` or, if `make` is unavailable, `./task.sh <target>` from the **repository root**. Engine and rules-evaluator targets use Docker (Python 3.12); do not use host `pip` for them. Frontend targets use Docker (`frontend` Compose service); do not use host `npm` for them.
 - **No hand-written Alembic migrations** — model changes only; migration autogeneration is the operator’s step.
 - **English** for all code, identifiers, and comments.
 

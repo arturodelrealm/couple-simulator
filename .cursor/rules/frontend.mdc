@@ -28,10 +28,10 @@ Full reference: [AGENTS.md](../../AGENTS.md). Skill: [.cursor/skills/react/SKILL
 ## Build and lint
 
 ```bash
-cd frontend && npm run build   # tsc + vite build
-make lint-frontend             # ESLint
-make format-check-frontend     # Prettier check
-make format-frontend           # Prettier write
+make lint-frontend             # ESLint (Docker)
+make format-check-frontend     # Prettier check (Docker)
+make format-frontend           # Prettier write (Docker)
+make build-check-frontend      # tsc + Vite production build (Docker)
 ```
 
 Do not replace `vite.config.ts`, `tsconfig.json`, or Tailwind scaffolding by hand — see `no-framework-scaffolding.mdc`.

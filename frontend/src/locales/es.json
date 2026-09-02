@@ -5,9 +5,13 @@
   "game": {
     "lobby": {
       "title": "Vida en pareja",
+      "subtitle": "Empieza una historia en pareja o entra a una partida con un nombre compartido.",
       "createButton": "Crear nueva partida",
+      "createHint": "Elige un nombre de partida y configura al jugador A.",
       "joinButton": "Entrar a una partida",
+      "joinHint": "Escribe el nombre de una partida existente para abrirla.",
       "continueCurrent": "Continuar",
+      "continueHint": "Retoma la partida guardada en este dispositivo.",
       "currentMatchLabel": "Partida actual"
     },
     "nav": {
@@ -47,6 +51,7 @@
     },
     "confirm": {
       "title": "Partida lista",
+      "subtitle": "Tu personaje está listo. Empieza la historia cuando quieras.",
       "matchName": "Nombre de la partida",
       "gameMode": "Modo de juego",
       "sexLabel": "Sexo",
@@ -57,22 +62,76 @@
       "copyInviteLink": "Copiar enlace de invitación",
       "inviteCopied": "¡Enlace copiado!",
       "hint": "Puedes cerrar esta página y volver más tarde — tu partida se recuperará automáticamente."
+    },
+    "play": {
+      "title": "Nuestra historia",
+      "lifeEvent": "Evento de vida",
+      "choicesPrompt": "¿Qué decides?",
+      "lifeStory": "Historia de vida",
+      "atAGlance": "De un vistazo",
+      "start": "Empezar a jugar",
+      "continue": "Continuar partida",
+      "continueNextEvent": "Continuar",
+      "nextQuestion": "Siguiente pregunta",
+      "partnerB": "Pareja B",
+      "age": "Edad {{age}}",
+      "childrenOverflow": "+{{count}}",
+      "timeline": {
+        "empty": "Tu historia aparecerá aquí."
+      },
+      "lifeStage": {
+        "youth": "Adultez joven",
+        "adult": "Adultez",
+        "elderly": "Años senior"
+      },
+      "stats": {
+        "compatibility": "Compatibilidad",
+        "finances": "Finanzas",
+        "children": "Hijos",
+        "adventures": "Aventuras",
+        "career": "Carrera",
+        "qualityOfLife": "Calidad de vida"
+      },
+      "gameOver": {
+        "title": "Una vida bien vivida",
+        "yourStory": "Vuestra historia",
+        "playAgain": "Jugar de nuevo",
+        "ages": "{{partnerAName}} tiene {{partnerAAge}} años, {{partnerBName}} tiene {{partnerBAge}}."
+      },
+      "errors": {
+        "runNotFound": "No se encontró esta simulación.",
+        "gameNotReady": "Esta partida aún no está lista para jugar.",
+        "runFinished": "Esta simulación ya ha terminado.",
+        "noEligibleEvents": "No quedan más eventos de vida para esta simulación.",
+        "eventMismatch": "Este evento ya no está abierto. Continúa o recarga la partida.",
+        "eventNotFound": "No se encontró este evento de vida.",
+        "invalidAnswers": "Esas respuestas no son válidas para este evento.",
+        "goToSetup": "Ir a la configuración del personaje"
+      }
     }
   },
   "avatar": {
     "builder": {
       "title": "Crea tu personaje",
       "forPartner": "Avatar de {{name}}",
-      "save": "Guardar personaje"
+      "save": "Guardar personaje",
+      "attributes": "Atributos del avatar"
     },
     "section": {
       "hair": "Pelo",
+      "hairColor": "Color de pelo",
+      "skin": "Piel",
       "eyes": "Ojos",
       "eyebrows": "Cejas",
       "mouth": "Boca",
       "facialHair": "Vello facial",
+      "facialHairColor": "Color de barba",
       "clothes": "Ropa",
+      "clothesColor": "Color de ropa",
       "accessories": "Accesorios"
+    },
+    "color": {
+      "swatch": "{{attribute}} {{color}}"
     },
     "option": {
       "none": "Ninguno"

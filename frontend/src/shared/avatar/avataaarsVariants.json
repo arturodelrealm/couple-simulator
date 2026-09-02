@@ -37,17 +37,14 @@
   ],
   "eyesVariant": [
     "closed",
-    "cry",
     "default",
     "eyeRoll",
     "happy",
-    "hearts",
     "side",
     "squint",
     "surprised",
     "wink",
-    "winkWacky",
-    "xDizzy"
+    "winkWacky"
   ],
   "eyebrowsVariant": [
     "angry",
@@ -86,8 +83,6 @@
     "moustacheMagnum"
   ],
   "clothesVariant": [
-    "blazerAndShirt",
-    "blazerAndSweater",
     "collarAndSweater",
     "graphicShirt",
     "hoodie",
@@ -104,5 +99,54 @@
     "round",
     "sunglasses",
     "wayfarers"
+  ],
+  "skinColor": [
+    "614335",
+    "ae5d29",
+    "d08b5b",
+    "edb98a",
+    "ffdbb4",
+    "fd9841",
+    "f8d25c"
+  ],
+  "hairColor": [
+    "2c1b18",
+    "4a312c",
+    "724133",
+    "a55728",
+    "b58143",
+    "d6b370",
+    "c93305",
+    "f59797",
+    "ecdcbf",
+    "e8e1e1"
+  ],
+  "facialHairColor": [
+    "2c1b18",
+    "4a312c",
+    "724133",
+    "a55728",
+    "b58143",
+    "d6b370",
+    "c93305",
+    "f59797",
+    "ecdcbf",
+    "e8e1e1"
+  ],
+  "clothesColor": [
+    "262e33",
+    "3c4f5c",
+    "25557c",
+    "5199e4",
+    "65c9ff",
+    "b1e2ff",
+    "929598",
+    "e6e6e6",
+    "ffffff",
+    "a7ffc4",
+    "ffffb1",
+    "ffafb9",
+    "ff488e",
+    "ff5c5c"
   ]
 }

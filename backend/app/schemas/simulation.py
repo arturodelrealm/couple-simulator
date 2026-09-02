@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Any
 from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -84,3 +85,26 @@ class EventPresentationRead(BaseModel):
 class CurrentEventRead(BaseModel):
     run_id: UUID
     event: EventPresentationRead
+
+
+class EventAnswerItem(BaseModel):
+    question_id: str
+    option_id: str
+
+
+class EventAnswersSubmit(BaseModel):
+    answers: list[EventAnswerItem]
+
+
+class ClientActionRead(BaseModel):
+    type: str
+    args: dict[str, Any]
+
+
+class EventAnswersSubmitted(BaseModel):
+    run_id: UUID
+    status: str
+    state: SimulationStateRead
+    events_played: int
+    client_actions: list[ClientActionRead]
+    game_finished: bool
