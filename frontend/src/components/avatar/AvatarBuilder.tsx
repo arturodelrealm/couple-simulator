@@ -1,11 +1,16 @@
-import type { ReactNode } from "react";
+import { useState, type ReactNode } from "react";
 
-import type { AvatarConfig } from "../../shared/avatar/avataaarsVariants";
+import type {
+  AvatarConfig,
+  AvatarSection,
+} from "../../shared/avatar/avataaarsVariants";
 import {
-  AVATAR_SECTIONS,
+  AVATAR_TABS,
   getSectionOptions,
 } from "../../shared/avatar/avataaarsVariants";
 import { AvatarPreview } from "../../shared/ui/AvatarPreview";
+import { AvatarAttributeTabs } from "./AvatarAttributeTabs";
+import { AvatarColorSwatches } from "./AvatarColorSwatches";
 import { AvatarOptionSection } from "./AvatarOptionSection";
 
 type AvatarBuilderProps = {
@@ -21,36 +26,70 @@ export function AvatarBuilder({
   onChange,
   footer,
 }: AvatarBuilderProps) {
-  const handleSelect = (
-    sectionKey: (typeof AVATAR_SECTIONS)[number],
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
+  const activeTab = AVATAR_TABS[activeTabIndex] ?? AVATAR_TABS[0];
+  if (!activeTab) {
+    return null;
+  }
+
+  const handleStyleSelect = (
+    section: AvatarSection,
     value: string,
     enabled: boolean,
   ) => {
-    const next: AvatarConfig = { ...config, [sectionKey.key]: value };
-    if (sectionKey.probabilityKey) {
-      next[sectionKey.probabilityKey] = enabled ? 100 : 0;
+    const next: AvatarConfig = { ...config, [section.key]: value };
+    if (section.probabilityKey) {
+      next[section.probabilityKey] = enabled ? 100 : 0;
     }
     onChange(next);
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <AvatarPreview config={config} seed={seed} size={180} />
-      {AVATAR_SECTIONS.map((section) => (
-        <AvatarOptionSection
-          key={section.key}
-          titleKey={section.titleKey}
-          optionKey={section.key}
-          options={getSectionOptions(section.key)}
-          value={config[section.key]}
-          probabilityKey={section.probabilityKey}
-          probabilityValue={
-            section.probabilityKey ? config[section.probabilityKey] : undefined
-          }
-          config={config}
-          onSelect={(value, enabled) => handleSelect(section, value, enabled)}
-        />
-      ))}
+      <AvatarAttributeTabs
+        tabs={AVATAR_TABS}
+        activeIndex={activeTabIndex}
+        onChange={setActiveTabIndex}
+      />
+      {activeTab.kind === "style" ? (
+        <div
+          role="tabpanel"
+          id={`avatar-panel-${activeTab.section.key}`}
+          aria-labelledby={`avatar-tab-${activeTab.section.key}`}
+        >
+          <AvatarOptionSection
+            optionKey={activeTab.section.key}
+            options={getSectionOptions(activeTab.section.key)}
+            value={config[activeTab.section.key]}
+            probabilityKey={activeTab.section.probabilityKey}
+            probabilityValue={
+              activeTab.section.probabilityKey
+                ? config[activeTab.section.probabilityKey]
+                : undefined
+            }
+            config={config}
+            onSelect={(value, enabled) =>
+              handleStyleSelect(activeTab.section, value, enabled)
+            }
+          />
+        </div>
+      ) : (
+        <div
+          role="tabpanel"
+          id={`avatar-panel-${activeTab.section.key}`}
+          aria-labelledby={`avatar-tab-${activeTab.section.key}`}
+        >
+          <AvatarColorSwatches
+            colorKey={activeTab.section.key}
+            options={getSectionOptions(activeTab.section.key)}
+            value={config[activeTab.section.key]}
+            onSelect={(value) =>
+              onChange({ ...config, [activeTab.section.key]: value })
+            }
+          />
+        </div>
+      )}
       {footer}
     </div>
   );

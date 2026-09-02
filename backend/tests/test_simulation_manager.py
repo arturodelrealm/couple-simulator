@@ -245,3 +245,168 @@ def test_get_current_event_finished_run_is_conflict(
 
     assert exc_info.value.code == "RUN_FINISHED"
     assert exc_info.value.status_code == 409
+
+
+def _continue_answers(event: dict) -> list[dict[str, str]]:
+    answers: list[dict[str, str]] = []
+    for question in event["questions"]:
+        option_id = question["options"][0]["id"]
+        if event["event_id"] == "burnout":
+            option_id = next(
+                option["id"]
+                for option in question["options"]
+                if option["id"] == "push_through"
+            )
+        answers.append(
+            {
+                "question_id": question["id"],
+                "option_id": option_id,
+            }
+        )
+    return answers
+
+
+def test_submit_answers_persists_and_clears_current_event(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    game = _create_ready_game(db_session, "sim-submit-ok", valid_avatar_config)
+    manager = SimulationManager()
+    started = manager.start_run(
+        db_session,
+        game.id,
+        PlayerRole.PARTNER_A.value,
+        seed=11,
+        max_events=5,
+    )
+    partner = db_session.scalar(
+        select(Player).where(
+            Player.game_id == game.id,
+            Player.role == PlayerRole.PARTNER_A.value,
+        )
+    )
+    assert partner is not None
+    lobby_age = partner.game_age
+
+    current = manager.get_current_event(db_session, game.id, started.run_id)
+    event_id = current.event["event_id"]
+    answers = _continue_answers(current.event)
+
+    result = manager.submit_answers(
+        db_session,
+        game.id,
+        started.run_id,
+        event_id,
+        answers,
+    )
+
+    assert result.run_id == started.run_id
+    assert result.events_played == 1
+    assert isinstance(result.client_actions, list)
+    assert "age" in result.state
+
+    loaded = manager.get_run(db_session, game.id, started.run_id)
+    assert loaded.current_event_id is None
+    assert loaded.events_played == 1
+    assert loaded.answers
+    assert all(item["event_id"] == event_id for item in loaded.answers)
+    assert len(loaded.answers) == len(answers)
+
+    db_session.refresh(partner)
+    assert partner.game_age == lobby_age
+    assert partner.game_age == GAME_AGE_DEFAULT
+
+    if result.game_finished or loaded.status == "FINISHED":
+        with pytest.raises(AppError) as exc_info:
+            manager.get_current_event(db_session, game.id, started.run_id)
+        assert exc_info.value.code in {"RUN_FINISHED", "NO_ELIGIBLE_EVENTS"}
+        assert exc_info.value.status_code == 409
+    else:
+        next_event = manager.get_current_event(db_session, game.id, started.run_id)
+        assert next_event.event["event_id"] != event_id
+
+
+def test_submit_answers_rejects_event_mismatch(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    game = _create_ready_game(db_session, "sim-submit-mismatch", valid_avatar_config)
+    manager = SimulationManager()
+    started = manager.start_run(
+        db_session,
+        game.id,
+        PlayerRole.PARTNER_A.value,
+        seed=11,
+    )
+    current = manager.get_current_event(db_session, game.id, started.run_id)
+    answers = _continue_answers(current.event)
+
+    with pytest.raises(AppError) as exc_info:
+        manager.submit_answers(
+            db_session,
+            game.id,
+            started.run_id,
+            "not_the_open_event",
+            answers,
+        )
+
+    assert exc_info.value.code == "EVENT_MISMATCH"
+    assert exc_info.value.status_code == 409
+
+
+def test_submit_answers_rejects_finished_run(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    game = _create_ready_game(db_session, "sim-submit-finished", valid_avatar_config)
+    manager = SimulationManager()
+    started = manager.start_run(
+        db_session,
+        game.id,
+        PlayerRole.PARTNER_A.value,
+        seed=4,
+    )
+    current = manager.get_current_event(db_session, game.id, started.run_id)
+    orm_run = db_session.get(SimulationRun, started.run_id)
+    assert orm_run is not None
+    orm_run.status = "FINISHED"
+    db_session.commit()
+
+    with pytest.raises(AppError) as exc_info:
+        manager.submit_answers(
+            db_session,
+            game.id,
+            started.run_id,
+            current.event["event_id"],
+            _continue_answers(current.event),
+        )
+
+    assert exc_info.value.code == "RUN_FINISHED"
+    assert exc_info.value.status_code == 409
+
+
+def test_submit_answers_rejects_invalid_answers(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    game = _create_ready_game(db_session, "sim-submit-invalid", valid_avatar_config)
+    manager = SimulationManager()
+    started = manager.start_run(
+        db_session,
+        game.id,
+        PlayerRole.PARTNER_A.value,
+        seed=11,
+    )
+    current = manager.get_current_event(db_session, game.id, started.run_id)
+
+    with pytest.raises(AppError) as exc_info:
+        manager.submit_answers(
+            db_session,
+            game.id,
+            started.run_id,
+            current.event["event_id"],
+            [],
+        )
+
+    assert exc_info.value.code == "INVALID_ANSWERS"
+    assert exc_info.value.status_code == 409

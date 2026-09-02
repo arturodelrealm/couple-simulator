@@ -1,7 +1,7 @@
 # Esqueleto del paquete `couple_simulator_engine`
 
-**Estado:** Borrador — guía de implementación  
-**Ámbito:** Estructura de directorios, módulos y responsabilidades del paquete Python  
+**Estado:** Borrador — guía de implementación
+**Ámbito:** Estructura de directorios, módulos y responsabilidades del paquete Python
 **Relacionado:** [game-engine-design.md](./game-engine-design.md)
 
 ---

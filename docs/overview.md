@@ -95,6 +95,7 @@ The original slice (`/create` → name only → avatar → confirm) is supersede
 - [Rules evaluator implementation plan](specs/rules-evaluator-implementation-plan.md) — phased plan for the standalone `rules_evaluator` package (ConditionExpr, tests, engine integration).
 - [Rules evaluator plan prompt](specs/rules-evaluator-implementation-plan-prompt.md) — prompt used to generate the implementation plan above.
 - [Game lobby spec](specs/game-lobby-and-player-a-setup.md) — lobby, match name, and Player A setup (implemented).
+- [Game play screen spec](specs/game-play-screen-frontend.md) — Partner A solo play UI; lobby Continue deep-links to an ACTIVE run.
 - [AGENTS.md](../AGENTS.md) — technical conventions for agents and contributors.
 - [development-workflow.md](development-workflow.md) — step-by-step workflow for agents.
 - [engineering-baseline-backlog.md](backlog/engineering-baseline-backlog.md) — engineering baseline and CI/deployment backlog.

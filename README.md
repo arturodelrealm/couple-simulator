@@ -71,20 +71,21 @@ Each row is a Makefile **target**. Equivalent without `make`: `./task.sh <target
 | Backend tests | `make test` |
 | Rules evaluator lint / tests | `make lint-rules-evaluator` / `make test-rules-evaluator` (Docker, Python 3.12) |
 | Game engine lint / tests | `make lint-couple-simulator-engine` / `make test-couple-simulator-engine` (Docker, Python 3.12) |
-| Frontend lint | `make lint-frontend` |
-| Frontend format | `make format-frontend` |
-| Frontend format check | `make format-check-frontend` |
-| Frontend build | `cd frontend && npm run build` |
+| Frontend lint | `make lint-frontend` (Docker) |
+| Frontend format | `make format-frontend` (Docker) |
+| Frontend format check | `make format-check-frontend` (Docker) |
+| Frontend build | `make build-check-frontend` (Docker) |
 | Run all pre-commit hooks | `make pre-commit-run` |
 | Install pre-commit hooks | `make pre-commit-install` |
 
-One-time dev setup (for git hooks and local frontend lint):
+One-time dev setup (git hooks; optional host Python for backend-only work):
 
 ```bash
 pip install -e "./backend[dev]"
 make pre-commit-install
-cd frontend && npm install
 ```
+
+Frontend lint, format, and `build-check-frontend` run in Docker. Host `npm install` is only needed if you run Vite on the host (see [docs/development-workflow.md](docs/development-workflow.md)).
 
 ## Project layout
 
@@ -122,7 +123,7 @@ couple-simulator/
 - **Backend:** Ruff lint/format via `make lint`, `make format`, and pre-commit.
 - **Backend tests:** pytest via `make test` (runs in Docker with Python 3.12). With a local 3.12 venv: `pip install -e "./backend[dev]"` then `cd backend && pytest`.
 - **Backend typecheck:** mypy on `app/services/` and `app/shared/` via `make typecheck`.
-- **Frontend:** ESLint + Prettier via `make lint-frontend` and `make format-check-frontend`; TypeScript check in `npm run build`.
+- **Frontend:** ESLint, Prettier, and TypeScript + Vite build via `make lint-frontend`, `make format-check-frontend`, and `make build-check-frontend` (Docker `frontend` service).
 
 **CI:** GitHub Actions runs on pushes to `main` and on pull requests (`.github/workflows/ci.yml`) — backend lint/test/typecheck, frontend lint/build, and migration consistency.
 

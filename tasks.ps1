@@ -32,6 +32,7 @@ switch ($Task) {
         Write-Host "  .\tasks.ps1 format"
         Write-Host "  .\tasks.ps1 format-frontend"
         Write-Host "  .\tasks.ps1 format-check-frontend"
+        Write-Host "  .\tasks.ps1 build-check-frontend"
         Write-Host "  .\tasks.ps1 typecheck"
         Write-Host "  .\tasks.ps1 test"
         Write-Host "  .\tasks.ps1 test-rules-evaluator"
@@ -84,10 +85,7 @@ switch ($Task) {
     }
 
     "lint-frontend" {
-        Push-Location frontend
-        & npm run lint
-        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
-        Pop-Location
+        Run-Compose @("run", "--rm", "--no-deps", "-T", "frontend", "npm", "run", "lint")
     }
 
     "format" {
@@ -98,17 +96,15 @@ switch ($Task) {
     }
 
     "format-frontend" {
-        Push-Location frontend
-        & npm run format
-        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
-        Pop-Location
+        Run-Compose @("run", "--rm", "--no-deps", "-T", "frontend", "npm", "run", "format")
     }
 
     "format-check-frontend" {
-        Push-Location frontend
-        & npm run format:check
-        if ($LASTEXITCODE -ne 0) { Pop-Location; exit $LASTEXITCODE }
-        Pop-Location
+        Run-Compose @("run", "--rm", "--no-deps", "-T", "frontend", "npm", "run", "format:check")
+    }
+
+    "build-check-frontend" {
+        Run-Compose @("run", "--rm", "--no-deps", "-T", "frontend", "npm", "run", "build")
     }
 
     "typecheck" {

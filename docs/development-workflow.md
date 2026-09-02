@@ -134,9 +134,9 @@ make typecheck               # mypy on app/services and app/shared (Docker)
 make test                    # backend pytest (Docker)
 make lint-couple-simulator-engine  # Ruff in Docker (Python 3.12)
 make test-couple-simulator-engine  # pytest in Docker (Python 3.12)
-make lint-frontend           # ESLint
-make format-check-frontend   # Prettier check
-cd frontend && npm run build # TypeScript + Vite build
+make lint-frontend           # ESLint (Docker)
+make format-check-frontend   # Prettier check (Docker)
+make build-check-frontend    # TypeScript + Vite production build (Docker)
 ```
 
 ```bash
@@ -144,7 +144,7 @@ cd frontend && npm run build # TypeScript + Vite build
 ./task.sh lint
 ```
 
-With a local Python 3.12 environment you may still run backend `pytest`/`mypy` on the host. Game engine and rules evaluator **make / task.sh targets use Docker** (`python-tools` service, image `python:3.12-slim`) so they do not depend on the host interpreter.
+With a local Python 3.12 environment you may still run backend `pytest`/`mypy` on the host. Game engine and rules evaluator **make / task.sh targets use Docker** (`python-tools` service, image `python:3.12-slim`) so they do not depend on the host interpreter. Frontend lint, format, and production build targets use the **`frontend` Compose service** so they do not depend on host `npm`.
 
 ### Hot reload on Windows (Docker)
 
@@ -224,7 +224,7 @@ Before finishing a task, verify:
 - [ ] `make test` (or `./task.sh test`) passes (backend changes)
 - [ ] `make typecheck` (or `./task.sh typecheck`) passes (backend services/shared changes)
 - [ ] `make lint-frontend` and `make format-check-frontend` pass (frontend changes; or `./task.sh` with the same names)
-- [ ] `npm run build` passes (frontend changes)
+- [ ] `make build-check-frontend` passes (frontend changes; or `./task.sh build-check-frontend`)
 - [ ] Documentation updated if behavior or setup changed
 
 ---

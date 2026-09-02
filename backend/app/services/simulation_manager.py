@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import lru_cache
@@ -11,7 +12,8 @@ from couple_simulator_engine.content.catalog import (
     package_events_directory,
 )
 from couple_simulator_engine.engine import GameEngine
-from couple_simulator_engine.session import EventPresentation
+from couple_simulator_engine.resolution.event_resolver import AnswerValidationError
+from couple_simulator_engine.session import Answer, EventPresentation
 from couple_simulator_engine.snapshot import RunSnapshot, run_snapshot_from_session
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
@@ -74,6 +76,16 @@ class SimulationRunList:
 class CurrentEventView:
     run_id: UUID
     event: dict[str, Any]
+
+
+@dataclass(frozen=True)
+class SubmitAnswersView:
+    run_id: UUID
+    status: str
+    state: dict[str, Any]
+    events_played: int
+    client_actions: list[dict[str, Any]]
+    game_finished: bool
 
 
 @lru_cache(maxsize=1)
@@ -228,6 +240,68 @@ class SimulationManager:
         return CurrentEventView(
             run_id=orm_run.id,
             event=_event_presentation_to_dict(presentation),
+        )
+
+    def submit_answers(
+        self,
+        db: Session,
+        game_id: UUID,
+        run_id: UUID,
+        event_id: str,
+        answers: Sequence[dict[str, str]],
+    ) -> SubmitAnswersView:
+        game, orm_run = self._load_game_and_run(db, game_id, run_id)
+        if orm_run.status == SimulationRunStatus.FINISHED.value:
+            raise AppError(
+                "RUN_FINISHED",
+                _("This simulation run has finished"),
+                status_code=409,
+            )
+        if orm_run.current_event_id != event_id:
+            raise AppError(
+                "EVENT_MISMATCH",
+                _("Event does not match the open event"),
+                status_code=409,
+            )
+
+        event = self._engine.catalog.get(event_id)
+        if event is None:
+            raise AppError(
+                "EVENT_NOT_FOUND",
+                _("Event not found"),
+                status_code=404,
+            )
+
+        loaded = self._engine.load_game(game_snapshot_from_db(game, orm_run))
+        session = loaded.session
+        engine_answers = [
+            Answer(question_id=item["question_id"], option_id=item["option_id"])
+            for item in answers
+        ]
+        try:
+            resolution = self._engine.submit_answers(session, event, engine_answers)
+        except AnswerValidationError as exc:
+            raise AppError(
+                "INVALID_ANSWERS",
+                _("Invalid event answers"),
+                status_code=409,
+            ) from exc
+
+        end = self._engine.check_end_conditions(session)
+        exported = self._engine.export_snapshot(loaded)
+        _apply_run_snapshot(orm_run, exported.active_run)
+        db.commit()
+
+        return SubmitAnswersView(
+            run_id=orm_run.id,
+            status=exported.active_run.status.value,
+            state=public_simulation_state(exported.active_run.state),
+            events_played=exported.active_run.events_played,
+            client_actions=[
+                {"type": action.type, "args": dict(action.args)}
+                for action in resolution.client_actions
+            ],
+            game_finished=resolution.game_finished or end.finished,
         )
 
     def _load_game_and_run(

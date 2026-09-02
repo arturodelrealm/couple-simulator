@@ -5,9 +5,13 @@
   "game": {
     "lobby": {
       "title": "Couple Life Simulator",
+      "subtitle": "Start a new couple story, or join a match with a shared name.",
       "createButton": "Create new match",
+      "createHint": "Pick a match name and set up Partner A.",
       "joinButton": "Join a match",
+      "joinHint": "Enter a match name to open an existing game.",
       "continueCurrent": "Continue",
+      "continueHint": "Pick up where you left off on this device.",
       "currentMatchLabel": "Current match"
     },
     "nav": {
@@ -47,6 +51,7 @@
     },
     "confirm": {
       "title": "Match ready",
+      "subtitle": "Your character is set. Start the story whenever you are ready.",
       "matchName": "Match name",
       "gameMode": "Game mode",
       "sexLabel": "Sex",
@@ -57,22 +62,76 @@
       "copyInviteLink": "Copy invitation link",
       "inviteCopied": "Link copied!",
       "hint": "You can close this page and return later — your match will be recovered automatically."
+    },
+    "play": {
+      "title": "Our Life Story",
+      "lifeEvent": "Life Event",
+      "choicesPrompt": "What do you decide?",
+      "lifeStory": "Life Story",
+      "atAGlance": "At a glance",
+      "start": "Start playing",
+      "continue": "Continue game",
+      "continueNextEvent": "Continue",
+      "nextQuestion": "Next question",
+      "partnerB": "Partner B",
+      "age": "Age {{age}}",
+      "childrenOverflow": "+{{count}}",
+      "timeline": {
+        "empty": "Your story will appear here."
+      },
+      "lifeStage": {
+        "youth": "Young Adulthood",
+        "adult": "Adulthood",
+        "elderly": "Senior Years"
+      },
+      "stats": {
+        "compatibility": "Compatibility",
+        "finances": "Finances",
+        "children": "Children",
+        "adventures": "Adventures",
+        "career": "Career",
+        "qualityOfLife": "Quality of Life"
+      },
+      "gameOver": {
+        "title": "A Life Well Lived",
+        "yourStory": "Your Story",
+        "playAgain": "Play Again",
+        "ages": "{{partnerAName}} is {{partnerAAge}}, {{partnerBName}} is {{partnerBAge}}."
+      },
+      "errors": {
+        "runNotFound": "This simulation run was not found.",
+        "gameNotReady": "This match is not ready to play yet.",
+        "runFinished": "This simulation run has finished.",
+        "noEligibleEvents": "No more life events are available for this run.",
+        "eventMismatch": "This event is no longer open. Try continuing or reload the game.",
+        "eventNotFound": "This life event was not found.",
+        "invalidAnswers": "Those answers are not valid for this event.",
+        "goToSetup": "Go to character setup"
+      }
     }
   },
   "avatar": {
     "builder": {
       "title": "Create your character",
       "forPartner": "Avatar for {{name}}",
-      "save": "Save character"
+      "save": "Save character",
+      "attributes": "Avatar attributes"
     },
     "section": {
       "hair": "Hair",
+      "hairColor": "Hair color",
+      "skin": "Skin",
       "eyes": "Eyes",
       "eyebrows": "Eyebrows",
       "mouth": "Mouth",
       "facialHair": "Facial hair",
+      "facialHairColor": "Beard color",
       "clothes": "Clothes",
+      "clothesColor": "Clothes color",
       "accessories": "Accessories"
+    },
+    "color": {
+      "swatch": "{{attribute}} {{color}}"
     },
     "option": {
       "none": "None"

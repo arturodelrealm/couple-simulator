@@ -6,7 +6,10 @@ from sqlalchemy.orm import Session
 from app.database import get_db
 from app.schemas.responses import ok
 from app.schemas.simulation import (
+    ClientActionRead,
     CurrentEventRead,
+    EventAnswersSubmit,
+    EventAnswersSubmitted,
     EventPresentationRead,
     QuestionPresentationRead,
     SimulationAnswerRead,
@@ -20,6 +23,7 @@ from app.schemas.simulation import (
 from app.services.simulation_manager import (
     CurrentEventView,
     SimulationRunView,
+    SubmitAnswersView,
     simulation_manager,
 )
 from app.shared.enums import SimulationRunStatus
@@ -67,6 +71,19 @@ def _current_event_payload(view: CurrentEventView) -> dict:
         ],
     )
     return CurrentEventRead(run_id=view.run_id, event=event).model_dump()
+
+
+def _submit_payload(view: SubmitAnswersView) -> dict:
+    return EventAnswersSubmitted(
+        run_id=view.run_id,
+        status=view.status,
+        state=_state_read(view.state),
+        events_played=view.events_played,
+        client_actions=[
+            ClientActionRead.model_validate(item) for item in view.client_actions
+        ],
+        game_finished=view.game_finished,
+    ).model_dump()
 
 
 @router.post("/{game_id}/simulation/runs", status_code=201)
@@ -140,3 +157,21 @@ def get_current_event(
 ) -> dict:
     view = simulation_manager.get_current_event(db, game_id, run_id)
     return ok(_current_event_payload(view))
+
+
+@router.post("/{game_id}/simulation/runs/{run_id}/events/{event_id}/answers")
+def submit_event_answers(
+    game_id: UUID,
+    run_id: UUID,
+    event_id: str,
+    payload: EventAnswersSubmit,
+    db: Session = Depends(get_db),
+) -> dict:
+    view = simulation_manager.submit_answers(
+        db,
+        game_id,
+        run_id,
+        event_id,
+        answers=[item.model_dump() for item in payload.answers],
+    )
+    return ok(_submit_payload(view))

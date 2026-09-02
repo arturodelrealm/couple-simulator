@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import { LobbyActionCard } from "../components/lobby/LobbyActionCard";
+import { LobbyCurrentMatch } from "../components/lobby/LobbyCurrentMatch";
+import { LobbyJoinIcon, LobbyPlusIcon } from "../components/lobby/lobbyIcons";
+import { PlayLayout } from "../components/play/PlayLayout";
+import { PlayHeartIcon } from "../components/play/playIcons";
 import { useLobby } from "../hooks/useLobby";
-import { GameLayout } from "../shared/ui/GameLayout";
-import { PrimaryButton } from "../shared/ui/PrimaryButton";
 import { ErrorMessage } from "../shared/ui/ErrorMessage";
 
 export function LobbyPage() {
@@ -11,45 +13,51 @@ export function LobbyPage() {
   const { currentGame, onContinue, isContinuing, error } = useLobby();
 
   return (
-    <GameLayout>
-      <div className="space-y-8">
-        <h1 className="text-2xl font-bold text-slate-900">
+    <PlayLayout
+      showBackToLobby={false}
+      contentClassName="mx-auto max-w-3xl space-y-6 px-6 py-8"
+    >
+      <section
+        className="rounded-3xl border border-purple-50 px-6 py-10 text-center shadow-sm sm:px-10"
+        style={{
+          background: "linear-gradient(90deg, #faf5ff, #fdf2f8, #eff6ff)",
+        }}
+      >
+        <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/80 shadow-sm">
+          <PlayHeartIcon className="h-6 w-6" style={{ color: "#F472B6" }} />
+        </div>
+        <h1 className="font-display text-3xl font-extrabold text-slate-800 sm:text-4xl">
           {t("game.lobby.title")}
         </h1>
+        <p className="mx-auto mt-3 max-w-md text-sm leading-relaxed text-slate-600">
+          {t("game.lobby.subtitle")}
+        </p>
+      </section>
 
-        <div className="space-y-3">
-          <Link to="/games/new" className="block">
-            <PrimaryButton className="w-full">
-              {t("game.lobby.createButton")}
-            </PrimaryButton>
-          </Link>
-          <Link to="/games/join" className="block">
-            <PrimaryButton className="w-full bg-white text-indigo-600 ring-1 ring-indigo-600 hover:bg-indigo-50">
-              {t("game.lobby.joinButton")}
-            </PrimaryButton>
-          </Link>
-        </div>
-
-        {currentGame && (
-          <div className="rounded-lg border border-slate-200 bg-white p-4 space-y-3">
-            <p className="text-sm text-slate-600">
-              {t("game.lobby.currentMatchLabel")}
-            </p>
-            <p className="font-mono text-lg font-medium text-slate-900">
-              {currentGame.match_name}
-            </p>
-            <PrimaryButton
-              onClick={onContinue}
-              disabled={isContinuing}
-              className="w-full"
-            >
-              {t("game.lobby.continueCurrent")}
-            </PrimaryButton>
-          </div>
-        )}
-
-        {error && <ErrorMessage message={error} />}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <LobbyActionCard
+          to="/games/new"
+          title={t("game.lobby.createButton")}
+          description={t("game.lobby.createHint")}
+          icon={<LobbyPlusIcon className="h-6 w-6" />}
+        />
+        <LobbyActionCard
+          to="/games/join"
+          title={t("game.lobby.joinButton")}
+          description={t("game.lobby.joinHint")}
+          icon={<LobbyJoinIcon className="h-6 w-6" />}
+        />
       </div>
-    </GameLayout>
+
+      {currentGame ? (
+        <LobbyCurrentMatch
+          matchName={currentGame.match_name}
+          onContinue={onContinue}
+          isContinuing={isContinuing}
+        />
+      ) : null}
+
+      {error ? <ErrorMessage message={error} /> : null}
+    </PlayLayout>
   );
 }

@@ -184,6 +184,7 @@ POST   /api/games/{game_id}/simulation/runs
 GET    /api/games/{game_id}/simulation/runs
 GET    /api/games/{game_id}/simulation/runs/{run_id}
 GET    /api/games/{game_id}/simulation/runs/{run_id}/events/current
+POST   /api/games/{game_id}/simulation/runs/{run_id}/events/{event_id}/answers
 ```
 
 Extend with resource-oriented endpoints as features are added.
