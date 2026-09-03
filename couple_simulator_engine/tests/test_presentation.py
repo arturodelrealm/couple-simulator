@@ -20,6 +20,7 @@ def _full_presentation() -> TextPresentation:
 
 # --- Role precedence ---
 
+
 def test_role_wins_over_sex_and_default() -> None:
     tp = _full_presentation()
     assert resolve_text_key(tp, player_role="partner_a", player_sex="female") == (
@@ -35,6 +36,7 @@ def test_role_partner_b() -> None:
 
 
 # --- Sex branch (no matching role) ---
+
 
 def test_sex_male_when_role_absent() -> None:
     tp = TextPresentation(
@@ -58,6 +60,7 @@ def test_sex_female_when_role_absent() -> None:
 
 # --- Other sex fallback ---
 
+
 def test_other_sex_falls_back_to_default_when_absent() -> None:
     tp = TextPresentation(
         default_key="default.key",
@@ -80,6 +83,7 @@ def test_other_sex_uses_explicit_entry_when_present() -> None:
 
 # --- Default-only presentation ---
 
+
 def test_default_only_returns_default_key() -> None:
     tp = TextPresentation(default_key="events.simple.text")
     assert resolve_text_key(tp, player_role="partner_a", player_sex="male") == (
@@ -89,13 +93,16 @@ def test_default_only_returns_default_key() -> None:
 
 # --- Plain string passthrough ---
 
+
 def test_plain_string_returned_unchanged() -> None:
-    assert resolve_text_key(
-        "events.plain.key", player_role="partner_a", player_sex="male"
-    ) == "events.plain.key"
+    assert (
+        resolve_text_key("events.plain.key", player_role="partner_a", player_sex="male")
+        == "events.plain.key"
+    )
 
 
 # --- Unknown role falls through ---
+
 
 def test_unknown_role_falls_to_sex() -> None:
     tp = TextPresentation(

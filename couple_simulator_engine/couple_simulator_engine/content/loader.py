@@ -161,12 +161,18 @@ def _parse_text_field(
                 )
             )
         by_role = _parse_text_variant_dict(
-            value.get("by_role"), variant="by_role", field=field,
-            source=source, event_id=event_id,
+            value.get("by_role"),
+            variant="by_role",
+            field=field,
+            source=source,
+            event_id=event_id,
         )
         by_sex = _parse_text_variant_dict(
-            value.get("by_sex"), variant="by_sex", field=field,
-            source=source, event_id=event_id,
+            value.get("by_sex"),
+            variant="by_sex",
+            field=field,
+            source=source,
+            event_id=event_id,
         )
         return TextPresentation(
             default_key=value["default_key"],
@@ -226,9 +232,7 @@ def _parse_question(
         )
     question_id = _require_str(data, "id", **ctx)
     if "text" not in data:
-        raise ContentParseError(
-            _format_error("Missing required field 'text'", **ctx)
-        )
+        raise ContentParseError(_format_error("Missing required field 'text'", **ctx))
     text = _parse_text_field(data["text"], field="text", **ctx)
     if "options" not in data or not isinstance(data["options"], list):
         raise ContentParseError(
@@ -270,9 +274,7 @@ def _parse_option(
         )
     option_id = _require_str(data, "id", **ctx)
     if "text" not in data:
-        raise ContentParseError(
-            _format_error("Missing required field 'text'", **ctx)
-        )
+        raise ContentParseError(_format_error("Missing required field 'text'", **ctx))
     text = _parse_text_field(data["text"], field="text", **ctx)
     actions = _parse_actions(
         data.get("actions", []),
