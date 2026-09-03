@@ -16,9 +16,10 @@ from couple_simulator_engine.content.definitions import (
     OptionDefinition,
     OutcomeDefinition,
     QuestionDefinition,
+    TextPresentation,
 )
 from couple_simulator_engine.engine import GameEngine
-from couple_simulator_engine.enums import PlayerSex, SessionStatus
+from couple_simulator_engine.enums import PlayerRole, PlayerSex, SessionStatus
 from couple_simulator_engine.player import Player
 from couple_simulator_engine.session import Answer, RecordedAnswer
 from couple_simulator_engine.snapshot import GameSnapshot, LoadedGame, RunSnapshot
@@ -170,7 +171,9 @@ def test_load_then_select_present_export_keeps_current_event_id() -> None:
     loaded = engine.load_game(snapshot)
     event = engine.select_next_event(loaded.session)
     assert event is not None
-    engine.present_event(event)
+    engine.present_event(
+        event, player_role=PlayerRole.PARTNER_A, player_sex=PlayerSex.MALE
+    )
     loaded.session.current_event_id = event.id
     exported = engine.export_snapshot(loaded)
     assert exported.active_run.current_event_id == event.id
@@ -510,3 +513,118 @@ def test_session_submit_does_not_use_partner_a_bank() -> None:
     assert session.state.finances == 70
     assert session.state.partner_a.simulation_relation_happiness == 70
     assert session.state.partner_b.simulation_relation_happiness == 70
+
+
+# --- present_event TextPresentation resolution tests ---
+
+
+def _text_presentation_event() -> EventDefinition:
+    return EventDefinition(
+        id="tp_test",
+        title="events.tp.title",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="q1",
+                text=TextPresentation(
+                    default_key="q1.default",
+                    by_sex={
+                        "male": "q1.male",
+                        "female": "q1.female",
+                    },
+                ),
+                options=(
+                    OptionDefinition(
+                        id="opt1",
+                        text=TextPresentation(
+                            default_key="opt1.default",
+                            by_role={
+                                "partner_a": "opt1.role_a",
+                                "partner_b": "opt1.role_b",
+                            },
+                        ),
+                    ),
+                    OptionDefinition(id="opt2", text="opt2.plain"),
+                ),
+            ),
+        ),
+        outcomes=(),
+        default_actions=(),
+        mismatch_actions=(),
+    )
+
+
+def test_present_event_resolves_sex_male() -> None:
+    engine = _engine()
+    event = _text_presentation_event()
+    pres = engine.present_event(
+        event,
+        player_role=PlayerRole.PARTNER_A,
+        player_sex=PlayerSex.MALE,
+    )
+    assert pres.questions[0].text == "q1.male"
+
+
+def test_present_event_resolves_sex_female() -> None:
+    engine = _engine()
+    event = _text_presentation_event()
+    pres = engine.present_event(
+        event,
+        player_role=PlayerRole.PARTNER_A,
+        player_sex=PlayerSex.FEMALE,
+    )
+    assert pres.questions[0].text == "q1.female"
+
+
+def test_present_event_other_sex_falls_to_default() -> None:
+    engine = _engine()
+    event = _text_presentation_event()
+    pres = engine.present_event(
+        event,
+        player_role=PlayerRole.PARTNER_A,
+        player_sex=PlayerSex.OTHER,
+    )
+    assert pres.questions[0].text == "q1.default"
+
+
+def test_present_event_role_precedence_on_option() -> None:
+    engine = _engine()
+    event = _text_presentation_event()
+    pres_a = engine.present_event(
+        event,
+        player_role=PlayerRole.PARTNER_A,
+        player_sex=PlayerSex.MALE,
+    )
+    assert pres_a.questions[0].options[0].text == "opt1.role_a"
+    pres_b = engine.present_event(
+        event,
+        player_role=PlayerRole.PARTNER_B,
+        player_sex=PlayerSex.MALE,
+    )
+    assert pres_b.questions[0].options[0].text == "opt1.role_b"
+
+
+def test_present_event_plain_string_unchanged() -> None:
+    engine = _engine()
+    event = _text_presentation_event()
+    pres = engine.present_event(
+        event,
+        player_role=PlayerRole.PARTNER_A,
+        player_sex=PlayerSex.MALE,
+    )
+    assert pres.questions[0].options[1].text == "opt2.plain"
+
+
+def test_present_event_title_description_passthrough() -> None:
+    engine = _engine()
+    event = _text_presentation_event()
+    pres = engine.present_event(
+        event,
+        player_role=PlayerRole.PARTNER_A,
+        player_sex=PlayerSex.MALE,
+    )
+    assert pres.title == "events.tp.title"
+    assert pres.description is None

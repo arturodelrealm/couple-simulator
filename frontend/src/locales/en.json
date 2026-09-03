@@ -168,5 +168,85 @@
     "matchNameInvalid": "Match name must be 3–32 characters: lowercase letters, numbers, hyphens, and underscores.",
     "sexRequired": "Please select a sex option.",
     "inviteCopyFailed": "Could not copy the link. Please copy it manually."
+  },
+  "events": {
+    "weekend_trip": {
+      "title": "Weekend plans",
+      "description": "Decide how to spend the weekend together.",
+      "questions": {
+        "weekend_plan": "What should we do this weekend?"
+      },
+      "options": {
+        "stay_home": "Stay home",
+        "road_trip": "Take a road trip"
+      },
+      "conversations": {
+        "went_out": "Whatever we picked, it was our weekend."
+      },
+      "timeline": {
+        "weekend_together": "Weekend together"
+      }
+    },
+    "buy_house_light": {
+      "title": "Buy a house?",
+      "questions": {
+        "want_to_buy": "Would you like to buy a house?",
+        "budget_ready": "Do you have the budget?"
+      },
+      "options": {
+        "want_to_buy": {
+          "yes": "Yes",
+          "no": "No"
+        },
+        "budget_ready": {
+          "yes": "Yes",
+          "no": "No"
+        }
+      },
+      "conversations": {
+        "purchase": "We are buying a home.",
+        "keep_renting": "Renting still works for us.",
+        "leave_open": "We leave the housing question open for now."
+      },
+      "timeline": {
+        "bought_house": "Bought a house"
+      }
+    },
+    "career_offer": {
+      "title": "Career offer",
+      "description": "A promotion with longer hours.",
+      "questions": {
+        "career_choice": "Do you accept the promotion with more hours?"
+      },
+      "options": {
+        "accept": "Accept",
+        "decline": "Decline"
+      }
+    },
+    "midlife_checkpoint": {
+      "title": "Midlife checkpoint",
+      "description": "A chance to step into a new life stage.",
+      "questions": {
+        "midlife_stance": "How do you meet this turning point?"
+      },
+      "options": {
+        "embrace": "Embrace it",
+        "resist": "Resist it"
+      },
+      "conversations": {
+        "stagnate": "Maybe we are not ready to call this a new chapter."
+      }
+    },
+    "burnout": {
+      "title": "Burnout",
+      "description": "Work pressure reaches a breaking point.",
+      "questions": {
+        "burnout_choice": "How do you respond to burnout?"
+      },
+      "options": {
+        "quit_job": "Quit the job",
+        "push_through": "Push through"
+      }
+    }
   }
 }

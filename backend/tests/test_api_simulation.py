@@ -220,6 +220,11 @@ def test_get_current_event_after_start(
     assert event["event_id"]
     assert event["questions"]
     assert "options" in event["questions"][0]
+    assert event["title"].startswith("events.")
+    assert event["questions"][0]["text"].startswith("events.")
+    assert event["questions"][0]["options"][0]["text"].startswith("events.")
+    if event["description"] is not None:
+        assert event["description"].startswith("events.")
 
     run = client.get(f"/api/games/{game_id}/simulation/runs/{run_id}")
     assert run.json()["data"]["current_event_id"] == event["event_id"]

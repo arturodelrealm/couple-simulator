@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import type { TimelineEntry } from "../../services/simulationService";
 import { STAT_CONFIG } from "../../shared/play/statConfig";
+import { translateContent } from "../../shared/play/translateContent";
 import type { StatsBarValues } from "./StatsBar";
 import { PlayBookIcon } from "./playIcons";
 
@@ -54,14 +55,14 @@ export function LifeStoryPanel({ timeline, stats }: LifeStoryPanelProps) {
                       isNewest ? "text-purple-700" : "text-slate-600"
                     }`}
                   >
-                    {entry.title}
+                    {translateContent(entry.title)}
                   </p>
                   <p className="mt-0.5 text-xs text-slate-400">
                     {t("game.play.age", { age: entry.age })}
                   </p>
                   {entry.description ? (
                     <p className="mt-1 text-xs text-slate-500">
-                      {entry.description}
+                      {translateContent(entry.description)}
                     </p>
                   ) : null}
                 </div>

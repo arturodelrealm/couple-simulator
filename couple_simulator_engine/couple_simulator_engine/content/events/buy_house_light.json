@@ -1,6 +1,6 @@
 {
   "id": "buy_house_light",
-  "title": "Buy a house?",
+  "title": "events.buy_house_light.title",
   "description": null,
   "tags": ["financial", "housing"],
   "life_stage": null,
@@ -13,11 +13,11 @@
   "questions": [
     {
       "id": "want_to_buy",
-      "text": "Would you like to buy a house?",
+      "text": "events.buy_house_light.questions.want_to_buy",
       "options": [
         {
           "id": "yes",
-          "text": "Yes",
+          "text": "events.buy_house_light.options.want_to_buy.yes",
           "actions": [
             {
               "type": "set_event_var",
@@ -27,7 +27,7 @@
         },
         {
           "id": "no",
-          "text": "No",
+          "text": "events.buy_house_light.options.want_to_buy.no",
           "actions": [
             {
               "type": "set_event_var",
@@ -39,11 +39,11 @@
     },
     {
       "id": "budget_ready",
-      "text": "Do you have the budget?",
+      "text": "events.buy_house_light.questions.budget_ready",
       "options": [
         {
           "id": "yes",
-          "text": "Yes",
+          "text": "events.buy_house_light.options.budget_ready.yes",
           "actions": [
             {
               "type": "set_event_var",
@@ -53,7 +53,7 @@
         },
         {
           "id": "no",
-          "text": "No",
+          "text": "events.buy_house_light.options.budget_ready.no",
           "actions": [
             {
               "type": "set_event_var",
@@ -97,13 +97,13 @@
           "type": "add_conversation",
           "args": {
             "speaker": "partner_a",
-            "text": "We are buying a home."
+            "text_key": "events.buy_house_light.conversations.purchase"
           }
         },
         {
           "type": "add_timeline_entry",
           "args": {
-            "title": "Bought a house",
+            "title_key": "events.buy_house_light.timeline.bought_house",
             "category": "housing"
           }
         }
@@ -126,7 +126,7 @@
           "type": "add_conversation",
           "args": {
             "speaker": "partner_a",
-            "text": "Renting still works for us."
+            "text_key": "events.buy_house_light.conversations.keep_renting"
           }
         }
       ]
@@ -137,7 +137,7 @@
       "type": "add_conversation",
       "args": {
         "speaker": "partner_a",
-        "text": "We leave the housing question open for now."
+        "text_key": "events.buy_house_light.conversations.leave_open"
       }
     }
   ],

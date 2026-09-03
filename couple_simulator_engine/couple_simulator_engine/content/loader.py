@@ -12,6 +12,8 @@ from couple_simulator_engine.content.definitions import (
     OptionDefinition,
     OutcomeDefinition,
     QuestionDefinition,
+    TextField,
+    TextPresentation,
 )
 from couple_simulator_engine.enums import LifeStage
 
@@ -123,6 +125,99 @@ def _parse_event(data: dict[str, Any], *, source: str) -> EventDefinition:
     )
 
 
+def _parse_text_field(
+    value: Any,
+    *,
+    field: str,
+    source: str,
+    event_id: str,
+) -> TextField:
+    """Parse a plain i18n key string or a ``TextPresentation`` object."""
+    if isinstance(value, str):
+        if not value:
+            raise ContentParseError(
+                _format_error(
+                    f"Field '{field}' must be a non-empty string",
+                    source=source,
+                    event_id=event_id,
+                )
+            )
+        return value
+    if isinstance(value, dict):
+        if "default_key" not in value or not isinstance(value["default_key"], str):
+            raise ContentParseError(
+                _format_error(
+                    f"Field '{field}' object requires a non-empty string 'default_key'",
+                    source=source,
+                    event_id=event_id,
+                )
+            )
+        if not value["default_key"]:
+            raise ContentParseError(
+                _format_error(
+                    f"Field '{field}' object requires a non-empty string 'default_key'",
+                    source=source,
+                    event_id=event_id,
+                )
+            )
+        by_role = _parse_text_variant_dict(
+            value.get("by_role"),
+            variant="by_role",
+            field=field,
+            source=source,
+            event_id=event_id,
+        )
+        by_sex = _parse_text_variant_dict(
+            value.get("by_sex"),
+            variant="by_sex",
+            field=field,
+            source=source,
+            event_id=event_id,
+        )
+        return TextPresentation(
+            default_key=value["default_key"],
+            by_role=by_role,
+            by_sex=by_sex,
+        )
+    raise ContentParseError(
+        _format_error(
+            f"Field '{field}' must be a string or TextPresentation object",
+            source=source,
+            event_id=event_id,
+        )
+    )
+
+
+def _parse_text_variant_dict(
+    value: Any,
+    *,
+    variant: str,
+    field: str,
+    source: str,
+    event_id: str,
+) -> dict[str, str] | None:
+    if value is None:
+        return None
+    if not isinstance(value, dict):
+        raise ContentParseError(
+            _format_error(
+                f"Field '{field}.{variant}' must be an object",
+                source=source,
+                event_id=event_id,
+            )
+        )
+    for k, v in value.items():
+        if not isinstance(k, str) or not isinstance(v, str):
+            raise ContentParseError(
+                _format_error(
+                    f"Field '{field}.{variant}' must have string keys and values",
+                    source=source,
+                    event_id=event_id,
+                )
+            )
+    return dict(value)
+
+
 def _parse_question(
     data: Any,
     *,
@@ -136,7 +231,9 @@ def _parse_question(
             _format_error(f"Question at index {index} must be an object", **ctx)
         )
     question_id = _require_str(data, "id", **ctx)
-    text = _require_str(data, "text", **ctx)
+    if "text" not in data:
+        raise ContentParseError(_format_error("Missing required field 'text'", **ctx))
+    text = _parse_text_field(data["text"], field="text", **ctx)
     if "options" not in data or not isinstance(data["options"], list):
         raise ContentParseError(
             _format_error(
@@ -176,7 +273,9 @@ def _parse_option(
             )
         )
     option_id = _require_str(data, "id", **ctx)
-    text = _require_str(data, "text", **ctx)
+    if "text" not in data:
+        raise ContentParseError(_format_error("Missing required field 'text'", **ctx))
+    text = _parse_text_field(data["text"], field="text", **ctx)
     actions = _parse_actions(
         data.get("actions", []),
         field=f"option {option_id!r} actions",

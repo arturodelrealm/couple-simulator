@@ -18,6 +18,7 @@ import {
 } from "../services/simulationService";
 import { toErrorMessage } from "../shared/errors";
 import { getPlayPath } from "../shared/gameNavigation";
+import { translateContent } from "../shared/play/translateContent";
 import {
   clearCurrentGame,
   saveCurrentGameFromGame,
@@ -73,6 +74,15 @@ function asDialogueSpeaker(value: unknown): PlayDialogueLine["speaker"] {
   return "both";
 }
 
+function asInterpolationParams(
+  value: unknown,
+): Record<string, unknown> | undefined {
+  if (value === null || typeof value !== "object" || Array.isArray(value)) {
+    return undefined;
+  }
+  return value as Record<string, unknown>;
+}
+
 function dialogueFromClientActions(
   actions: ClientAction[],
 ): PlayDialogueLine[] {
@@ -82,10 +92,16 @@ function dialogueFromClientActions(
       continue;
     }
     const args = action.args ?? {};
-    const text = typeof args.text === "string" ? args.text : "";
-    if (text === "") {
+    const textKey = typeof args.text_key === "string" ? args.text_key : "";
+    const literalText = typeof args.text === "string" ? args.text : "";
+    const keyOrText = textKey !== "" ? textKey : literalText;
+    if (keyOrText === "") {
       continue;
     }
+    const text = translateContent(
+      keyOrText,
+      asInterpolationParams(args.params),
+    );
     lines.push({ speaker: asDialogueSpeaker(args.speaker), text });
   }
   return lines;

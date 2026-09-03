@@ -78,3 +78,34 @@ def test_burnout_end_game_includes_reason() -> None:
     ]
     assert end_actions
     assert end_actions[0].args.get("reason") == "burnout"
+
+
+def test_packaged_event_copy_fields_are_i18n_keys() -> None:
+    catalog = load_catalog(package_events_directory())
+    for event in catalog.all_events():
+        assert event.title.startswith("events.")
+        if event.description is not None:
+            assert event.description.startswith("events.")
+        for question in event.questions:
+            assert question.text.startswith("events.")
+            for option in question.options:
+                assert option.text.startswith("events.")
+        for action in event.default_actions:
+            if action.type == "add_conversation":
+                assert "text_key" in action.args
+                assert str(action.args["text_key"]).startswith("events.")
+                assert "text" not in action.args
+            if action.type == "add_timeline_entry":
+                assert "title_key" in action.args
+                assert str(action.args["title_key"]).startswith("events.")
+                assert "title" not in action.args
+        for outcome in event.outcomes:
+            for action in outcome.actions:
+                if action.type == "add_conversation":
+                    assert "text_key" in action.args
+                    assert str(action.args["text_key"]).startswith("events.")
+                    assert "text" not in action.args
+                if action.type == "add_timeline_entry":
+                    assert "title_key" in action.args
+                    assert str(action.args["title_key"]).startswith("events.")
+                    assert "title" not in action.args

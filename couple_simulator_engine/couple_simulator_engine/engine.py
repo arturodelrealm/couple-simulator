@@ -9,7 +9,8 @@ from uuid import uuid4
 from couple_simulator_engine.config import GameConfig
 from couple_simulator_engine.content.catalog import ContentCatalog
 from couple_simulator_engine.content.definitions import EventDefinition
-from couple_simulator_engine.enums import PlayerRole, SessionStatus
+from couple_simulator_engine.content.presentation import resolve_text_key
+from couple_simulator_engine.enums import PlayerRole, PlayerSex, SessionStatus
 from couple_simulator_engine.player import Player
 from couple_simulator_engine.resolution.event_resolver import resolve_event
 from couple_simulator_engine.rng import SeededRNG
@@ -103,13 +104,36 @@ class GameEngine:
             )
         return event_selector.select_next_event(session_or_loaded, self.catalog)
 
-    def present_event(self, event: EventDefinition) -> EventPresentation:
+    def present_event(
+        self,
+        event: EventDefinition,
+        *,
+        player_role: PlayerRole | str,
+        player_sex: PlayerSex,
+    ) -> EventPresentation:
+        role_str = (
+            player_role.value
+            if isinstance(player_role, PlayerRole)
+            else str(player_role)
+        )
+        sex_str = player_sex.value
         questions = [
             QuestionPresentation(
                 id=question.id,
-                text=question.text,
+                text=resolve_text_key(
+                    question.text,
+                    player_role=role_str,
+                    player_sex=sex_str,
+                ),
                 options=[
-                    OptionPresentation(id=option.id, text=option.text)
+                    OptionPresentation(
+                        id=option.id,
+                        text=resolve_text_key(
+                            option.text,
+                            player_role=role_str,
+                            player_sex=sex_str,
+                        ),
+                    )
                     for option in question.options
                 ],
             )

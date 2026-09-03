@@ -10,7 +10,7 @@ from couple_simulator_engine.content.catalog import (
 )
 from couple_simulator_engine.content.definitions import EventDefinition
 from couple_simulator_engine.engine import END_REASON_MAX_EVENTS, GameEngine
-from couple_simulator_engine.enums import PlayerSex, SessionStatus
+from couple_simulator_engine.enums import PlayerRole, PlayerSex, SessionStatus
 from couple_simulator_engine.player import Player
 from couple_simulator_engine.session import Answer, GameSession
 
@@ -41,7 +41,11 @@ def _run_until_finished(engine: GameEngine, session: GameSession) -> None:
         if event is None:
             engine.check_end_conditions(session)
             break
-        engine.present_event(event)
+        engine.present_event(
+            event,
+            player_role=PlayerRole.PARTNER_A,
+            player_sex=session.player.sex,
+        )
         engine.submit_answers(session, event, _continue_answers(event))
 
 

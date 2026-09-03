@@ -1,7 +1,7 @@
 {
   "id": "midlife_checkpoint",
-  "title": "Midlife checkpoint",
-  "description": "A chance to step into a new life stage.",
+  "title": "events.midlife_checkpoint.title",
+  "description": "events.midlife_checkpoint.description",
   "tags": ["life_stage"],
   "life_stage": null,
   "eligibility": {
@@ -13,16 +13,16 @@
   "questions": [
     {
       "id": "midlife_stance",
-      "text": "How do you meet this turning point?",
+      "text": "events.midlife_checkpoint.questions.midlife_stance",
       "options": [
         {
           "id": "embrace",
-          "text": "Embrace it",
+          "text": "events.midlife_checkpoint.options.embrace",
           "actions": []
         },
         {
           "id": "resist",
-          "text": "Resist it",
+          "text": "events.midlife_checkpoint.options.resist",
           "actions": []
         }
       ]
@@ -61,7 +61,7 @@
           "type": "add_conversation",
           "args": {
             "speaker": "partner_a",
-            "text": "Maybe we are not ready to call this a new chapter."
+            "text_key": "events.midlife_checkpoint.conversations.stagnate"
           }
         }
       ]

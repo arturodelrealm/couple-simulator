@@ -173,6 +173,40 @@ def test_add_conversation_passthrough_text_key() -> None:
     assert result[0].args["params"]["name"] == "Alex"
 
 
+def test_add_conversation_includes_text_key_alongside_literal_text() -> None:
+    session = _session()
+    action = ActionDefinition(
+        type="add_conversation",
+        args={
+            "speaker": "partner_a",
+            "text": "Hello",
+            "text_key": "events.cafe.greeting",
+        },
+    )
+    result = apply_action(action, _ctx(session), session, session.rng)
+    assert result[0].args["text"] == "Hello"
+    assert result[0].args["text_key"] == "events.cafe.greeting"
+
+
+def test_add_timeline_entry_passthrough_title_and_description_keys() -> None:
+    session = _session(age=30)
+    action = ActionDefinition(
+        type="add_timeline_entry",
+        args={
+            "title_key": "events.cafe.timeline.title",
+            "description_key": "events.cafe.timeline.description",
+            "category": "leisure",
+        },
+    )
+    result = apply_action(action, _ctx(session), session, session.rng)
+    assert session.timeline[0].title == "events.cafe.timeline.title"
+    assert session.timeline[0].description == "events.cafe.timeline.description"
+    assert result[0].args["title_key"] == "events.cafe.timeline.title"
+    assert result[0].args["description_key"] == "events.cafe.timeline.description"
+    assert result[0].args["title"] == "events.cafe.timeline.title"
+    assert result[0].args["description"] == "events.cafe.timeline.description"
+
+
 def test_add_timeline_entry_appends_with_state_age() -> None:
     session = _session(age=30)
     action = ActionDefinition(

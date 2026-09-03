@@ -97,7 +97,7 @@ def handle_add_conversation(
         payload["params"] = resolved_params
     if "text" in args:
         payload["text"] = _interpolate_player_name(str(args["text"]), name)
-    elif "text_key" in args:
+    if "text_key" in args:
         payload["text_key"] = args["text_key"]
     return [ClientAction(type="add_conversation", args=payload)]
 
@@ -108,11 +108,18 @@ def handle_add_timeline_entry(
     session: GameSession,
     rng: SeededRNG,
 ) -> list[ClientAction]:
+    title_key = args.get("title_key")
+    description_key = args.get("description_key")
+    title = str(title_key) if title_key is not None else args["title"]
+    if description_key is not None:
+        description = str(description_key)
+    else:
+        description = args.get("description")
     entry = TimelineEntry(
-        title=args["title"],
+        title=title,
         category=args["category"],
         age=session.state.age,
-        description=args.get("description"),
+        description=description,
     )
     session.timeline.append(entry)
     client_args: dict[str, Any] = {
@@ -122,6 +129,10 @@ def handle_add_timeline_entry(
     }
     if entry.description is not None:
         client_args["description"] = entry.description
+    if title_key is not None:
+        client_args["title_key"] = title_key
+    if description_key is not None:
+        client_args["description_key"] = description_key
     return [ClientAction(type="add_timeline_entry", args=client_args)]
 
 

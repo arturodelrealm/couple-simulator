@@ -11,7 +11,7 @@ from couple_simulator_engine.content.catalog import (
     load_catalog,
     package_events_directory,
 )
-from couple_simulator_engine.enums import PlayerSex
+from couple_simulator_engine.enums import PlayerRole, PlayerSex
 from couple_simulator_engine.session import (
     Answer,
     ClientAction,
@@ -113,7 +113,11 @@ def play(engine: GameEngine, player: Player, *, seed: int | None) -> GameSummary
         if event is None:
             engine.check_end_conditions(session)
             break
-        presentation = engine.present_event(event)
+        presentation = engine.present_event(
+            event,
+            player_role=PlayerRole.PARTNER_A,
+            player_sex=player.sex,
+        )
         print(f"\n--- {presentation.title} ---")
         if presentation.description:
             print(presentation.description)
