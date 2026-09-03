@@ -9,6 +9,7 @@ const API_ERROR_I18N_KEYS: Record<string, string> = {
   EVENT_MISMATCH: "game.play.errors.eventMismatch",
   EVENT_NOT_FOUND: "game.play.errors.eventNotFound",
   INVALID_ANSWERS: "game.play.errors.invalidAnswers",
+  PARTNER_B_NOT_READY: "game.play.errors.partnerBNotReady",
 };
 
 export function toErrorMessage(

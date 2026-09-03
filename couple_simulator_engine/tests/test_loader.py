@@ -147,7 +147,7 @@ def test_eligibility_and_when_null_stored_as_none(tmp_path: Path) -> None:
                         "actions": [
                             {
                                 "type": "modify_stat",
-                                "args": {"variable": "career", "delta": 1},
+                                "args": {"variable": "quality_of_life", "delta": 1},
                             }
                         ],
                     }

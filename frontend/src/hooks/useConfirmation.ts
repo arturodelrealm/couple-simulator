@@ -31,7 +31,8 @@ export function useConfirmation() {
   const [error, setError] = useState<string | null>(null);
   const [inviteCopied, setInviteCopied] = useState(false);
   const [inviteCopyError, setInviteCopyError] = useState<string | null>(null);
-  const [hasActiveRun, setHasActiveRun] = useState(false);
+  const [hasActiveRunA, setHasActiveRunA] = useState(false);
+  const [hasActiveRunB, setHasActiveRunB] = useState(false);
 
   useEffect(() => {
     if (!gameId) {
@@ -50,11 +51,18 @@ export function useConfirmation() {
       getGameInvite(gameId),
       listSimulationRuns(gameId, {
         status: "ACTIVE",
+        player_role: "partner_a",
+        page: 1,
+        per_page: 1,
+      }).catch(() => emptyRunList),
+      listSimulationRuns(gameId, {
+        status: "ACTIVE",
+        player_role: "partner_b",
         page: 1,
         per_page: 1,
       }).catch(() => emptyRunList),
     ])
-      .then(([loaded, loadedInvite, runs]) => {
+      .then(([loaded, loadedInvite, runsA, runsB]) => {
         saveCurrentGameFromGame(loaded);
         touchCurrentGame();
         if (!isPlayerASetupComplete(loaded)) {
@@ -63,7 +71,8 @@ export function useConfirmation() {
         }
         setGame(loaded);
         setInvite(loadedInvite);
-        setHasActiveRun(runs.items.length > 0);
+        setHasActiveRunA(runsA.items.length > 0);
+        setHasActiveRunB(runsB.items.length > 0);
       })
       .catch((err) => {
         clearCurrentGame();
@@ -97,7 +106,8 @@ export function useConfirmation() {
     inviteUrl,
     isLoading,
     error,
-    hasActiveRun,
+    hasActiveRunA,
+    hasActiveRunB,
     onCopyInvite,
     inviteCopied,
     inviteCopyError,

@@ -7,6 +7,7 @@ import { PlayLayout } from "../components/play/PlayLayout";
 import { PlayHeartIcon } from "../components/play/playIcons";
 import { useLobby } from "../hooks/useLobby";
 import { ErrorMessage } from "../shared/ui/ErrorMessage";
+import { getPlayerBSetupPath } from "../shared/gameNavigation";
 
 export function LobbyPage() {
   const { t } = useTranslation();
@@ -52,6 +53,7 @@ export function LobbyPage() {
       {currentGame ? (
         <LobbyCurrentMatch
           matchName={currentGame.match_name}
+          partnerBHref={getPlayerBSetupPath(currentGame.game_id)}
           onContinue={onContinue}
           isContinuing={isContinuing}
         />

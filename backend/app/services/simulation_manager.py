@@ -4,7 +4,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import lru_cache
-from typing import Any
+from typing import Any, cast
 from uuid import UUID
 
 from couple_simulator_engine.content.catalog import (
@@ -12,9 +12,14 @@ from couple_simulator_engine.content.catalog import (
     package_events_directory,
 )
 from couple_simulator_engine.engine import GameEngine
+from couple_simulator_engine.player import Player as EnginePlayer
 from couple_simulator_engine.resolution.event_resolver import AnswerValidationError
 from couple_simulator_engine.session import Answer, EventPresentation
-from couple_simulator_engine.snapshot import RunSnapshot, run_snapshot_from_session
+from couple_simulator_engine.snapshot import (
+    PlayerRoleName,
+    RunSnapshot,
+    run_snapshot_from_session,
+)
 from sqlalchemy import func, select
 from sqlalchemy.orm import Session, selectinload
 
@@ -35,7 +40,9 @@ from app.shared.i18n import translate as _
 
 _LIST_PER_PAGE_CAP = 100
 _LIST_PER_PAGE_DEFAULT = 20
-_PHASE1_PLAYER_ROLE = PlayerRole.PARTNER_A.value
+_ALLOWED_PLAYER_ROLES = frozenset(
+    {PlayerRole.PARTNER_A.value, PlayerRole.PARTNER_B.value}
+)
 
 
 @dataclass(frozen=True)
@@ -105,7 +112,7 @@ class SimulationManager:
         seed: int | None = None,
         max_events: int | None = None,
     ) -> SimulationRunView:
-        if player_role != _PHASE1_PLAYER_ROLE:
+        if player_role not in _ALLOWED_PLAYER_ROLES:
             raise AppError(
                 "INVALID_PLAYER_ROLE",
                 _("Invalid player role"),
@@ -115,12 +122,18 @@ class SimulationManager:
         game = _load_game(db, game_id)
         if game is None:
             raise AppError("GAME_NOT_FOUND", _("Game not found"), status_code=404)
-        _require_ready_for_start(game)
+        _require_ready_for_start(game, player_role)
         partner_a = _partner_a(game)
 
-        engine_player = lobby_player_to_engine(partner_a)
+        engine_partner_b: EnginePlayer | None
+        if player_role == PlayerRole.PARTNER_B.value:
+            engine_partner_b = lobby_player_to_engine(_require_complete_partner_b(game))
+        else:
+            engine_partner_b = _engine_partner_b_if_complete(game)
         session = self._engine.new_session(
-            engine_player,
+            lobby_player_to_engine(partner_a),
+            partner_b=engine_partner_b,
+            player_role=player_role,
             seed=seed,
             max_events=max_events,
         )
@@ -128,7 +141,7 @@ class SimulationManager:
         now = datetime.now(timezone.utc)
         snapshot = run_snapshot_from_session(
             session,
-            player_role="partner_a",
+            player_role=cast(PlayerRoleName, player_role),
             run_number=run_number,
         )
         orm_run = SimulationRun(
@@ -141,6 +154,8 @@ class SimulationManager:
         )
         _apply_run_snapshot(orm_run, snapshot)
         db.add(orm_run)
+        if player_role == PlayerRole.PARTNER_B.value:
+            game.status = GameStatus.PLAYER_B_PLAYING.value
         db.commit()
         db.refresh(orm_run)
         return _view_from_orm(orm_run, snapshot)
@@ -156,12 +171,19 @@ class SimulationManager:
         db: Session,
         game_id: UUID,
         status: str | None = None,
+        player_role: str | None = None,
         page: int = 1,
         per_page: int = _LIST_PER_PAGE_DEFAULT,
     ) -> SimulationRunList:
         game = _load_game(db, game_id)
         if game is None:
             raise AppError("GAME_NOT_FOUND", _("Game not found"), status_code=404)
+        if player_role is not None and player_role not in _ALLOWED_PLAYER_ROLES:
+            raise AppError(
+                "INVALID_PLAYER_ROLE",
+                _("Invalid player role"),
+                status_code=400,
+            )
 
         safe_page = max(page, 1)
         safe_per_page = min(max(per_page, 1), _LIST_PER_PAGE_CAP)
@@ -169,6 +191,8 @@ class SimulationManager:
         runs = list(game.simulation_runs)
         if status is not None:
             runs = [run for run in runs if run.status == status]
+        if player_role is not None:
+            runs = [run for run in runs if run.player_role == player_role]
         runs.sort(key=_run_list_sort_key, reverse=True)
         total = len(runs)
         start = (safe_page - 1) * safe_per_page
@@ -220,7 +244,7 @@ class SimulationManager:
                 event=_event_presentation_to_dict(presentation),
             )
 
-        event = self._engine.select_next_event(session)
+        event = self._engine.select_next_event(loaded)
         if event is None:
             self._engine.check_end_conditions(session)
             exported = self._engine.export_snapshot(loaded)
@@ -279,7 +303,7 @@ class SimulationManager:
             for item in answers
         ]
         try:
-            resolution = self._engine.submit_answers(session, event, engine_answers)
+            resolution = self._engine.submit_answers(loaded, event, engine_answers)
         except AnswerValidationError as exc:
             raise AppError(
                 "INVALID_ANSWERS",
@@ -431,6 +455,27 @@ def _load_game(db: Session, game_id: UUID) -> Game | None:
     )
 
 
+def _lobby_player_is_complete(player: Player) -> bool:
+    has_name = player.name is not None and player.name.strip() != ""
+    has_avatar = player.avatar_config is not None
+    has_sex = player.sex is not None
+    return has_name and has_avatar and has_sex
+
+
+def _engine_partner_b_if_complete(game: Game) -> EnginePlayer | None:
+    partner_b = next(
+        (
+            player
+            for player in game.players
+            if player.role == PlayerRole.PARTNER_B.value
+        ),
+        None,
+    )
+    if partner_b is None or not _lobby_player_is_complete(partner_b):
+        return None
+    return lobby_player_to_engine(partner_b)
+
+
 def _partner_a(game: Game) -> Player:
     partner_a = next(
         (
@@ -449,22 +494,38 @@ def _partner_a(game: Game) -> Player:
     return partner_a
 
 
-def _require_ready_for_start(game: Game) -> None:
+def _require_complete_partner_b(game: Game) -> Player:
+    partner_b = next(
+        (
+            player
+            for player in game.players
+            if player.role == PlayerRole.PARTNER_B.value
+        ),
+        None,
+    )
+    if partner_b is None or not _lobby_player_is_complete(partner_b):
+        raise AppError(
+            "PARTNER_B_NOT_READY",
+            _("Partner B is not ready to start a simulation"),
+            status_code=409,
+        )
+    return partner_b
+
+
+def _require_ready_for_start(game: Game, player_role: str) -> None:
     partner_a = _partner_a(game)
-    has_name = partner_a.name is not None and partner_a.name.strip() != ""
-    has_avatar = partner_a.avatar_config is not None
-    has_sex = partner_a.sex is not None
-    if (
-        game.status != GameStatus.PLAYER_A_READY.value
-        or not has_name
-        or not has_avatar
-        or not has_sex
-    ):
+    allowed_statuses = {
+        GameStatus.PLAYER_A_READY.value,
+        GameStatus.PLAYER_B_PLAYING.value,
+    }
+    if game.status not in allowed_statuses or not _lobby_player_is_complete(partner_a):
         raise AppError(
             "GAME_NOT_READY",
             _("Game is not ready to start a simulation"),
             status_code=409,
         )
+    if player_role == PlayerRole.PARTNER_B.value:
+        _require_complete_partner_b(game)
 
 
 def _run_list_sort_key(run: SimulationRun) -> tuple[datetime, int]:

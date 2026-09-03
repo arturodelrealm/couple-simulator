@@ -4,10 +4,15 @@ import { useTranslation } from "react-i18next";
 import { ConfirmActions } from "../components/confirm/ConfirmActions";
 import { ConfirmHero } from "../components/confirm/ConfirmHero";
 import { ConfirmInviteCard } from "../components/confirm/ConfirmInviteCard";
+import { ConfirmPartnerB } from "../components/confirm/ConfirmPartnerB";
 import { PlayLayout } from "../components/play/PlayLayout";
 import { useConfirmation } from "../hooks/useConfirmation";
 import { ErrorMessage } from "../shared/ui/ErrorMessage";
 import { LoadingState } from "../shared/ui/LoadingState";
+import {
+  isGameReadyToPlay,
+  isPlayerBSetupComplete,
+} from "../shared/gameNavigation";
 
 export function ConfirmationPage() {
   const { t } = useTranslation();
@@ -17,7 +22,8 @@ export function ConfirmationPage() {
     inviteUrl,
     isLoading,
     error,
-    hasActiveRun,
+    hasActiveRunA,
+    hasActiveRunB,
     onCopyInvite,
     inviteCopied,
     inviteCopyError,
@@ -55,10 +61,20 @@ export function ConfirmationPage() {
         avatarConfig={game.partner_a.avatar_config ?? {}}
         seed={gameId}
       />
+      {game.partner_b ? (
+        <ConfirmPartnerB
+          name={game.partner_b.name}
+          sex={game.partner_b.sex}
+          avatarConfig={game.partner_b.avatar_config ?? {}}
+          seed={gameId}
+        />
+      ) : null}
       <ConfirmActions
         gameId={gameId}
-        canPlay={game.status === "PLAYER_A_READY"}
-        hasActiveRun={hasActiveRun}
+        canPlay={isGameReadyToPlay(game)}
+        hasActiveRunA={hasActiveRunA}
+        hasActiveRunB={hasActiveRunB}
+        partnerBComplete={isPlayerBSetupComplete(game)}
       />
       {inviteUrl ? (
         <ConfirmInviteCard

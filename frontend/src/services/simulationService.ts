@@ -8,16 +8,16 @@ export type SimulationState = {
   age: number;
   compatibility: number;
   finances: number;
-  adventures: number;
-  career: number;
   quality_of_life: number;
   children: number;
   life_stage: SimulationLifeStage | string;
   relationship_status: string;
 };
 
+export type SimulationPlayerRole = "partner_a" | "partner_b";
+
 export type StartRunPayload = {
-  player_role: "partner_a";
+  player_role: SimulationPlayerRole;
   seed?: number;
   max_events?: number;
 };
@@ -72,6 +72,7 @@ export type SimulationRunList = {
 
 export type ListSimulationRunsParams = {
   status?: SimulationRunStatus;
+  player_role?: SimulationPlayerRole;
   page?: number;
   per_page?: number;
 };
@@ -163,6 +164,9 @@ export function listSimulationRuns(
   const search = new URLSearchParams();
   if (params?.status !== undefined) {
     search.set("status", params.status);
+  }
+  if (params?.player_role !== undefined) {
+    search.set("player_role", params.player_role);
   }
   if (params?.page !== undefined) {
     search.set("page", String(params.page));

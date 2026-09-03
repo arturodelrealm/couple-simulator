@@ -15,6 +15,7 @@ import { StatsBar, type StatsBarValues } from "../components/play/StatsBar";
 import { useSimulationPlay } from "../hooks/useSimulationPlay";
 import type { SimulationState } from "../services/simulationService";
 import { isGameReadyToPlay } from "../shared/gameNavigation";
+import { resolvePlayPartnerB } from "../shared/play/resolvePlayPartnerB";
 import { ErrorMessage } from "../shared/ui/ErrorMessage";
 import { LoadingState } from "../shared/ui/LoadingState";
 
@@ -23,8 +24,6 @@ function statsFromState(state: SimulationState): StatsBarValues {
     compatibility: state.compatibility,
     finances: state.finances,
     children: state.children,
-    adventures: state.adventures,
-    career: state.career,
     quality_of_life: state.quality_of_life,
   };
 }
@@ -42,7 +41,6 @@ export function PlayPage() {
     selectedOptionId,
     hasMoreQuestions,
     dialogue,
-    partnerBPreferences,
     isLoading,
     error,
     errorCode,
@@ -100,8 +98,9 @@ export function PlayPage() {
 
   const stats = statsFromState(run.state);
   const partnerAName = game.partner_a.name ?? "";
-  const partnerBName = t("game.play.partnerB");
-  const partnerBAge = partnerBPreferences?.display_age ?? run.state.age;
+  const partnerB = resolvePlayPartnerB(game, run.state.age);
+  const partnerBName = partnerB.nameFromApi ?? t("game.play.partnerB");
+  const partnerBAge = partnerB.displayAge;
 
   if (eventStep === "game-over") {
     return (
@@ -130,12 +129,12 @@ export function PlayPage() {
         partnerAName={partnerAName}
         partnerAAvatar={game.partner_a.avatar_config ?? {}}
         partnerASeed={gameId}
-        partnerBAvatar={partnerBPreferences?.avatar_config ?? {}}
-        partnerBSeed={`${gameId}-partner-b`}
+        partnerBAvatar={partnerB.avatarConfig}
+        partnerBSeed={partnerB.seed}
         partnerBName={partnerBName}
         lifeStage={run.state.life_stage}
         age={run.state.age}
-        partnerBDisplayAge={partnerBPreferences?.display_age}
+        partnerBDisplayAge={partnerB.displayAge}
         childrenCount={run.state.children}
       />
       <StatsBar values={stats} />

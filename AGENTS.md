@@ -252,8 +252,6 @@ ELDERLY (60+)
   "age": 22,
   "compatibility": 100,
   "finances": 50,
-  "adventures": 50,
-  "career": 50,
   "quality_of_life": 50,
   "children": 0
 }

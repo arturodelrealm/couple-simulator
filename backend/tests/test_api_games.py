@@ -28,6 +28,7 @@ def test_create_and_get_game(client: TestClient):
     assert created["partner_a"]["name"] == "Alex"
     assert created["partner_a"]["game_age"] == 22
     assert created["partner_a"]["game_relation_happiness"] == 100
+    assert created["partner_b"] is None
 
     get_response = client.get(f"/api/games/{created['id']}")
 
@@ -111,6 +112,7 @@ def test_get_game_by_match_name(client: TestClient):
     assert get_response.status_code == 200
     assert get_response.json()["data"]["id"] == created["id"]
     assert get_response.json()["data"]["match_name"] == "find-me-game"
+    assert get_response.json()["data"]["partner_b"] is None
 
 
 def test_get_game_by_match_name_case_insensitive(client: TestClient):
@@ -278,3 +280,91 @@ def test_create_game_with_game_stats(client: TestClient):
     partner_a = response.json()["data"]["partner_a"]
     assert partner_a["game_age"] == 35
     assert partner_a["game_relation_happiness"] == 70
+
+
+def test_patch_partner_b_creates_and_updates_same_row(
+    client: TestClient,
+    valid_avatar_config: dict[str, str],
+):
+    create_response = client.post(
+        "/api/games",
+        json={"match_name": "partner-b-lobby"},
+    )
+    game_id = create_response.json()["data"]["id"]
+    assert create_response.json()["data"]["partner_b"] is None
+
+    first_patch = client.patch(
+        f"/api/games/{game_id}",
+        json={
+            "partner_b_name": "Blake",
+            "partner_b_sex": "male",
+            "partner_b_avatar_config": valid_avatar_config,
+            "partner_b_game_age": 26,
+            "partner_b_game_relation_happiness": 80,
+        },
+    )
+    assert first_patch.status_code == 200
+    first_body = first_patch.json()["data"]
+    assert first_body["partner_b"]["name"] == "Blake"
+    assert first_body["partner_b"]["sex"] == "male"
+    assert first_body["partner_b"]["avatar_config"] == valid_avatar_config
+    assert first_body["partner_b"]["game_age"] == 26
+    assert first_body["partner_b"]["game_relation_happiness"] == 80
+    assert first_body["partner_a"]["name"] is None
+
+    second_patch = client.patch(
+        f"/api/games/{game_id}",
+        json={"partner_b_name": "Riley"},
+    )
+    assert second_patch.status_code == 200
+    second_body = second_patch.json()["data"]
+    assert second_body["partner_b"]["name"] == "Riley"
+    assert second_body["partner_b"]["sex"] == "male"
+    assert second_body["partner_b"]["game_age"] == 26
+
+    by_name = client.get("/api/games/by-match-name/partner-b-lobby")
+    assert by_name.status_code == 200
+    assert by_name.json()["data"]["partner_b"]["name"] == "Riley"
+
+
+def test_patch_mixes_partner_a_and_partner_b_fields(
+    client: TestClient,
+    valid_avatar_config: dict[str, str],
+):
+    create_response = client.post(
+        "/api/games",
+        json={"match_name": "mix-partners", "partner_a_name": "Alex"},
+    )
+    game_id = create_response.json()["data"]["id"]
+
+    patch_response = client.patch(
+        f"/api/games/{game_id}",
+        json={
+            "partner_a_sex": "female",
+            "avatar_config": valid_avatar_config,
+            "partner_b_name": "Blake",
+        },
+    )
+
+    assert patch_response.status_code == 200
+    body = patch_response.json()["data"]
+    assert body["status"] == "PLAYER_A_READY"
+    assert body["partner_a"]["name"] == "Alex"
+    assert body["partner_a"]["sex"] == "female"
+    assert body["partner_b"]["name"] == "Blake"
+    assert body["partner_b"]["sex"] is None
+    assert body["partner_b"]["game_age"] == 22
+    assert body["partner_b"]["game_relation_happiness"] == 100
+
+
+def test_patch_game_empty_body_still_400(client: TestClient):
+    create_response = client.post(
+        "/api/games",
+        json={"match_name": "empty-patch-api"},
+    )
+    game_id = create_response.json()["data"]["id"]
+
+    patch_response = client.patch(f"/api/games/{game_id}", json={})
+
+    assert patch_response.status_code == 400
+    assert patch_response.json()["errors"][0]["code"] == "BAD_REQUEST"

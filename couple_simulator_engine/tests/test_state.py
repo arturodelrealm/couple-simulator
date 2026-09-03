@@ -13,8 +13,6 @@ def test_default_initial_values() -> None:
     assert state.age == 22
     assert state.compatibility == 100
     assert state.finances == 50
-    assert state.adventures == 50
-    assert state.career == 50
     assert state.quality_of_life == 50
     assert state.children == 0
     assert state.life_stage == LifeStage.YOUTH
@@ -86,6 +84,9 @@ def test_to_dict_aligns_with_rules_evaluator_paths() -> None:
     state = SimulationState()
     payload = state.to_dict()
     assert payload["finances"] == 50
+    assert payload["quality_of_life"] == 50
+    assert "adventures" not in payload
+    assert "career" not in payload
     assert payload["compatibility"] == 100
     assert payload["age"] == 22
     assert payload["life_stage"] == "youth"
@@ -115,3 +116,12 @@ def test_set_stat_rejects_derived_age_and_compatibility() -> None:
 def test_clamp_unknown_stat() -> None:
     with pytest.raises(ValueError, match="Unknown stat"):
         clamp_stat("not_a_stat", 1)
+
+
+def test_removed_stats_are_unknown() -> None:
+    state = SimulationState()
+    for variable in ("career", "adventures"):
+        with pytest.raises(ValueError, match="Unknown stat"):
+            clamp_stat(variable, 50)
+        with pytest.raises(ValueError, match="Unknown stat"):
+            state.set_stat(variable, 50)

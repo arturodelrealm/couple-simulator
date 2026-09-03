@@ -12,12 +12,15 @@ export type PartnerA = {
   avatar_config: AvatarConfig | null;
 };
 
+export type PartnerB = PartnerA;
+
 export type Game = {
   id: string;
   match_name: string;
   game_mode: GameMode;
   status: GameStatus;
   partner_a: PartnerA;
+  partner_b: PartnerB | null;
 };
 
 export type CreateGamePayload = {
@@ -32,6 +35,9 @@ export type UpdateGamePayload = {
   partner_a_name?: string;
   partner_a_sex?: PlayerSex;
   avatar_config?: AvatarConfig;
+  partner_b_name?: string;
+  partner_b_sex?: PlayerSex;
+  partner_b_avatar_config?: AvatarConfig;
 };
 
 export type GameInvite = {

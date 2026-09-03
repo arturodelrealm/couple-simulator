@@ -123,6 +123,7 @@ export function loadPartnerBPreferences(
   }
 }
 
+/** @deprecated Prefer lobby `game.partner_b` on the play screen. Only used when API Partner B is null. */
 export function getOrCreatePartnerBPreferences(
   gameId: string,
   displayAge: number,

@@ -1,9 +1,12 @@
 import pytest
+from sqlalchemy import func, select
 from sqlalchemy.orm import Session
 
+from app.models.game import Game
+from app.models.player import Player
 from app.schemas.game import GameCreate, GameUpdate
 from app.services import game_service
-from app.shared.enums import GameStatus, PlayerSex
+from app.shared.enums import GameStatus, PlayerRole, PlayerSex
 from app.shared.exceptions import AppError
 
 
@@ -25,6 +28,7 @@ def test_create_game_stores_match_name_and_optional_partner_a(db_session: Sessio
     assert game.partner_a.sex is None
     assert game.partner_a.game_age == 22
     assert game.partner_a.game_relation_happiness == 100
+    assert game.partner_b is None
 
 
 def test_create_game_with_complete_setup_is_player_a_ready(
@@ -72,6 +76,7 @@ def test_get_game_by_match_name(db_session: Session):
 
     assert found.id == created.id
     assert found.match_name == "find-me"
+    assert found.partner_b is None
 
 
 def test_get_game_by_match_name_raises_not_found(db_session: Session):
@@ -313,3 +318,166 @@ def test_update_game_rejects_invalid_game_age(db_session: Session):
 
     assert exc_info.value.code == "VALIDATION_ERROR"
     assert exc_info.value.field == "body.partner_a_game_age"
+
+
+def test_update_game_creates_single_partner_b_row(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    created = game_service.create_game(
+        db_session,
+        GameCreate(match_name="lazy-partner-b"),
+    )
+    assert created.partner_b is None
+
+    first = game_service.update_game(
+        db_session,
+        created.id,
+        GameUpdate(
+            partner_b_name="Blake",
+            partner_b_sex=PlayerSex.MALE,
+            partner_b_avatar_config=valid_avatar_config,
+        ),
+    )
+    assert first.partner_b is not None
+    assert first.partner_b.name == "Blake"
+    assert first.partner_b.sex == PlayerSex.MALE.value
+    assert first.partner_b.avatar_config == valid_avatar_config
+    assert first.partner_b.game_age == 22
+    assert first.partner_b.game_relation_happiness == 100
+
+    second = game_service.update_game(
+        db_session,
+        created.id,
+        GameUpdate(partner_b_game_age=29),
+    )
+    assert second.partner_b is not None
+    assert second.partner_b.name == "Blake"
+    assert second.partner_b.game_age == 29
+
+    b_count = db_session.scalar(
+        select(func.count())
+        .select_from(Player)
+        .where(
+            Player.game_id == created.id,
+            Player.role == PlayerRole.PARTNER_B.value,
+        )
+    )
+    assert b_count == 1
+
+
+def test_update_game_partner_b_only_does_not_create_on_empty_payload(
+    db_session: Session,
+):
+    created = game_service.create_game(
+        db_session,
+        GameCreate(match_name="b-empty-still-bad"),
+    )
+
+    with pytest.raises(AppError) as exc_info:
+        game_service.update_game(db_session, created.id, GameUpdate())
+
+    assert exc_info.value.code == "BAD_REQUEST"
+    assert created.partner_b is None
+
+
+def test_update_game_keeps_created_when_a_incomplete_even_with_partner_b(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    created = game_service.create_game(
+        db_session,
+        GameCreate(match_name="a-incomplete-with-b", partner_a_name="Alex"),
+    )
+
+    updated = game_service.update_game(
+        db_session,
+        created.id,
+        GameUpdate(
+            partner_b_name="Blake",
+            partner_b_sex=PlayerSex.MALE,
+            partner_b_avatar_config=valid_avatar_config,
+        ),
+    )
+
+    assert updated.status == GameStatus.CREATED.value
+    assert updated.partner_b is not None
+
+
+def test_update_game_stays_player_a_ready_when_b_configured_but_no_b_run(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    created = game_service.create_game(
+        db_session,
+        GameCreate(
+            match_name="a-ready-b-lobby",
+            partner_a_name="Alex",
+            partner_a_sex=PlayerSex.FEMALE,
+            avatar_config=valid_avatar_config,
+        ),
+    )
+    assert created.status == GameStatus.PLAYER_A_READY.value
+
+    updated = game_service.update_game(
+        db_session,
+        created.id,
+        GameUpdate(partner_b_name="Blake"),
+    )
+
+    assert updated.status == GameStatus.PLAYER_A_READY.value
+
+
+def test_update_game_does_not_regress_player_b_playing_while_a_complete(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    created = game_service.create_game(
+        db_session,
+        GameCreate(
+            match_name="keep-b-playing",
+            partner_a_name="Alex",
+            partner_a_sex=PlayerSex.FEMALE,
+            avatar_config=valid_avatar_config,
+        ),
+    )
+    orm_game = db_session.get(Game, created.id)
+    assert orm_game is not None
+    orm_game.status = GameStatus.PLAYER_B_PLAYING.value
+    db_session.commit()
+
+    updated = game_service.update_game(
+        db_session,
+        created.id,
+        GameUpdate(partner_a_name="Jordan"),
+    )
+
+    assert updated.status == GameStatus.PLAYER_B_PLAYING.value
+    assert updated.partner_a.name == "Jordan"
+
+
+def test_update_game_leaves_finished_status_unchanged(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    created = game_service.create_game(
+        db_session,
+        GameCreate(
+            match_name="keep-finished",
+            partner_a_name="Alex",
+            partner_a_sex=PlayerSex.FEMALE,
+            avatar_config=valid_avatar_config,
+        ),
+    )
+    orm_game = db_session.get(Game, created.id)
+    assert orm_game is not None
+    orm_game.status = GameStatus.FINISHED.value
+    db_session.commit()
+
+    updated = game_service.update_game(
+        db_session,
+        created.id,
+        GameUpdate(partner_a_name="Jordan"),
+    )
+
+    assert updated.status == GameStatus.FINISHED.value
