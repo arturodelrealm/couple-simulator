@@ -10,9 +10,7 @@ from couple_simulator_engine.enums import LifeStage, PlayerSex, RelationshipStat
 from couple_simulator_engine.player import Player
 
 _DERIVED_STATS = frozenset({"age", "compatibility"})
-_COUPLE_STATS = frozenset(
-    {"finances", "adventures", "career", "quality_of_life", "children"}
-)
+_COUPLE_STATS = frozenset({"finances", "quality_of_life", "children"})
 
 
 def _default_partner_a() -> Player:
@@ -28,8 +26,6 @@ class SimulationState:
     partner_a: Player = field(default_factory=_default_partner_a)
     partner_b: Player = field(default_factory=_default_partner_b)
     finances: int = 50
-    adventures: int = 50
-    career: int = 50
     quality_of_life: int = 50
     children: int = 0
     life_stage: LifeStage = LifeStage.YOUTH
@@ -62,8 +58,6 @@ class SimulationState:
             "age": self.age,
             "compatibility": self.compatibility,
             "finances": self.finances,
-            "adventures": self.adventures,
-            "career": self.career,
             "quality_of_life": self.quality_of_life,
             "children": self.children,
             "life_stage": self.life_stage.value,

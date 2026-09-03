@@ -13,6 +13,7 @@ import {
   type CurrentEvent,
   type EventAnswer,
   type QuestionPresentation,
+  type SimulationPlayerRole,
   type SimulationRunDetail,
 } from "../services/simulationService";
 import { toErrorMessage } from "../shared/errors";
@@ -22,10 +23,6 @@ import {
   saveCurrentGameFromGame,
   saveCurrentRunId,
 } from "../shared/gameStorage";
-import {
-  getOrCreatePartnerBPreferences,
-  type PartnerBPreferences,
-} from "../shared/play/partnerBPreferences";
 
 export type EventStep =
   "answering" | "submitting" | "event-resolved" | "game-over";
@@ -40,7 +37,6 @@ type LoadResult = {
   run: SimulationRunDetail;
   currentEvent: CurrentEvent | null;
   eventStep: EventStep;
-  partnerBPreferences: PartnerBPreferences;
 };
 
 function persistSuccessfulLoad(game: Game, runId: string): void {
@@ -95,6 +91,10 @@ function dialogueFromClientActions(
   return lines;
 }
 
+function asStartPlayerRole(role: string): SimulationPlayerRole {
+  return role === "partner_b" ? "partner_b" : "partner_a";
+}
+
 async function loadSimulationPlay(
   gameId: string,
   runId: string,
@@ -104,10 +104,6 @@ async function loadSimulationPlay(
     getSimulationRun(gameId, runId),
   ]);
   persistSuccessfulLoad(game, run.run_id);
-  const partnerBPreferences = getOrCreatePartnerBPreferences(
-    gameId,
-    run.state.age,
-  );
 
   if (run.status === "FINISHED") {
     return {
@@ -115,7 +111,6 @@ async function loadSimulationPlay(
       run,
       currentEvent: null,
       eventStep: "game-over",
-      partnerBPreferences,
     };
   }
 
@@ -126,7 +121,6 @@ async function loadSimulationPlay(
       run,
       currentEvent,
       eventStep: "answering",
-      partnerBPreferences,
     };
   } catch (error) {
     if (isEndOfRunError(error)) {
@@ -135,7 +129,6 @@ async function loadSimulationPlay(
         run,
         currentEvent: null,
         eventStep: "game-over",
-        partnerBPreferences,
       };
     }
     throw error;
@@ -156,8 +149,6 @@ export function useSimulationPlay() {
   >({});
   const [resolution, setResolution] = useState<ClientAction[] | null>(null);
   const [gameFinished, setGameFinished] = useState(false);
-  const [partnerBPreferences, setPartnerBPreferences] =
-    useState<PartnerBPreferences | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<string | null>(null);
@@ -175,7 +166,6 @@ export function useSimulationPlay() {
       setGame(null);
       setRun(null);
       setCurrentEvent(null);
-      setPartnerBPreferences(null);
       setError(toErrorMessage(err, t));
       setErrorCode(err instanceof ApiClientError ? err.code : null);
     },
@@ -189,7 +179,6 @@ export function useSimulationPlay() {
       setGame(null);
       setRun(null);
       setCurrentEvent(null);
-      setPartnerBPreferences(null);
       setIsLoading(false);
       return;
     }
@@ -208,7 +197,6 @@ export function useSimulationPlay() {
       setSelectedOptions({});
       setResolution(null);
       setGameFinished(loaded.eventStep === "game-over");
-      setPartnerBPreferences(loaded.partnerBPreferences);
       submitInFlightRef.current = false;
     } catch (err) {
       applyLoadFailure(err);
@@ -379,7 +367,9 @@ export function useSimulationPlay() {
     setIsPlayingAgain(true);
     setActionError(null);
     try {
-      const created = await startSimulationRun(gameId);
+      const created = await startSimulationRun(gameId, {
+        player_role: asStartPlayerRole(run?.player_role ?? "partner_a"),
+      });
       saveCurrentRunId(created.run_id);
       navigate(getPlayPath(gameId, created.run_id));
     } catch (err) {
@@ -389,7 +379,7 @@ export function useSimulationPlay() {
       setActionError(toErrorMessage(err, t));
       setIsPlayingAgain(false);
     }
-  }, [gameId, isPlayingAgain, navigate, t]);
+  }, [gameId, isPlayingAgain, navigate, run?.player_role, t]);
 
   const questions = currentEvent?.event.questions ?? [];
   const currentQuestion = questions[questionIndex];
@@ -411,7 +401,6 @@ export function useSimulationPlay() {
     hasMoreQuestions,
     resolution,
     dialogue,
-    partnerBPreferences,
     isLoading,
     error,
     errorCode,

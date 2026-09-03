@@ -37,8 +37,6 @@ def _state() -> SimulationState:
         partner_a=_partner("Alex", game_age=28, sim_age=29),
         partner_b=_partner("Sam", game_age=26, sim_age=27),
         finances=40,
-        adventures=55,
-        career=60,
         quality_of_life=45,
         children=1,
     )
@@ -128,8 +126,6 @@ def _assert_states_equal(left: SimulationState, right: SimulationState) -> None:
     _assert_players_equal(left.partner_a, right.partner_a)
     _assert_players_equal(left.partner_b, right.partner_b)
     assert left.finances == right.finances
-    assert left.adventures == right.adventures
-    assert left.career == right.career
     assert left.quality_of_life == right.quality_of_life
     assert left.children == right.children
     assert left.life_stage == right.life_stage

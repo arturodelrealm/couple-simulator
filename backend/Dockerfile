@@ -9,7 +9,11 @@ COPY couple_simulator_engine /workspace/couple_simulator_engine
 COPY backend /workspace/backend
 
 WORKDIR /workspace/backend
+# Editable engine so Compose's couple_simulator_engine bind-mount is what
+# Python imports (a regular pip install copies the package into site-packages
+# and then ignores later engine edits until image rebuild).
 RUN pip install --no-cache-dir . \
+    && pip install --no-cache-dir -e /workspace/couple_simulator_engine \
     && python -c "from couple_simulator_engine import GameEngine"
 RUN chmod +x scripts/start.sh scripts/start-prod.sh
 

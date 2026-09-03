@@ -106,6 +106,7 @@ def start_simulation_run(
 def list_simulation_runs(
     game_id: UUID,
     status: SimulationRunStatus | None = None,
+    player_role: str | None = Query(default=None),
     page: int = Query(default=1, ge=1),
     per_page: int = Query(default=20, ge=1, le=100),
     db: Session = Depends(get_db),
@@ -114,6 +115,7 @@ def list_simulation_runs(
         db,
         game_id,
         status=status.value if status is not None else None,
+        player_role=player_role,
         page=page,
         per_page=per_page,
     )

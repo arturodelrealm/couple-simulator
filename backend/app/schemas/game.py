@@ -7,12 +7,15 @@ from app.shared.enums import GameMode, PlayerSex
 from app.shared.match_name_validation import validate_match_name
 
 
-class PartnerARead(BaseModel):
+class PartnerRead(BaseModel):
     name: str | None = None
     sex: str | None = None
     avatar_config: dict[str, Any] | None = None
     game_age: int
     game_relation_happiness: int
+
+
+PartnerARead = PartnerRead
 
 
 class GameRead(BaseModel):
@@ -22,7 +25,8 @@ class GameRead(BaseModel):
     match_name: str
     game_mode: str
     status: str
-    partner_a: PartnerARead
+    partner_a: PartnerRead
+    partner_b: PartnerRead | None = None
 
 
 class GameCreate(BaseModel):
@@ -58,15 +62,20 @@ class GameUpdate(BaseModel):
     avatar_config: dict[str, Any] | None = None
     partner_a_game_age: int | None = None
     partner_a_game_relation_happiness: int | None = None
+    partner_b_name: str | None = Field(default=None, min_length=1, max_length=255)
+    partner_b_sex: PlayerSex | None = None
+    partner_b_avatar_config: dict[str, Any] | None = None
+    partner_b_game_age: int | None = None
+    partner_b_game_relation_happiness: int | None = None
 
-    @field_validator("partner_a_name")
+    @field_validator("partner_a_name", "partner_b_name")
     @classmethod
     def strip_name(cls, value: str | None) -> str | None:
         if value is None:
             return None
         stripped = value.strip()
         if not stripped:
-            raise ValueError("partner_a_name must not be empty")
+            raise ValueError("name must not be empty")
         return stripped
 
 

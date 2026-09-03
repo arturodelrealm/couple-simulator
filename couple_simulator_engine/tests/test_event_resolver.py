@@ -100,8 +100,7 @@ def test_career_offer_accept_applies_accepted_only() -> None:
         [Answer(question_id="career_choice", option_id="accept")],
     )
     assert resolution.applied_outcome_ids == ["accepted"]
-    assert session.state.career == 70
-    assert session.state.quality_of_life == 45
+    assert session.state.quality_of_life == 65
 
 
 def test_two_outcomes_both_apply_when_when_is_true() -> None:
@@ -136,7 +135,7 @@ def test_two_outcomes_both_apply_when_when_is_true() -> None:
                 actions=(
                     ActionDefinition(
                         type="modify_stat",
-                        args={"variable": "career", "delta": 2},
+                        args={"variable": "quality_of_life", "delta": 2},
                     ),
                 ),
             ),
@@ -150,7 +149,7 @@ def test_two_outcomes_both_apply_when_when_is_true() -> None:
     )
     assert resolution.applied_outcome_ids == ["one", "two"]
     assert session.state.finances == 51
-    assert session.state.career == 52
+    assert session.state.quality_of_life == 52
 
 
 def test_default_actions_when_no_outcome_matches() -> None:
@@ -339,7 +338,7 @@ def test_mismatch_actions_run_when_partners_disagree() -> None:
         mismatch_actions=(
             ActionDefinition(
                 type="modify_stat",
-                args={"variable": "adventures", "delta": 7},
+                args={"variable": "quality_of_life", "delta": 7},
             ),
         )
     )
@@ -352,7 +351,7 @@ def test_mismatch_actions_run_when_partners_disagree() -> None:
         [Answer(question_id="q1", option_id="opt_b")],
         partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
     )
-    assert session.state.adventures == 57
+    assert session.state.quality_of_life == 57
     assert session.state.finances == 70
 
 
@@ -411,7 +410,7 @@ def test_mismatch_actions_skipped_when_answers_match() -> None:
         mismatch_actions=(
             ActionDefinition(
                 type="modify_stat",
-                args={"variable": "adventures", "delta": 7},
+                args={"variable": "quality_of_life", "delta": 7},
             ),
         )
     )
@@ -422,5 +421,5 @@ def test_mismatch_actions_skipped_when_answers_match() -> None:
         [Answer(question_id="q1", option_id="opt_a")],
         partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
     )
-    assert session.state.adventures == 50
+    assert session.state.quality_of_life == 50
     assert session.state.finances == 51

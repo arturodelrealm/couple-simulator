@@ -13,6 +13,7 @@ export function JoinMatchPage() {
     matchName,
     setMatchName,
     onSubmit,
+    onJoinAsPartnerB,
     isSubmitting,
     isAutoJoining,
     error,
@@ -60,6 +61,14 @@ export function JoinMatchPage() {
         <PrimaryButton onClick={onSubmit} disabled={isSubmitting}>
           {t("game.join.submit")}
         </PrimaryButton>
+        <button
+          type="button"
+          onClick={onJoinAsPartnerB}
+          disabled={isSubmitting}
+          className="w-full rounded-2xl border-2 border-purple-100 bg-white px-5 py-3 text-center font-display text-base font-bold text-slate-700 transition-all hover:border-purple-300 hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-50"
+        >
+          {t("game.join.iamPartnerB")}
+        </button>
       </div>
     </GameLayout>
   );

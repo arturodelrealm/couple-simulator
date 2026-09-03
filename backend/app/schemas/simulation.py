@@ -17,8 +17,6 @@ class SimulationStateRead(BaseModel):
     age: int
     compatibility: int
     finances: int
-    adventures: int
-    career: int
     quality_of_life: int
     children: int
     life_stage: str

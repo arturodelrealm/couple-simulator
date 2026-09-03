@@ -44,8 +44,6 @@ def copy_simulation_state(state: SimulationState) -> SimulationState:
         partner_a=copy_player(state.partner_a),
         partner_b=copy_player(state.partner_b),
         finances=state.finances,
-        adventures=state.adventures,
-        career=state.career,
         quality_of_life=state.quality_of_life,
         children=state.children,
         life_stage=LifeStage(state.life_stage),

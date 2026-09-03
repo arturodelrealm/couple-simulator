@@ -15,6 +15,7 @@
   "Game age must be at least %(min)s": "La edad del juego debe ser al menos %(min)s.",
   "Relation happiness must be between %(min)s and %(max)s": "La felicidad de la relación debe estar entre %(min)s y %(max)s.",
   "Game is not ready to start a simulation": "La partida no está lista para iniciar una simulación.",
+  "Partner B is not ready to start a simulation": "El jugador B no está listo para iniciar una simulación.",
   "Invalid player role": "El rol de jugador no es válido.",
   "Invalid player sex": "El sexo del jugador no es válido.",
   "Simulation run not found": "No se encontró la simulación.",

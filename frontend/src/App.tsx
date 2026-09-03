@@ -7,6 +7,7 @@ import { JoinMatchPage } from "./pages/JoinMatchPage";
 import { LobbyPage } from "./pages/LobbyPage";
 import { PlayEntryPage } from "./pages/PlayEntryPage";
 import { PlayerASetupPage } from "./pages/PlayerASetupPage";
+import { PlayerBSetupPage } from "./pages/PlayerBSetupPage";
 import { PlayPage } from "./pages/PlayPage";
 
 function AvatarRedirect() {
@@ -23,6 +24,7 @@ export function App() {
       <Route path="/games/join" element={<JoinMatchPage />} />
       <Route path="/games/join/:matchName" element={<JoinMatchPage />} />
       <Route path="/games/:gameId/player-a" element={<PlayerASetupPage />} />
+      <Route path="/games/:gameId/player-b" element={<PlayerBSetupPage />} />
       <Route path="/games/:gameId/confirm" element={<ConfirmationPage />} />
       <Route path="/games/:gameId/play" element={<PlayEntryPage />} />
       <Route path="/games/:gameId/play/:runId" element={<PlayPage />} />

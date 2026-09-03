@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 
 import { PlayLayout } from "../components/play/PlayLayout";
 import { usePlayEntry } from "../hooks/usePlayEntry";
+import { getPlayerBSetupPath } from "../shared/gameNavigation";
 import { ErrorMessage } from "../shared/ui/ErrorMessage";
 import { LoadingState } from "../shared/ui/LoadingState";
 
@@ -18,13 +19,22 @@ export function PlayEntryPage() {
     );
   }
 
+  const showPartnerBSetupLink =
+    errorCode === "PARTNER_B_NOT_READY" && gameId !== undefined;
   const showSetupLink = errorCode === "GAME_NOT_READY" && gameId !== undefined;
 
   return (
     <PlayLayout>
       <div className="space-y-4">
         <ErrorMessage message={error ?? t("errors.generic")} />
-        {showSetupLink ? (
+        {showPartnerBSetupLink ? (
+          <Link
+            to={getPlayerBSetupPath(gameId)}
+            className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+          >
+            {t("game.play.errors.goToPartnerBSetup")}
+          </Link>
+        ) : showSetupLink ? (
           <Link
             to={`/games/${gameId}/player-a`}
             className="text-sm font-medium text-indigo-600 hover:text-indigo-700"

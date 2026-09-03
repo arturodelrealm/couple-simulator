@@ -12,7 +12,8 @@
       "joinHint": "Enter a match name to open an existing game.",
       "continueCurrent": "Continue",
       "continueHint": "Pick up where you left off on this device.",
-      "currentMatchLabel": "Current match"
+      "currentMatchLabel": "Current match",
+      "iamPartnerB": "I am Partner B"
     },
     "nav": {
       "backToLobby": "Back to lobby"
@@ -34,11 +35,25 @@
       "matchNamePlaceholder": "boda-ana-luis",
       "submit": "Join",
       "joining": "Joining match...",
-      "notFound": "No match found with that name."
+      "notFound": "No match found with that name.",
+      "iamPartnerB": "I am Partner B"
     },
     "playerA": {
       "title": "Set up your character",
       "editTitle": "Edit your character",
+      "nameLabel": "Name",
+      "namePlaceholder": "Name",
+      "sexLabel": "Sex",
+      "sex": {
+        "male": "Male",
+        "female": "Female",
+        "preferNotToSay": "Prefer not to say"
+      },
+      "save": "Save"
+    },
+    "playerB": {
+      "title": "Set up Partner B",
+      "editTitle": "Edit Partner B",
       "nameLabel": "Name",
       "namePlaceholder": "Name",
       "sexLabel": "Sex",
@@ -56,6 +71,9 @@
       "gameMode": "Game mode",
       "sexLabel": "Sex",
       "editPlayerA": "Edit player A",
+      "iamPartnerB": "I am Partner B",
+      "editPlayerB": "Edit Partner B",
+      "partnerBHeading": "Partner B",
       "backToLobby": "Back to lobby",
       "inviteLabel": "Invitation link",
       "inviteHint": "Share this link so others can join the match.",
@@ -71,6 +89,11 @@
       "atAGlance": "At a glance",
       "start": "Start playing",
       "continue": "Continue game",
+      "startAsPartnerA": "Start as Partner A",
+      "continueAsPartnerA": "Continue as Partner A",
+      "startAsPartnerB": "Start as Partner B",
+      "continueAsPartnerB": "Continue as Partner B",
+      "completePartnerBFirst": "Complete Partner B setup first.",
       "continueNextEvent": "Continue",
       "nextQuestion": "Next question",
       "partnerB": "Partner B",
@@ -88,8 +111,6 @@
         "compatibility": "Compatibility",
         "finances": "Finances",
         "children": "Children",
-        "adventures": "Adventures",
-        "career": "Career",
         "qualityOfLife": "Quality of Life"
       },
       "gameOver": {
@@ -106,7 +127,9 @@
         "eventMismatch": "This event is no longer open. Try continuing or reload the game.",
         "eventNotFound": "This life event was not found.",
         "invalidAnswers": "Those answers are not valid for this event.",
-        "goToSetup": "Go to character setup"
+        "goToSetup": "Go to character setup",
+        "goToPartnerBSetup": "Go to Partner B setup",
+        "partnerBNotReady": "Partner B is not ready to play yet."
       }
     }
   },

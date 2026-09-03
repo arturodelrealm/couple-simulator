@@ -12,7 +12,7 @@ from app.schemas.game import (
     GameInviteRead,
     GameRead,
     GameUpdate,
-    PartnerARead,
+    PartnerRead,
 )
 from app.shared.avatar_validation import validate_avatar_config
 from app.shared.enums import GameStatus, PlayerRole
@@ -28,31 +28,44 @@ from app.shared.player_game_stats import (
 )
 
 
-def _partner_a_from_game(game: Game) -> PartnerARead:
-    partner_a = next(
-        (p for p in game.players if p.role == PlayerRole.PARTNER_A.value),
+def _partner_read_from_player(player: Player) -> PartnerRead:
+    avatar_config: dict[str, Any] | None = None
+    if player.avatar_config is not None:
+        avatar_config = player.avatar_config.config
+    return PartnerRead(
+        name=player.name,
+        sex=player.sex,
+        avatar_config=avatar_config,
+        game_age=player.game_age,
+        game_relation_happiness=player.game_relation_happiness,
+    )
+
+
+def _player_by_role(game: Game, role: PlayerRole) -> Player | None:
+    return next(
+        (player for player in game.players if player.role == role.value),
         None,
     )
+
+
+def _partner_a_from_game(game: Game) -> PartnerRead:
+    partner_a = _player_by_role(game, PlayerRole.PARTNER_A)
     if partner_a is None:
-        return PartnerARead(
+        return PartnerRead(
             name=None,
             sex=None,
             avatar_config=None,
             game_age=GAME_AGE_DEFAULT,
             game_relation_happiness=GAME_RELATION_HAPPINESS_DEFAULT,
         )
+    return _partner_read_from_player(partner_a)
 
-    avatar_config: dict[str, Any] | None = None
-    if partner_a.avatar_config is not None:
-        avatar_config = partner_a.avatar_config.config
 
-    return PartnerARead(
-        name=partner_a.name,
-        sex=partner_a.sex,
-        avatar_config=avatar_config,
-        game_age=partner_a.game_age,
-        game_relation_happiness=partner_a.game_relation_happiness,
-    )
+def _partner_b_from_game(game: Game) -> PartnerRead | None:
+    partner_b = _player_by_role(game, PlayerRole.PARTNER_B)
+    if partner_b is None:
+        return None
+    return _partner_read_from_player(partner_b)
 
 
 def _game_to_read(game: Game) -> GameRead:
@@ -62,14 +75,12 @@ def _game_to_read(game: Game) -> GameRead:
         game_mode=game.game_mode,
         status=game.status,
         partner_a=_partner_a_from_game(game),
+        partner_b=_partner_b_from_game(game),
     )
 
 
 def _get_partner_a(game: Game) -> Player:
-    partner_a = next(
-        (p for p in game.players if p.role == PlayerRole.PARTNER_A.value),
-        None,
-    )
+    partner_a = _player_by_role(game, PlayerRole.PARTNER_A)
     if partner_a is None:
         raise AppError(
             "INTERNAL_ERROR",
@@ -79,14 +90,63 @@ def _get_partner_a(game: Game) -> Player:
     return partner_a
 
 
-def _apply_status(game: Game, partner_a: Player) -> None:
-    has_name = partner_a.name is not None and partner_a.name.strip() != ""
-    has_avatar = partner_a.avatar_config is not None
-    has_sex = partner_a.sex is not None
-    if has_name and has_avatar and has_sex:
-        game.status = GameStatus.PLAYER_A_READY.value
+def _ensure_partner_b(game: Game) -> Player:
+    partner_b = _player_by_role(game, PlayerRole.PARTNER_B)
+    if partner_b is not None:
+        return partner_b
+    partner_b = Player(
+        role=PlayerRole.PARTNER_B.value,
+        game_age=GAME_AGE_DEFAULT,
+        game_relation_happiness=GAME_RELATION_HAPPINESS_DEFAULT,
+    )
+    game.players.append(partner_b)
+    return partner_b
+
+
+def _apply_avatar(player: Player, avatar_config: dict[str, Any]) -> None:
+    validated = validate_avatar_config(avatar_config)
+    if player.avatar_config is None:
+        player.avatar_config = AvatarConfig(config=validated)
     else:
+        player.avatar_config.config = validated
+
+
+def _payload_has_partner_b_fields(payload: GameUpdate) -> bool:
+    return any(
+        value is not None
+        for value in (
+            payload.partner_b_name,
+            payload.partner_b_sex,
+            payload.partner_b_avatar_config,
+            payload.partner_b_game_age,
+            payload.partner_b_game_relation_happiness,
+        )
+    )
+
+
+def _lobby_player_is_complete(player: Player) -> bool:
+    has_name = player.name is not None and player.name.strip() != ""
+    has_avatar = player.avatar_config is not None
+    has_sex = player.sex is not None
+    return has_name and has_avatar and has_sex
+
+
+def _has_partner_b_run(game: Game) -> bool:
+    return any(
+        run.player_role == PlayerRole.PARTNER_B.value for run in game.simulation_runs
+    )
+
+
+def _apply_status(game: Game, partner_a: Player) -> None:
+    if game.status == GameStatus.FINISHED.value:
+        return
+    if not _lobby_player_is_complete(partner_a):
         game.status = GameStatus.CREATED.value
+        return
+    if game.status == GameStatus.PLAYER_B_PLAYING.value or _has_partner_b_run(game):
+        game.status = GameStatus.PLAYER_B_PLAYING.value
+        return
+    game.status = GameStatus.PLAYER_A_READY.value
 
 
 def _load_game_with_players(db: Session, game_id: UUID) -> Game | None:
@@ -95,6 +155,7 @@ def _load_game_with_players(db: Session, game_id: UUID) -> Game | None:
         .where(Game.id == game_id)
         .options(
             selectinload(Game.players).selectinload(Player.avatar_config),
+            selectinload(Game.simulation_runs),
         ),
     )
 
@@ -178,13 +239,7 @@ def create_game(db: Session, payload: GameCreate) -> GameRead:
 
 
 def update_game(db: Session, game_id: UUID, payload: GameUpdate) -> GameRead:
-    if (
-        payload.partner_a_name is None
-        and payload.partner_a_sex is None
-        and payload.avatar_config is None
-        and payload.partner_a_game_age is None
-        and payload.partner_a_game_relation_happiness is None
-    ):
+    if not payload.model_dump(exclude_none=True):
         raise AppError(
             "BAD_REQUEST",
             _("At least one field must be provided"),
@@ -208,11 +263,7 @@ def update_game(db: Session, game_id: UUID, payload: GameUpdate) -> GameRead:
         partner_a.sex = payload.partner_a_sex.value
 
     if payload.avatar_config is not None:
-        validated = validate_avatar_config(payload.avatar_config)
-        if partner_a.avatar_config is None:
-            partner_a.avatar_config = AvatarConfig(config=validated)
-        else:
-            partner_a.avatar_config.config = validated
+        _apply_avatar(partner_a, payload.avatar_config)
 
     if payload.partner_a_game_age is not None:
         partner_a.game_age = validate_game_age(
@@ -225,6 +276,25 @@ def update_game(db: Session, game_id: UUID, payload: GameUpdate) -> GameRead:
             payload.partner_a_game_relation_happiness,
             field="body.partner_a_game_relation_happiness",
         )
+
+    if _payload_has_partner_b_fields(payload):
+        partner_b = _ensure_partner_b(game)
+        if payload.partner_b_name is not None:
+            partner_b.name = payload.partner_b_name
+        if payload.partner_b_sex is not None:
+            partner_b.sex = payload.partner_b_sex.value
+        if payload.partner_b_avatar_config is not None:
+            _apply_avatar(partner_b, payload.partner_b_avatar_config)
+        if payload.partner_b_game_age is not None:
+            partner_b.game_age = validate_game_age(
+                payload.partner_b_game_age,
+                field="body.partner_b_game_age",
+            )
+        if payload.partner_b_game_relation_happiness is not None:
+            partner_b.game_relation_happiness = validate_game_relation_happiness(
+                payload.partner_b_game_relation_happiness,
+                field="body.partner_b_game_relation_happiness",
+            )
 
     _apply_status(game, partner_a)
     db.commit()

@@ -35,7 +35,7 @@
       "actions": [
         {
           "type": "modify_stat",
-          "args": { "variable": "career", "delta": 20 }
+          "args": { "variable": "quality_of_life", "delta": 20 }
         },
         {
           "type": "modify_stat",
@@ -54,7 +54,7 @@
       "actions": [
         {
           "type": "modify_stat",
-          "args": { "variable": "career", "delta": -5 }
+          "args": { "variable": "quality_of_life", "delta": -5 }
         },
         {
           "type": "modify_stat",

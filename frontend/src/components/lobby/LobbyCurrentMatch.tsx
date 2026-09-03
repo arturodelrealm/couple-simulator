@@ -1,13 +1,16 @@
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 export type LobbyCurrentMatchProps = {
   matchName: string;
+  partnerBHref: string;
   onContinue: () => void;
   isContinuing: boolean;
 };
 
 export function LobbyCurrentMatch({
   matchName,
+  partnerBHref,
   onContinue,
   isContinuing,
 }: LobbyCurrentMatchProps) {
@@ -35,6 +38,12 @@ export function LobbyCurrentMatch({
       >
         {t("game.lobby.continueCurrent")}
       </button>
+      <Link
+        to={partnerBHref}
+        className="mt-3 block w-full rounded-2xl border-2 border-purple-100 bg-white px-5 py-3 text-center font-display text-base font-bold text-slate-700 transition-all hover:border-purple-300 hover:bg-purple-50"
+      >
+        {t("game.lobby.iamPartnerB")}
+      </Link>
     </div>
   );
 }

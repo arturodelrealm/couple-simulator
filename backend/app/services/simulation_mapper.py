@@ -111,8 +111,6 @@ def simulation_state_to_dict(state: SimulationState) -> dict[str, Any]:
         "partner_a": engine_player_to_dict(state.partner_a),
         "partner_b": engine_player_to_dict(state.partner_b),
         "finances": state.finances,
-        "adventures": state.adventures,
-        "career": state.career,
         "quality_of_life": state.quality_of_life,
         "children": state.children,
         "life_stage": state.life_stage.value,
@@ -121,17 +119,23 @@ def simulation_state_to_dict(state: SimulationState) -> dict[str, Any]:
 
 
 def simulation_state_from_dict(data: dict[str, Any]) -> SimulationState:
-    return SimulationState(
-        partner_a=engine_player_from_dict(data["partner_a"]),
-        partner_b=engine_player_from_dict(data["partner_b"]),
-        finances=int(data["finances"]),
-        adventures=int(data["adventures"]),
-        career=int(data["career"]),
-        quality_of_life=int(data["quality_of_life"]),
-        children=int(data["children"]),
-        life_stage=LifeStage(str(data["life_stage"])),
-        relationship_status=RelationshipStatus(str(data["relationship_status"])),
-    )
+    kwargs: dict[str, Any] = {
+        "partner_a": engine_player_from_dict(data["partner_a"]),
+        "partner_b": engine_player_from_dict(data["partner_b"]),
+    }
+    if "finances" in data:
+        kwargs["finances"] = int(data["finances"])
+    if "quality_of_life" in data:
+        kwargs["quality_of_life"] = int(data["quality_of_life"])
+    if "children" in data:
+        kwargs["children"] = int(data["children"])
+    if "life_stage" in data:
+        kwargs["life_stage"] = LifeStage(str(data["life_stage"]))
+    if "relationship_status" in data:
+        kwargs["relationship_status"] = RelationshipStatus(
+            str(data["relationship_status"]),
+        )
+    return SimulationState(**kwargs)
 
 
 def public_simulation_state(state: SimulationState) -> dict[str, Any]:

@@ -77,8 +77,7 @@ def _print_stats(session: GameSession) -> None:
     print("Current stats:")
     print(
         f"  age={state.age} compatibility={state.compatibility} "
-        f"finances={state.finances} adventures={state.adventures} "
-        f"career={state.career} quality_of_life={state.quality_of_life} "
+        f"finances={state.finances} quality_of_life={state.quality_of_life} "
         f"children={state.children} life_stage={state.life_stage.value}"
     )
 
@@ -99,8 +98,7 @@ def _print_stats_from_state(state: SimulationState) -> None:
     print(
         "Final stats: "
         f"age={state.age} compatibility={state.compatibility} "
-        f"finances={state.finances} adventures={state.adventures} "
-        f"career={state.career} quality_of_life={state.quality_of_life} "
+        f"finances={state.finances} quality_of_life={state.quality_of_life} "
         f"children={state.children} life_stage={state.life_stage.value}"
     )
 

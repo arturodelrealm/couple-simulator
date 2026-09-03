@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { getGameByMatchName } from "../services/gameService";
 import { saveCurrentGameFromGame } from "../shared/gameStorage";
 import { toErrorMessage } from "../shared/errors";
-import { getGameStepPath } from "../shared/gameNavigation";
+import { getGameStepPath, getPlayerBSetupPath } from "../shared/gameNavigation";
 import {
   isValidMatchName,
   normalizeMatchName,
@@ -20,7 +20,7 @@ export function useJoinMatch() {
   const [error, setError] = useState<string | null>(null);
 
   const joinByMatchName = useCallback(
-    async (rawName: string) => {
+    async (rawName: string, asPartnerB = false) => {
       const trimmed = rawName.trim();
       if (!trimmed) {
         setError(t("errors.matchNameRequired"));
@@ -36,7 +36,9 @@ export function useJoinMatch() {
       try {
         const game = await getGameByMatchName(normalizeMatchName(trimmed));
         saveCurrentGameFromGame(game);
-        navigate(getGameStepPath(game));
+        navigate(
+          asPartnerB ? getPlayerBSetupPath(game.id) : getGameStepPath(game),
+        );
       } catch (err) {
         setError(toErrorMessage(err, t));
       } finally {
@@ -58,10 +60,15 @@ export function useJoinMatch() {
     void joinByMatchName(matchName);
   }, [joinByMatchName, matchName]);
 
+  const onJoinAsPartnerB = useCallback(() => {
+    void joinByMatchName(matchName, true);
+  }, [joinByMatchName, matchName]);
+
   return {
     matchName,
     setMatchName,
     onSubmit,
+    onJoinAsPartnerB,
     isSubmitting,
     isAutoJoining: Boolean(matchNameParam) && isSubmitting,
     error,

@@ -1,8 +1,6 @@
 import type { ComponentType } from "react";
 
 import {
-  AdventuresIcon,
-  CareerIcon,
   ChildrenIcon,
   CompatibilityIcon,
   FinancesIcon,
@@ -11,12 +9,7 @@ import {
 } from "./statIcons";
 
 export type SimulationStatKey =
-  | "compatibility"
-  | "finances"
-  | "children"
-  | "adventures"
-  | "career"
-  | "quality_of_life";
+  "compatibility" | "finances" | "children" | "quality_of_life";
 
 export type StatDisplayConfig = {
   key: SimulationStatKey;
@@ -51,22 +44,6 @@ export const STAT_CONFIG: readonly StatDisplayConfig[] = [
     background: "#EFF6FF",
     isCount: true,
     Icon: ChildrenIcon,
-  },
-  {
-    key: "adventures",
-    labelKey: "game.play.stats.adventures",
-    color: "#34D399",
-    background: "#ECFDF5",
-    isCount: false,
-    Icon: AdventuresIcon,
-  },
-  {
-    key: "career",
-    labelKey: "game.play.stats.career",
-    color: "#818CF8",
-    background: "#EEF2FF",
-    isCount: false,
-    Icon: CareerIcon,
   },
   {
     key: "quality_of_life",

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { ApiClientError } from "../services/apiClient";
@@ -9,7 +9,14 @@ import {
   startSimulationRun,
 } from "../services/simulationService";
 import { toErrorMessage } from "../shared/errors";
-import { getPlayPath, isGameReadyToPlay } from "../shared/gameNavigation";
+import {
+  getConfirmPath,
+  getPlayPath,
+  getPlayerBSetupPath,
+  isGameReadyToPlay,
+  isPlayerBSetupComplete,
+  parsePlayPlayerRole,
+} from "../shared/gameNavigation";
 import {
   clearCurrentGame,
   saveCurrentGameFromGame,
@@ -20,14 +27,21 @@ export function usePlayEntry() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { gameId } = useParams<{ gameId: string }>();
+  const [searchParams] = useSearchParams();
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [errorCode, setErrorCode] = useState<string | null>(null);
+  const playerRole = parsePlayPlayerRole(searchParams.get("role"));
 
   useEffect(() => {
     if (!gameId) {
       setError(t("errors.gameNotFound"));
       setIsLoading(false);
+      return;
+    }
+
+    if (playerRole === null) {
+      navigate(getConfirmPath(gameId), { replace: true });
       return;
     }
 
@@ -42,6 +56,12 @@ export function usePlayEntry() {
         if (cancelled) {
           return;
         }
+
+        if (playerRole === "partner_b" && !isPlayerBSetupComplete(game)) {
+          navigate(getPlayerBSetupPath(gameId), { replace: true });
+          return;
+        }
+
         if (!isGameReadyToPlay(game)) {
           navigate(`/games/${gameId}/player-a`, { replace: true });
           return;
@@ -50,6 +70,7 @@ export function usePlayEntry() {
 
         const listed = await listSimulationRuns(gameId, {
           status: "ACTIVE",
+          player_role: playerRole,
           page: 1,
           per_page: 1,
         });
@@ -65,7 +86,9 @@ export function usePlayEntry() {
           return;
         }
 
-        const created = await startSimulationRun(gameId);
+        const created = await startSimulationRun(gameId, {
+          player_role: playerRole,
+        });
         if (cancelled) {
           return;
         }
@@ -89,7 +112,7 @@ export function usePlayEntry() {
     return () => {
       cancelled = true;
     };
-  }, [gameId, navigate, t]);
+  }, [gameId, navigate, playerRole, t]);
 
-  return { gameId, isLoading, error, errorCode };
+  return { gameId, isLoading, error, errorCode, playerRole };
 }
