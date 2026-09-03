@@ -111,7 +111,22 @@
         "compatibility": "Compatibilidad",
         "finances": "Finanzas",
         "children": "Hijos",
-        "qualityOfLife": "Calidad de vida"
+        "qualityOfLife": "Calidad de vida",
+        "wellness": "Bienestar"
+      },
+      "household": {
+        "house": "Hogar",
+        "mascot": "Mascota",
+        "noMascot": "Sin mascota"
+      },
+      "housingType": {
+        "apartment": "Departamento",
+        "house": "Casa"
+      },
+      "housingQuality": {
+        "bad": "Mala",
+        "ok": "Aceptable",
+        "excellent": "Excelente"
       },
       "gameOver": {
         "title": "Una vida bien vivida",

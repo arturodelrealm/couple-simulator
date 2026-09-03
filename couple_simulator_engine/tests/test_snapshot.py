@@ -128,6 +128,10 @@ def _assert_states_equal(left: SimulationState, right: SimulationState) -> None:
     assert left.finances == right.finances
     assert left.quality_of_life == right.quality_of_life
     assert left.children == right.children
+    assert left.wellness == right.wellness
+    assert left.housing == right.housing
+    assert left.mascot == right.mascot
+    assert left.tags == right.tags
     assert left.life_stage == right.life_stage
     assert left.relationship_status == right.relationship_status
     assert left.age == right.age

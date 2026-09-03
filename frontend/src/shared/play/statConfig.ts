@@ -5,11 +5,12 @@ import {
   CompatibilityIcon,
   FinancesIcon,
   QualityOfLifeIcon,
+  WellnessIcon,
   type StatIconProps,
 } from "./statIcons";
 
 export type SimulationStatKey =
-  "compatibility" | "finances" | "children" | "quality_of_life";
+  "compatibility" | "finances" | "children" | "quality_of_life" | "wellness";
 
 export type StatDisplayConfig = {
   key: SimulationStatKey;
@@ -52,5 +53,13 @@ export const STAT_CONFIG: readonly StatDisplayConfig[] = [
     background: "#FFF7ED",
     isCount: false,
     Icon: QualityOfLifeIcon,
+  },
+  {
+    key: "wellness",
+    labelKey: "game.play.stats.wellness",
+    color: "#34D399",
+    background: "#ECFDF5",
+    isCount: false,
+    Icon: WellnessIcon,
   },
 ];

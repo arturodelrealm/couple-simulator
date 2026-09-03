@@ -13,12 +13,27 @@ class SimulationRunCreate(BaseModel):
     max_events: int | None = Field(default=None, ge=1)
 
 
+class HousingRead(BaseModel):
+    place: str
+    type: str
+    quality: str
+
+
+class MascotRead(BaseModel):
+    species: str
+    name: str
+
+
 class SimulationStateRead(BaseModel):
     age: int
     compatibility: int
     finances: int
     quality_of_life: int
     children: int
+    wellness: int
+    housing: HousingRead
+    mascot: MascotRead | None
+    tags: dict[str, Any] = Field(default_factory=dict)
     life_stage: str
     relationship_status: str
 

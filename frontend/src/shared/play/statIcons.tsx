@@ -48,3 +48,11 @@ export function QualityOfLifeIcon(props: StatIconProps) {
     </svg>
   );
 }
+
+export function WellnessIcon(props: StatIconProps) {
+  return (
+    <svg {...svgDefaults} {...props}>
+      <path d="M22 12h-4l-3 7-6-14-3 7H2" />
+    </svg>
+  );
+}

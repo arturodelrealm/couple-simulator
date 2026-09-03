@@ -6,11 +6,31 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from couple_simulator_engine.clamp import clamp_stat
-from couple_simulator_engine.enums import LifeStage, PlayerSex, RelationshipStatus
+from couple_simulator_engine.enums import (
+    HousingQuality,
+    HousingType,
+    LifeStage,
+    PlayerSex,
+    RelationshipStatus,
+)
 from couple_simulator_engine.player import Player
 
 _DERIVED_STATS = frozenset({"age", "compatibility"})
-_COUPLE_STATS = frozenset({"finances", "quality_of_life", "children"})
+_COUPLE_STATS = frozenset({"finances", "quality_of_life", "children", "wellness"})
+_DEFAULT_HOUSING_PLACE = "Providencia"
+
+
+@dataclass
+class Housing:
+    place: str = _DEFAULT_HOUSING_PLACE
+    type: HousingType = HousingType.APARTMENT
+    quality: HousingQuality = HousingQuality.OK
+
+
+@dataclass
+class Mascot:
+    species: str
+    name: str
 
 
 def _default_partner_a() -> Player:
@@ -28,6 +48,10 @@ class SimulationState:
     finances: int = 50
     quality_of_life: int = 50
     children: int = 0
+    wellness: int = 50
+    housing: Housing = field(default_factory=Housing)
+    mascot: Mascot | None = None
+    tags: dict[str, Any] = field(default_factory=dict)
     life_stage: LifeStage = LifeStage.YOUTH
     relationship_status: RelationshipStatus = RelationshipStatus.TOGETHER
 
@@ -60,6 +84,18 @@ class SimulationState:
             "finances": self.finances,
             "quality_of_life": self.quality_of_life,
             "children": self.children,
+            "wellness": self.wellness,
+            "housing": {
+                "place": self.housing.place,
+                "type": self.housing.type.value,
+                "quality": self.housing.quality.value,
+            },
+            "mascot": (
+                None
+                if self.mascot is None
+                else {"species": self.mascot.species, "name": self.mascot.name}
+            ),
+            "tags": dict(self.tags),
             "life_stage": self.life_stage.value,
             "relationship_status": self.relationship_status.value,
         }

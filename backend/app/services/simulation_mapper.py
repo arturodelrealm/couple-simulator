@@ -4,6 +4,8 @@ from typing import Any, cast
 
 from couple_simulator_engine.config import GameConfig
 from couple_simulator_engine.enums import (
+    HousingQuality,
+    HousingType,
     LifeStage,
     PlayerSex,
     RelationshipStatus,
@@ -19,7 +21,7 @@ from couple_simulator_engine.snapshot import (
     PlayerRoleName,
     RunSnapshot,
 )
-from couple_simulator_engine.state import SimulationState
+from couple_simulator_engine.state import Housing, Mascot, SimulationState
 
 from app.models.game import Game
 from app.models.player import Player
@@ -106,6 +108,34 @@ def engine_player_from_dict(data: dict[str, Any]) -> EnginePlayer:
     )
 
 
+def _housing_to_dict(housing: Housing) -> dict[str, str]:
+    return {
+        "place": housing.place,
+        "type": housing.type.value,
+        "quality": housing.quality.value,
+    }
+
+
+def _mascot_to_dict(mascot: Mascot | None) -> dict[str, str] | None:
+    if mascot is None:
+        return None
+    return {"species": mascot.species, "name": mascot.name}
+
+
+def _housing_from_dict(data: dict[str, Any]) -> Housing:
+    return Housing(
+        place=str(data["place"]),
+        type=HousingType(str(data["type"])),
+        quality=HousingQuality(str(data["quality"])),
+    )
+
+
+def _mascot_from_dict(data: dict[str, Any] | None) -> Mascot | None:
+    if data is None:
+        return None
+    return Mascot(species=str(data["species"]), name=str(data["name"]))
+
+
 def simulation_state_to_dict(state: SimulationState) -> dict[str, Any]:
     return {
         "partner_a": engine_player_to_dict(state.partner_a),
@@ -113,6 +143,10 @@ def simulation_state_to_dict(state: SimulationState) -> dict[str, Any]:
         "finances": state.finances,
         "quality_of_life": state.quality_of_life,
         "children": state.children,
+        "wellness": state.wellness,
+        "housing": _housing_to_dict(state.housing),
+        "mascot": _mascot_to_dict(state.mascot),
+        "tags": dict(state.tags),
         "life_stage": state.life_stage.value,
         "relationship_status": state.relationship_status.value,
     }
@@ -129,6 +163,17 @@ def simulation_state_from_dict(data: dict[str, Any]) -> SimulationState:
         kwargs["quality_of_life"] = int(data["quality_of_life"])
     if "children" in data:
         kwargs["children"] = int(data["children"])
+    if "wellness" in data:
+        kwargs["wellness"] = int(data["wellness"])
+    if "housing" in data:
+        kwargs["housing"] = _housing_from_dict(data["housing"])
+    if "mascot" in data:
+        mascot_raw = data["mascot"]
+        kwargs["mascot"] = _mascot_from_dict(
+            mascot_raw if isinstance(mascot_raw, dict) else None,
+        )
+    if "tags" in data and isinstance(data["tags"], dict):
+        kwargs["tags"] = {str(key): value for key, value in data["tags"].items()}
     if "life_stage" in data:
         kwargs["life_stage"] = LifeStage(str(data["life_stage"]))
     if "relationship_status" in data:

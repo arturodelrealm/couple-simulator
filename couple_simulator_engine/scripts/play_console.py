@@ -72,13 +72,27 @@ def _print_client_action(action: ClientAction) -> None:
     print(f"  [{action.type}] {action.args}")
 
 
+def _household_line(state: SimulationState) -> str:
+    housing = state.housing
+    if state.mascot is None:
+        mascot = "none"
+    else:
+        mascot = f"{state.mascot.species}/{state.mascot.name}"
+    return (
+        f"wellness={state.wellness} "
+        f"housing={housing.place}/{housing.type.value}/{housing.quality.value} "
+        f"mascot={mascot}"
+    )
+
+
 def _print_stats(session: GameSession) -> None:
     state = session.state
     print("Current stats:")
     print(
         f"  age={state.age} compatibility={state.compatibility} "
         f"finances={state.finances} quality_of_life={state.quality_of_life} "
-        f"children={state.children} life_stage={state.life_stage.value}"
+        f"children={state.children} life_stage={state.life_stage.value} "
+        f"{_household_line(state)}"
     )
 
 
@@ -99,7 +113,8 @@ def _print_stats_from_state(state: SimulationState) -> None:
         "Final stats: "
         f"age={state.age} compatibility={state.compatibility} "
         f"finances={state.finances} quality_of_life={state.quality_of_life} "
-        f"children={state.children} life_stage={state.life_stage.value}"
+        f"children={state.children} life_stage={state.life_stage.value} "
+        f"{_household_line(state)}"
     )
 
 

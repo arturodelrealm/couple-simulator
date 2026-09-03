@@ -1,6 +1,12 @@
-from couple_simulator_engine.enums import LifeStage, PlayerSex, RelationshipStatus
+from couple_simulator_engine.enums import (
+    HousingQuality,
+    HousingType,
+    LifeStage,
+    PlayerSex,
+    RelationshipStatus,
+)
 from couple_simulator_engine.player import Player
-from couple_simulator_engine.state import SimulationState
+from couple_simulator_engine.state import Housing, Mascot, SimulationState
 
 from app.schemas.simulation import SimulationStateRead
 from app.services.simulation_mapper import (
@@ -34,6 +40,10 @@ def _base_snapshot(**overrides: object) -> dict[str, object]:
 def test_simulation_state_read_omits_removed_stats():
     assert "career" not in SimulationStateRead.model_fields
     assert "adventures" not in SimulationStateRead.model_fields
+    assert "wellness" in SimulationStateRead.model_fields
+    assert "housing" in SimulationStateRead.model_fields
+    assert "mascot" in SimulationStateRead.model_fields
+    assert "tags" in SimulationStateRead.model_fields
 
 
 def test_from_dict_ignores_legacy_career_and_adventures():
@@ -62,6 +72,10 @@ def test_from_dict_uses_engine_defaults_when_couple_stats_missing():
     assert state.children == defaults.children
     assert state.life_stage == defaults.life_stage
     assert state.relationship_status == defaults.relationship_status
+    assert state.wellness == defaults.wellness
+    assert state.housing == defaults.housing
+    assert state.mascot is None
+    assert state.tags == {}
 
 
 def test_to_dict_and_public_state_omit_removed_keys():
@@ -76,3 +90,54 @@ def test_to_dict_and_public_state_omit_removed_keys():
     assert "career" not in public
     assert "adventures" not in public
     SimulationStateRead.model_validate(public)
+    assert public["wellness"] == 50
+    assert public["housing"] == {
+        "place": "Providencia",
+        "type": "apartment",
+        "quality": "ok",
+    }
+    assert public["mascot"] is None
+    assert public["tags"] == {}
+
+
+def test_from_dict_legacy_snapshot_without_household_uses_defaults():
+    snapshot = _base_snapshot()
+    assert "wellness" not in snapshot
+    assert "housing" not in snapshot
+    assert "mascot" not in snapshot
+    assert "tags" not in snapshot
+
+    state = simulation_state_from_dict(snapshot)
+    defaults = SimulationState()
+
+    assert state.wellness == 50
+    assert state.housing.place == defaults.housing.place
+    assert state.housing.type == HousingType.APARTMENT
+    assert state.housing.quality == HousingQuality.OK
+    assert state.mascot is None
+    assert state.tags == {}
+
+
+def test_to_dict_from_dict_round_trips_non_default_household():
+    snapshot = _base_snapshot(
+        wellness=12,
+        housing={"place": "Las Condes", "type": "house", "quality": "excellent"},
+        mascot={"species": "cat", "name": "Michi"},
+        tags={"owns_house": True, "job": "engineer"},
+    )
+    state = simulation_state_from_dict(snapshot)
+    persisted = simulation_state_to_dict(state)
+    restored = simulation_state_from_dict(persisted)
+
+    assert restored.wellness == 12
+    assert restored.housing == Housing(
+        place="Las Condes",
+        type=HousingType.HOUSE,
+        quality=HousingQuality.EXCELLENT,
+    )
+    assert restored.mascot == Mascot(species="cat", name="Michi")
+    assert restored.tags == {"owns_house": True, "job": "engineer"}
+    public = public_simulation_state(restored)
+    SimulationStateRead.model_validate(public)
+    assert public["housing"]["type"] == "house"
+    assert public["mascot"] == {"species": "cat", "name": "Michi"}

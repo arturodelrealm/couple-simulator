@@ -157,7 +157,7 @@ class GameEngine:
             session = loaded.session
             partner_a_answers = (
                 self.partner_a_answers(loaded, event)
-                if loaded.player_role == PlayerRole.PARTNER_B
+                if loaded.player_role == PlayerRole.PARTNER_B and event.use_answer_bank
                 else None
             )
             if session.current_event_id != event.id:

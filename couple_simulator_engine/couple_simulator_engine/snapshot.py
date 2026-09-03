@@ -8,6 +8,8 @@ from typing import Any, Literal
 from couple_simulator_engine.config import GameConfig
 from couple_simulator_engine.content.answers import AnswerBank
 from couple_simulator_engine.enums import (
+    HousingQuality,
+    HousingType,
     LifeStage,
     PlayerSex,
     RelationshipStatus,
@@ -16,7 +18,7 @@ from couple_simulator_engine.enums import (
 from couple_simulator_engine.player import Player
 from couple_simulator_engine.rng import SeededRNG
 from couple_simulator_engine.session import GameSession, RecordedAnswer, TimelineEntry
-from couple_simulator_engine.state import SimulationState
+from couple_simulator_engine.state import Housing, Mascot, SimulationState
 
 PlayerRoleName = Literal["partner_a", "partner_b"]
 
@@ -38,6 +40,20 @@ def copy_player(player: Player) -> Player:
     )
 
 
+def copy_housing(housing: Housing) -> Housing:
+    return Housing(
+        place=housing.place,
+        type=HousingType(housing.type),
+        quality=HousingQuality(housing.quality),
+    )
+
+
+def copy_mascot(mascot: Mascot | None) -> Mascot | None:
+    if mascot is None:
+        return None
+    return Mascot(species=mascot.species, name=mascot.name)
+
+
 def copy_simulation_state(state: SimulationState) -> SimulationState:
     """Round-trip partners and couple stats (not ``SimulationState.to_dict()``)."""
     return SimulationState(
@@ -46,6 +62,10 @@ def copy_simulation_state(state: SimulationState) -> SimulationState:
         finances=state.finances,
         quality_of_life=state.quality_of_life,
         children=state.children,
+        wellness=state.wellness,
+        housing=copy_housing(state.housing),
+        mascot=copy_mascot(state.mascot),
+        tags=dict(state.tags),
         life_stage=LifeStage(state.life_stage),
         relationship_status=RelationshipStatus(state.relationship_status),
     )

@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from couple_simulator_engine.enums import LifeStage
+from couple_simulator_engine.enums import LifeStage, PlayerRole
 
 
 @dataclass(frozen=True)
@@ -63,3 +63,5 @@ class EventDefinition:
     mismatch_actions: tuple[ActionDefinition, ...]
     weight: float = 1.0
     max_occurrences: int = 1
+    player_role: PlayerRole | None = None
+    use_answer_bank: bool = True

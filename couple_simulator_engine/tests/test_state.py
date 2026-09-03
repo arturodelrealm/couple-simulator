@@ -3,9 +3,16 @@
 import pytest
 
 from couple_simulator_engine.clamp import clamp_stat
-from couple_simulator_engine.enums import LifeStage, PlayerSex, RelationshipStatus
+from couple_simulator_engine.enums import (
+    HousingQuality,
+    HousingType,
+    LifeStage,
+    PlayerSex,
+    RelationshipStatus,
+)
 from couple_simulator_engine.player import Player
-from couple_simulator_engine.state import SimulationState
+from couple_simulator_engine.snapshot import copy_simulation_state
+from couple_simulator_engine.state import Housing, Mascot, SimulationState
 
 
 def test_default_initial_values() -> None:
@@ -15,6 +22,12 @@ def test_default_initial_values() -> None:
     assert state.finances == 50
     assert state.quality_of_life == 50
     assert state.children == 0
+    assert state.wellness == 50
+    assert state.mascot is None
+    assert state.tags == {}
+    assert state.housing.place == "Providencia"
+    assert state.housing.type == HousingType.APARTMENT
+    assert state.housing.quality == HousingQuality.OK
     assert state.life_stage == LifeStage.YOUTH
     assert state.relationship_status == RelationshipStatus.TOGETHER
     assert state.partner_a.game_age == 22
@@ -85,6 +98,14 @@ def test_to_dict_aligns_with_rules_evaluator_paths() -> None:
     payload = state.to_dict()
     assert payload["finances"] == 50
     assert payload["quality_of_life"] == 50
+    assert payload["wellness"] == 50
+    assert payload["housing"] == {
+        "place": "Providencia",
+        "type": "apartment",
+        "quality": "ok",
+    }
+    assert payload["mascot"] is None
+    assert payload["tags"] == {}
     assert "adventures" not in payload
     assert "career" not in payload
     assert payload["compatibility"] == 100
@@ -125,3 +146,43 @@ def test_removed_stats_are_unknown() -> None:
             clamp_stat(variable, 50)
         with pytest.raises(ValueError, match="Unknown stat"):
             state.set_stat(variable, 50)
+
+
+def test_set_stat_clamps_wellness() -> None:
+    state = SimulationState()
+    assert state.set_stat("wellness", 150) == 100
+    assert state.wellness == 100
+    assert state.set_stat("wellness", -20) == 0
+    assert state.wellness == 0
+
+
+def test_copy_simulation_state_round_trips_household_fields() -> None:
+    original = SimulationState(
+        wellness=12,
+        housing=Housing(
+            place="Las Condes",
+            type=HousingType.HOUSE,
+            quality=HousingQuality.EXCELLENT,
+        ),
+        mascot=Mascot(species="cat", name="Michi"),
+        tags={"owns_house": True},
+    )
+    copied = copy_simulation_state(original)
+    assert copied.wellness == 12
+    assert copied.housing.place == "Las Condes"
+    assert copied.housing.type == HousingType.HOUSE
+    assert copied.housing.quality == HousingQuality.EXCELLENT
+    assert copied.mascot is not None
+    assert copied.mascot.species == "cat"
+    assert copied.mascot.name == "Michi"
+    assert copied.tags == {"owns_house": True}
+    copied.housing.place = "Ñuñoa"
+    copied.mascot.name = "Other"
+    copied.wellness = 99
+    copied.tags["owns_house"] = False
+    copied.tags["extra"] = 1
+    assert original.housing.place == "Las Condes"
+    assert original.mascot is not None
+    assert original.mascot.name == "Michi"
+    assert original.wellness == 12
+    assert original.tags == {"owns_house": True}

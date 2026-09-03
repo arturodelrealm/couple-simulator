@@ -2,10 +2,15 @@
 
 from __future__ import annotations
 
-from couple_simulator_engine.conditions import build_evaluation_context, should_apply
+from couple_simulator_engine.conditions import (
+    build_evaluation_context,
+    evaluation_mode,
+    should_apply,
+)
 from couple_simulator_engine.content.answers import AnswerBank
 from couple_simulator_engine.content.catalog import ContentCatalog
 from couple_simulator_engine.content.definitions import EventDefinition
+from couple_simulator_engine.enums import PlayerRole
 from couple_simulator_engine.session import GameSession
 from couple_simulator_engine.snapshot import LoadedGame
 
@@ -15,10 +20,21 @@ def occurrences_in_session(session: GameSession, event_id: str) -> int:
     return session.events_played_ids.count(event_id)
 
 
+def _matches_player_role(session: GameSession, event: EventDefinition) -> bool:
+    if event.player_role is None:
+        return True
+    mode = evaluation_mode(session)
+    if event.player_role == PlayerRole.PARTNER_B:
+        return mode == "couple"
+    return mode == "solo"
+
+
 def _is_eligible(session: GameSession, event: EventDefinition) -> bool:
     if occurrences_in_session(session, event.id) >= event.max_occurrences:
         return False
     if event.life_stage is not None and event.life_stage != session.state.life_stage:
+        return False
+    if not _matches_player_role(session, event):
         return False
     ctx = build_evaluation_context(session, event, [])
     return should_apply(event.eligibility, ctx)
@@ -39,7 +55,9 @@ def _selection_weight(
     bank: AnswerBank | None,
     boost: float,
 ) -> float:
-    if bank is None or bank.partner_a_answers(event) is None:
+    if bank is None or not event.use_answer_bank:
+        return event.weight
+    if bank.partner_a_answers(event) is None:
         return event.weight
     return event.weight * boost
 

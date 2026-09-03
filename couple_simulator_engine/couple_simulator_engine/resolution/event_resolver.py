@@ -200,8 +200,9 @@ def resolve_event(
     submitted_ordered = [live_by_question[question.id] for question in event.questions]
     _open_event_if_needed(session, event)
 
+    bank_answers = partner_a_answers if event.use_answer_bank else None
     partner_a_by_question = (
-        _complete_partner_a_answers(event, partner_a_answers)
+        _complete_partner_a_answers(event, bank_answers)
         if evaluation_mode(session) == "couple"
         else None
     )
