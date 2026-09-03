@@ -520,4 +520,3 @@ def test_http_partner_b_start_with_zero_a_runs_is_solo_like(
     )
     assert listed_b.json()["data"]["pagination"]["total"] == 1
     assert listed_b.json()["data"]["items"][0]["run_id"] == b_run_id
-
