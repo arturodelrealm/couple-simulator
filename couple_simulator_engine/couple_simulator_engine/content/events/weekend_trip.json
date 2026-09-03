@@ -1,23 +1,23 @@
 {
   "id": "weekend_trip",
-  "title": "Weekend plans",
-  "description": "Decide how to spend the weekend together.",
+  "title": "events.weekend_trip.title",
+  "description": "events.weekend_trip.description",
   "tags": ["leisure", "adventure"],
   "life_stage": null,
   "eligibility": null,
   "questions": [
     {
       "id": "weekend_plan",
-      "text": "What should we do this weekend?",
+      "text": "events.weekend_trip.questions.weekend_plan",
       "options": [
         {
           "id": "stay_home",
-          "text": "Stay home",
+          "text": "events.weekend_trip.options.stay_home",
           "actions": []
         },
         {
           "id": "road_trip",
-          "text": "Take a road trip",
+          "text": "events.weekend_trip.options.road_trip",
           "actions": [
             {
               "type": "modify_stat",
@@ -41,13 +41,13 @@
           "type": "add_conversation",
           "args": {
             "speaker": "partner_a",
-            "text": "Whatever we picked, it was our weekend."
+            "text_key": "events.weekend_trip.conversations.went_out"
           }
         },
         {
           "type": "add_timeline_entry",
           "args": {
-            "title": "Weekend together",
+            "title_key": "events.weekend_trip.timeline.weekend_together",
             "category": "leisure"
           }
         }

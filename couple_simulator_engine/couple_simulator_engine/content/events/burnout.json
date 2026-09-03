@@ -1,23 +1,23 @@
 {
   "id": "burnout",
-  "title": "Burnout",
-  "description": "Work pressure reaches a breaking point.",
+  "title": "events.burnout.title",
+  "description": "events.burnout.description",
   "tags": ["career"],
   "life_stage": null,
   "eligibility": null,
   "questions": [
     {
       "id": "burnout_choice",
-      "text": "How do you respond to burnout?",
+      "text": "events.burnout.questions.burnout_choice",
       "options": [
         {
           "id": "quit_job",
-          "text": "Quit the job",
+          "text": "events.burnout.options.quit_job",
           "actions": []
         },
         {
           "id": "push_through",
-          "text": "Push through",
+          "text": "events.burnout.options.push_through",
           "actions": []
         }
       ]

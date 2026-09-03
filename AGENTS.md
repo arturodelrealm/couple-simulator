@@ -68,6 +68,8 @@ const { t } = useTranslation();
 - Store translation keys in English.
 - Keep copy out of business logic; services should raise domain errors, routers map them to translatable HTTP responses.
 
+**Engine event content:** packaged event JSON (`couple_simulator_engine/.../content/events/`) stores **i18n keys**, not display prose, in `title` / `description` / question and option `text`. Conversation and timeline actions use `text_key` / `title_key` / `description_key`. Spanish and English strings live in `frontend/src/locales/es.json` and `en.json` under `events.<event_id>.*`. The play UI resolves keys with `translateContent` / `t()`; the API does **not** gettext event copy. Default UI locale is Spanish (`frontend/src/i18n.ts` `lng: "es"`). When adding an event, add matching keys in both locale files.
+
 ---
 
 ## Repository layout

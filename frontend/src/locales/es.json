@@ -115,14 +115,14 @@
       },
       "gameOver": {
         "title": "Una vida bien vivida",
-        "yourStory": "Vuestra historia",
+        "yourStory": "Nuestra historia",
         "playAgain": "Jugar de nuevo",
         "ages": "{{partnerAName}} tiene {{partnerAAge}} años, {{partnerBName}} tiene {{partnerBAge}}."
       },
       "errors": {
         "runNotFound": "No se encontró esta simulación.",
         "gameNotReady": "Esta partida aún no está lista para jugar.",
-        "runFinished": "Esta simulación ya ha terminado.",
+        "runFinished": "Esta simulación ya terminó.",
         "noEligibleEvents": "No quedan más eventos de vida para esta simulación.",
         "eventMismatch": "Este evento ya no está abierto. Continúa o recarga la partida.",
         "eventNotFound": "No se encontró este evento de vida.",
@@ -168,5 +168,85 @@
     "matchNameInvalid": "El nombre debe tener 3–32 caracteres: letras minúsculas, números, guiones y guiones bajos.",
     "sexRequired": "Selecciona una opción de sexo.",
     "inviteCopyFailed": "No se pudo copiar el enlace. Cópialo manualmente."
+  },
+  "events": {
+    "weekend_trip": {
+      "title": "Planes de fin de semana",
+      "description": "Decidan cómo pasar el fin de semana juntos.",
+      "questions": {
+        "weekend_plan": "¿Qué hacemos este fin de semana?"
+      },
+      "options": {
+        "stay_home": "Quedarnos en casa",
+        "road_trip": "Salir de viaje"
+      },
+      "conversations": {
+        "went_out": "Lo que elijamos, va a ser nuestro fin de semana."
+      },
+      "timeline": {
+        "weekend_together": "Fin de semana juntos"
+      }
+    },
+    "buy_house_light": {
+      "title": "¿Compramos una casa?",
+      "questions": {
+        "want_to_buy": "¿Les gustaría comprar una casa?",
+        "budget_ready": "¿Tienen el presupuesto?"
+      },
+      "options": {
+        "want_to_buy": {
+          "yes": "Sí",
+          "no": "No"
+        },
+        "budget_ready": {
+          "yes": "Sí",
+          "no": "No"
+        }
+      },
+      "conversations": {
+        "purchase": "Vamos a comprar una casa.",
+        "keep_renting": "Seguir de arriendo nos funciona.",
+        "leave_open": "Por ahora dejamos el tema de la casa en pausa."
+      },
+      "timeline": {
+        "bought_house": "Compramos una casa"
+      }
+    },
+    "career_offer": {
+      "title": "Oferta de trabajo",
+      "description": "Un ascenso con más horas.",
+      "questions": {
+        "career_choice": "¿Aceptan el ascenso con más horas?"
+      },
+      "options": {
+        "accept": "Aceptar",
+        "decline": "Rechazar"
+      }
+    },
+    "midlife_checkpoint": {
+      "title": "Punto de inflexión",
+      "description": "Una oportunidad de entrar en una nueva etapa de la vida.",
+      "questions": {
+        "midlife_stance": "¿Cómo enfrentan este momento?"
+      },
+      "options": {
+        "embrace": "Asumirlo",
+        "resist": "Resistirnos"
+      },
+      "conversations": {
+        "stagnate": "A lo mejor no estamos listos para decir que esto es un capítulo nuevo."
+      }
+    },
+    "burnout": {
+      "title": "Agotamiento",
+      "description": "La presión del trabajo llega al límite.",
+      "questions": {
+        "burnout_choice": "¿Qué hacen con el agotamiento?"
+      },
+      "options": {
+        "quit_job": "Renunciar",
+        "push_through": "Aguantar"
+      }
+    }
   }
 }

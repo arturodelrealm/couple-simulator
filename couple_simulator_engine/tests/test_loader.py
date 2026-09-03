@@ -166,3 +166,109 @@ def test_content_catalog_get_unknown_id() -> None:
     catalog = ContentCatalog()
     assert catalog.get("missing") is None
     assert catalog.all_events() == ()
+
+
+# --- TextPresentation loader tests ---
+
+from couple_simulator_engine.content.definitions import TextPresentation  # noqa: E402
+
+
+def test_load_event_with_text_presentation_on_question_and_option(
+    tmp_path: Path,
+) -> None:
+    payload = {
+        "id": "tp_event",
+        "title": "TP event",
+        "questions": [
+            {
+                "id": "q1",
+                "text": {
+                    "default_key": "events.tp.q1.default",
+                    "by_sex": {
+                        "male": "events.tp.q1.male",
+                        "female": "events.tp.q1.female",
+                    },
+                },
+                "options": [
+                    {
+                        "id": "a",
+                        "text": {
+                            "default_key": "events.tp.opt_a.default",
+                            "by_role": {
+                                "partner_a": "events.tp.opt_a.role_a",
+                                "partner_b": "events.tp.opt_a.role_b",
+                            },
+                        },
+                    },
+                    {"id": "b", "text": "events.tp.opt_b.plain"},
+                ],
+            }
+        ],
+    }
+    event = load_event_file(_write_event(tmp_path, "tp.json", payload))
+    assert isinstance(event.questions[0].text, TextPresentation)
+    assert event.questions[0].text.default_key == "events.tp.q1.default"
+    assert event.questions[0].text.by_sex == {
+        "male": "events.tp.q1.male",
+        "female": "events.tp.q1.female",
+    }
+    opt_a = event.questions[0].options[0]
+    assert isinstance(opt_a.text, TextPresentation)
+    assert opt_a.text.by_role == {
+        "partner_a": "events.tp.opt_a.role_a",
+        "partner_b": "events.tp.opt_a.role_b",
+    }
+    opt_b = event.questions[0].options[1]
+    assert isinstance(opt_b.text, str)
+    assert opt_b.text == "events.tp.opt_b.plain"
+
+
+def test_text_presentation_missing_default_key_raises(tmp_path: Path) -> None:
+    payload = {
+        "id": "bad_tp",
+        "title": "Bad",
+        "questions": [
+            {
+                "id": "q1",
+                "text": {"by_sex": {"male": "m"}},
+                "options": [{"id": "a", "text": "A"}],
+            }
+        ],
+    }
+    with pytest.raises(ContentParseError, match="default_key"):
+        load_event_file(_write_event(tmp_path, "bad_tp.json", payload))
+
+
+def test_text_presentation_non_string_variant_values_raises(tmp_path: Path) -> None:
+    payload = {
+        "id": "bad_var",
+        "title": "Bad",
+        "questions": [
+            {
+                "id": "q1",
+                "text": {
+                    "default_key": "ok",
+                    "by_sex": {"male": 123},
+                },
+                "options": [{"id": "a", "text": "A"}],
+            }
+        ],
+    }
+    with pytest.raises(ContentParseError, match="string keys and values"):
+        load_event_file(_write_event(tmp_path, "bad_var.json", payload))
+
+
+def test_text_field_rejects_non_string_non_object(tmp_path: Path) -> None:
+    payload = {
+        "id": "bad_type",
+        "title": "Bad",
+        "questions": [
+            {
+                "id": "q1",
+                "text": 42,
+                "options": [{"id": "a", "text": "A"}],
+            }
+        ],
+    }
+    with pytest.raises(ContentParseError, match="string or TextPresentation"):
+        load_event_file(_write_event(tmp_path, "bad_type.json", payload))

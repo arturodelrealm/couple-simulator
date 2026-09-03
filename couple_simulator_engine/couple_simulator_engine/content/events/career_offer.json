@@ -1,23 +1,23 @@
 {
   "id": "career_offer",
-  "title": "Career offer",
-  "description": "A promotion with longer hours.",
+  "title": "events.career_offer.title",
+  "description": "events.career_offer.description",
   "tags": ["career"],
   "life_stage": null,
   "eligibility": null,
   "questions": [
     {
       "id": "career_choice",
-      "text": "Do you accept the promotion with more hours?",
+      "text": "events.career_offer.questions.career_choice",
       "options": [
         {
           "id": "accept",
-          "text": "Accept",
+          "text": "events.career_offer.options.accept",
           "actions": []
         },
         {
           "id": "decline",
-          "text": "Decline",
+          "text": "events.career_offer.options.decline",
           "actions": []
         }
       ]

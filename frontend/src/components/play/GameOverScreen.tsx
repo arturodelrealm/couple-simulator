@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 
 import type { TimelineEntry } from "../../services/simulationService";
 import { STAT_CONFIG } from "../../shared/play/statConfig";
+import { translateContent } from "../../shared/play/translateContent";
 import { ErrorMessage } from "../../shared/ui/ErrorMessage";
 import type { StatsBarValues } from "./StatsBar";
 import { PlayRefreshIcon } from "./playIcons";
@@ -82,7 +83,8 @@ export function GameOverScreen({
                 key={`${entry.title}-${entry.age}-${index}`}
                 className="border-b border-slate-100 py-1 text-xs text-slate-500 last:border-0"
               >
-                {t("game.play.age", { age: entry.age })} — {entry.title}
+                {t("game.play.age", { age: entry.age })} —{" "}
+                {translateContent(entry.title)}
               </p>
             ))
           )}

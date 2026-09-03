@@ -16,16 +16,29 @@ class ActionDefinition:
 
 
 @dataclass(frozen=True)
+class TextPresentation:
+    """Structured text field with optional role/sex variants (spec §6.2)."""
+
+    default_key: str
+    by_role: dict[str, str] | None = None
+    by_sex: dict[str, str] | None = None
+
+
+# Union accepted on question/option text after parsing.
+TextField = str | TextPresentation
+
+
+@dataclass(frozen=True)
 class OptionDefinition:
     id: str
-    text: str
+    text: TextField
     actions: tuple[ActionDefinition, ...] = ()
 
 
 @dataclass(frozen=True)
 class QuestionDefinition:
     id: str
-    text: str
+    text: TextField
     options: tuple[OptionDefinition, ...]
 
 

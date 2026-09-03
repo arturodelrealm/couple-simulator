@@ -167,7 +167,8 @@ def test_default_actions_when_no_outcome_matches() -> None:
     assert session.state.finances == 50
     assert any(
         action.type == "add_conversation"
-        and action.args.get("text") == "We leave the housing question open for now."
+        and action.args.get("text_key")
+        == "events.buy_house_light.conversations.leave_open"
         for action in resolution.client_actions
     )
 
@@ -403,6 +404,74 @@ def test_outcomes_use_effective_option_not_discarded() -> None:
         partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
     )
     assert resolution.applied_outcome_ids == ["a_won"]
+
+
+def test_resolution_passthrough_conversation_and_timeline_keys() -> None:
+    event = EventDefinition(
+        id="keyed_copy",
+        title="events.keyed_copy.title",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="q1",
+                text="events.keyed_copy.questions.q1",
+                options=(OptionDefinition(id="a", text="events.keyed_copy.options.a"),),
+            ),
+        ),
+        outcomes=(
+            OutcomeDefinition(
+                id="done",
+                when=None,
+                actions=(
+                    ActionDefinition(
+                        type="add_conversation",
+                        args={
+                            "speaker": "narrator",
+                            "text_key": "events.keyed_copy.conversations.done",
+                        },
+                    ),
+                    ActionDefinition(
+                        type="add_timeline_entry",
+                        args={
+                            "title_key": "events.keyed_copy.timeline.done",
+                            "description_key": (
+                                "events.keyed_copy.timeline.done_description"
+                            ),
+                            "category": "life",
+                        },
+                    ),
+                ),
+            ),
+        ),
+        default_actions=(),
+        mismatch_actions=(),
+    )
+    session = _session()
+    resolution = resolve_event(
+        session, event, [Answer(question_id="q1", option_id="a")]
+    )
+    conversation = next(
+        action
+        for action in resolution.client_actions
+        if action.type == "add_conversation"
+    )
+    timeline = next(
+        action
+        for action in resolution.client_actions
+        if action.type == "add_timeline_entry"
+    )
+    assert conversation.args["text_key"] == "events.keyed_copy.conversations.done"
+    assert "text" not in conversation.args
+    assert timeline.args["title_key"] == "events.keyed_copy.timeline.done"
+    assert (
+        timeline.args["description_key"]
+        == "events.keyed_copy.timeline.done_description"
+    )
+    assert timeline.args["title"] == "events.keyed_copy.timeline.done"
+    assert session.timeline[0].title == "events.keyed_copy.timeline.done"
 
 
 def test_mismatch_actions_skipped_when_answers_match() -> None:

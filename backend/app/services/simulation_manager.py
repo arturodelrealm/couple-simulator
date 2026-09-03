@@ -238,7 +238,11 @@ class SimulationManager:
                     _("No eligible events remain"),
                     status_code=409,
                 )
-            presentation = self._engine.present_event(event)
+            presentation = self._engine.present_event(
+                event,
+                player_role=loaded.player_role,
+                player_sex=loaded.session.player.sex,
+            )
             return CurrentEventView(
                 run_id=orm_run.id,
                 event=_event_presentation_to_dict(presentation),
@@ -260,7 +264,11 @@ class SimulationManager:
         exported = self._engine.export_snapshot(loaded)
         _apply_run_snapshot(orm_run, exported.active_run)
         db.commit()
-        presentation = self._engine.present_event(event)
+        presentation = self._engine.present_event(
+            event,
+            player_role=loaded.player_role,
+            player_sex=loaded.session.player.sex,
+        )
         return CurrentEventView(
             run_id=orm_run.id,
             event=_event_presentation_to_dict(presentation),

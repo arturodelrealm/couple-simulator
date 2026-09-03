@@ -11,6 +11,7 @@ i18n.use(initReactI18next).init({
   },
   lng: "es",
   fallbackLng: "en",
+  // Engine event copy is stored as i18n keys and resolved in this UI locale.
   supportedLngs: ["en", "es"],
   interpolation: { escapeValue: false },
 });

@@ -16,6 +16,7 @@ import { useSimulationPlay } from "../hooks/useSimulationPlay";
 import type { SimulationState } from "../services/simulationService";
 import { isGameReadyToPlay } from "../shared/gameNavigation";
 import { resolvePlayPartnerB } from "../shared/play/resolvePlayPartnerB";
+import { translateContent } from "../shared/play/translateContent";
 import { ErrorMessage } from "../shared/ui/ErrorMessage";
 import { LoadingState } from "../shared/ui/LoadingState";
 
@@ -142,8 +143,12 @@ export function PlayPage() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_300px] lg:items-start">
         {currentEvent ? (
           <EventCard
-            title={currentEvent.event.title}
-            description={currentEvent.event.description}
+            title={translateContent(currentEvent.event.title)}
+            description={
+              currentEvent.event.description
+                ? translateContent(currentEvent.event.description)
+                : null
+            }
           >
             {showChoices && currentQuestion ? (
               <>
@@ -151,13 +156,13 @@ export function PlayPage() {
                   {t("game.play.choicesPrompt")}
                 </p>
                 <p className="text-sm leading-relaxed text-slate-600">
-                  {currentQuestion.text}
+                  {translateContent(currentQuestion.text)}
                 </p>
                 {currentQuestion.options.map((option, index) => (
                   <ChoiceCard
                     key={option.id}
                     index={index}
-                    text={option.text}
+                    text={translateContent(option.text)}
                     selected={selectedOptionId === option.id}
                     disabled={choicesDisabled}
                     onSelect={() => selectOption(option.id)}
