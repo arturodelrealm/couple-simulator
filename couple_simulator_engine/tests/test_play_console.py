@@ -58,3 +58,6 @@ def test_play_console_completes_with_piped_answers() -> None:
     assert "Events played:" in result.stdout
     assert "Actions:" in result.stdout
     assert "Current stats:" in result.stdout
+    assert "wellness=" in result.stdout
+    assert "housing=Providencia/apartment/ok" in result.stdout
+    assert "mascot=none" in result.stdout

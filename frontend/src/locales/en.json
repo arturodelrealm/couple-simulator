@@ -111,7 +111,22 @@
         "compatibility": "Compatibility",
         "finances": "Finances",
         "children": "Children",
-        "qualityOfLife": "Quality of Life"
+        "qualityOfLife": "Quality of Life",
+        "wellness": "Wellness"
+      },
+      "household": {
+        "house": "Home",
+        "mascot": "Mascot",
+        "noMascot": "No mascot"
+      },
+      "housingType": {
+        "apartment": "Apartment",
+        "house": "House"
+      },
+      "housingQuality": {
+        "bad": "Bad",
+        "ok": "Ok",
+        "excellent": "Excellent"
       },
       "gameOver": {
         "title": "A Life Well Lived",

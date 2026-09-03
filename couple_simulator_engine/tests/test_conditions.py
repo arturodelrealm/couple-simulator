@@ -172,3 +172,27 @@ def test_event_variables_home_desire_compare() -> None:
     )
     assert should_apply(purchase.when, ctx) is True
     assert should_apply(keep_renting.when, ctx) is False
+
+
+def test_simulation_tags_are_readable_from_state_paths() -> None:
+    session = _session()
+    assert session.state.tags == {}
+    session.state.tags["owns_house"] = True
+    event = _catalog_event("buy_house_light")
+    ctx = build_evaluation_context(session, event, [])
+    assert ctx["state"]["tags"] == {"owns_house": True}
+    assert ctx["tags"] == ["financial", "housing"]
+    present = {
+        "type": "compare",
+        "path": "state/tags/owns_house",
+        "op": "eq",
+        "value": True,
+    }
+    missing = {
+        "type": "compare",
+        "path": "state/tags/has_mascot",
+        "op": "eq",
+        "value": True,
+    }
+    assert should_apply(present, ctx) is True
+    assert should_apply(missing, ctx) is False

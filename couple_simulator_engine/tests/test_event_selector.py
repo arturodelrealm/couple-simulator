@@ -11,7 +11,7 @@ from couple_simulator_engine.content.definitions import (
     QuestionDefinition,
 )
 from couple_simulator_engine.engine import GameEngine
-from couple_simulator_engine.enums import LifeStage, PlayerSex
+from couple_simulator_engine.enums import LifeStage, PlayerRole, PlayerSex
 from couple_simulator_engine.player import Player
 from couple_simulator_engine.rng import SeededRNG
 from couple_simulator_engine.selection.event_selector import (
@@ -58,6 +58,8 @@ def _event(
     life_stage: LifeStage | None = None,
     weight: float = 1.0,
     max_occurrences: int = 1,
+    player_role: PlayerRole | None = None,
+    use_answer_bank: bool = True,
 ) -> EventDefinition:
     return EventDefinition(
         id=event_id,
@@ -78,6 +80,8 @@ def _event(
         mismatch_actions=(),
         weight=weight,
         max_occurrences=max_occurrences,
+        player_role=player_role,
+        use_answer_bank=use_answer_bank,
     )
 
 
@@ -337,4 +341,37 @@ def test_engine_select_next_event_loaded_partner_b_boosts() -> None:
     assert {(event.id, weight) for event, weight in pairs} == {
         ("uncovered", 1.0),
         ("covered", 2.0),
+    }
+
+
+def test_partner_b_only_event_excluded_from_partner_a_session() -> None:
+    event = _event("b_only", player_role=PlayerRole.PARTNER_B)
+    catalog = ContentCatalog([event])
+    session = _session()
+    assert select_next_event(session, catalog) is None
+    session.player = session.state.partner_b
+    chosen = select_next_event(session, catalog)
+    assert chosen is event
+
+
+def test_use_answer_bank_false_skips_coverage_boost() -> None:
+    uncovered = _event("uncovered", weight=1.0)
+    covered = _event("covered", weight=1.0, use_answer_bank=False)
+    catalog = ContentCatalog([uncovered, covered])
+    session = _session()
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    loaded = _loaded(
+        session,
+        player_role="partner_b",
+        answers=[
+            RecordedAnswer(event_id="covered", question_id="q", option_id="a"),
+        ],
+    )
+    assert select_next_event_for_loaded(loaded, catalog) is not None
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert {(event.id, weight) for event, weight in pairs} == {
+        ("uncovered", 1.0),
+        ("covered", 1.0),
     }

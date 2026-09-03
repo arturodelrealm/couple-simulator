@@ -6,11 +6,17 @@ from couple_simulator_engine.actions.registry import apply_action
 from couple_simulator_engine.actions.types import UnknownActionTypeError
 from couple_simulator_engine.config import GameConfig
 from couple_simulator_engine.content.definitions import ActionDefinition
-from couple_simulator_engine.enums import LifeStage, PlayerSex, SessionStatus
+from couple_simulator_engine.enums import (
+    HousingQuality,
+    HousingType,
+    LifeStage,
+    PlayerSex,
+    SessionStatus,
+)
 from couple_simulator_engine.player import Player
 from couple_simulator_engine.rng import SeededRNG
 from couple_simulator_engine.session import GameSession
-from couple_simulator_engine.state import SimulationState
+from couple_simulator_engine.state import Mascot, SimulationState
 
 
 def _session(*, finances: int = 50, age: int = 22) -> GameSession:
@@ -241,3 +247,177 @@ def test_end_game_sets_finished_and_emits_reason() -> None:
     assert session.end_reason == "burnout"
     assert result[0].type == "end_game"
     assert result[0].args == {"reason": "burnout"}
+
+
+def test_modify_stat_wellness_updates_and_clamps() -> None:
+    session = _session()
+    action = ActionDefinition(
+        type="modify_stat",
+        args={"variable": "wellness", "delta": 80},
+    )
+    result = apply_action(action, _ctx(session), session, session.rng)
+    assert session.state.wellness == 100
+    assert result[0].args == {
+        "variable": "wellness",
+        "delta": 50,
+        "new_value": 100,
+    }
+
+
+def test_set_housing_replaces_object_and_emits_payload() -> None:
+    session = _session()
+    wellness = session.state.wellness
+    mascot = session.state.mascot
+    action = ActionDefinition(
+        type="set_housing",
+        args={"place": "Las Condes", "type": "house", "quality": "excellent"},
+    )
+    result = apply_action(action, _ctx(session), session, session.rng)
+    housing = session.state.housing
+    assert housing.place == "Las Condes"
+    assert housing.type == HousingType.HOUSE
+    assert housing.quality == HousingQuality.EXCELLENT
+    assert session.state.wellness == wellness
+    assert session.state.mascot is mascot
+    assert result[0].type == "set_housing"
+    assert result[0].args == {
+        "place": "Las Condes",
+        "type": "house",
+        "quality": "excellent",
+    }
+
+
+def test_set_housing_rejects_invalid_type_and_quality() -> None:
+    session = _session()
+    original = session.state.housing
+    with pytest.raises(ValueError):
+        apply_action(
+            ActionDefinition(
+                type="set_housing",
+                args={"place": "Providencia", "type": "castle", "quality": "ok"},
+            ),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+    with pytest.raises(ValueError):
+        apply_action(
+            ActionDefinition(
+                type="set_housing",
+                args={"place": "Providencia", "type": "apartment", "quality": "luxury"},
+            ),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+    assert session.state.housing is original
+
+
+def test_set_housing_rejects_empty_place() -> None:
+    session = _session()
+    with pytest.raises(ValueError, match="Invalid place"):
+        apply_action(
+            ActionDefinition(
+                type="set_housing",
+                args={"place": "  ", "type": "apartment", "quality": "ok"},
+            ),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+
+
+def test_set_mascot_sets_and_clears() -> None:
+    session = _session()
+    set_action = ActionDefinition(
+        type="set_mascot",
+        args={"species": "cat", "name": "Michi"},
+    )
+    set_result = apply_action(set_action, _ctx(session), session, session.rng)
+    assert session.state.mascot == Mascot(species="cat", name="Michi")
+    assert set_result[0].type == "set_mascot"
+    assert set_result[0].args == {"mascot": {"species": "cat", "name": "Michi"}}
+
+    clear_result = apply_action(
+        ActionDefinition(type="set_mascot", args={"mascot": None}),
+        _ctx(session),
+        session,
+        session.rng,
+    )
+    assert session.state.mascot is None
+    assert clear_result[0].args == {"mascot": None}
+
+
+def test_set_mascot_rejects_invalid_mix() -> None:
+    session = _session()
+    session.state.mascot = Mascot(species="dog", name="Luna")
+    with pytest.raises(ValueError, match="species and name"):
+        apply_action(
+            ActionDefinition(type="set_mascot", args={"species": "cat"}),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+    with pytest.raises(ValueError, match="Cannot mix"):
+        apply_action(
+            ActionDefinition(
+                type="set_mascot",
+                args={"mascot": None, "species": "cat", "name": "Michi"},
+            ),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+    assert session.state.mascot == Mascot(species="dog", name="Luna")
+
+
+def test_set_tag_sets_replaces_and_clears() -> None:
+    session = _session()
+    set_result = apply_action(
+        ActionDefinition(type="set_tag", args={"key": "owns_house", "value": True}),
+        _ctx(session),
+        session,
+        session.rng,
+    )
+    assert session.state.tags == {"owns_house": True}
+    assert set_result[0].type == "set_tag"
+    assert set_result[0].args == {"key": "owns_house", "value": True}
+
+    apply_action(
+        ActionDefinition(type="set_tag", args={"key": "owns_house", "value": False}),
+        _ctx(session),
+        session,
+        session.rng,
+    )
+    assert session.state.tags == {"owns_house": False}
+
+    clear_result = apply_action(
+        ActionDefinition(type="set_tag", args={"key": "owns_house", "value": None}),
+        _ctx(session),
+        session,
+        session.rng,
+    )
+    assert session.state.tags == {}
+    assert clear_result[0].args == {"key": "owns_house", "value": None}
+
+
+def test_set_tag_rejects_invalid_key() -> None:
+    session = _session()
+    with pytest.raises(ValueError, match="Invalid key"):
+        apply_action(
+            ActionDefinition(type="set_tag", args={"key": "  ", "value": True}),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+    with pytest.raises(ValueError, match="Invalid key"):
+        apply_action(
+            ActionDefinition(
+                type="set_tag",
+                args={"key": "nested/path", "value": True},
+            ),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+    assert session.state.tags == {}

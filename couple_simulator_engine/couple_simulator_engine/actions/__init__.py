@@ -8,6 +8,9 @@ from couple_simulator_engine.actions.handlers import (
     handle_end_game,
     handle_modify_stat,
     handle_set_event_var,
+    handle_set_housing,
+    handle_set_mascot,
+    handle_set_tag,
 )
 from couple_simulator_engine.actions.registry import (
     apply_action,
@@ -25,6 +28,9 @@ __all__ = [
     "handle_end_game",
     "handle_modify_stat",
     "handle_set_event_var",
+    "handle_set_housing",
+    "handle_set_mascot",
+    "handle_set_tag",
     "register_action_handler",
     "resolve_value",
 ]

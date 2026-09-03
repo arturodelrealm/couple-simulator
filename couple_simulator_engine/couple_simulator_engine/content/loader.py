@@ -15,7 +15,7 @@ from couple_simulator_engine.content.definitions import (
     TextField,
     TextPresentation,
 )
-from couple_simulator_engine.enums import LifeStage
+from couple_simulator_engine.enums import LifeStage, PlayerRole
 
 DEFAULT_WEIGHT = 1.0
 DEFAULT_MAX_OCCURRENCES = 1
@@ -120,6 +120,12 @@ def _parse_event(data: dict[str, Any], *, source: str) -> EventDefinition:
         max_occurrences=_parse_int(
             data.get("max_occurrences", DEFAULT_MAX_OCCURRENCES),
             field="max_occurrences",
+            **ctx,
+        ),
+        player_role=_parse_player_role(data.get("player_role"), **ctx),
+        use_answer_bank=_parse_bool(
+            data.get("use_answer_bank", True),
+            field="use_answer_bank",
             **ctx,
         ),
     )
@@ -482,6 +488,41 @@ def _parse_int(value: Any, *, field: str, source: str, event_id: str) -> int:
             )
         )
     return value
+
+
+def _parse_bool(value: Any, *, field: str, source: str, event_id: str) -> bool:
+    if not isinstance(value, bool):
+        raise ContentParseError(
+            _format_error(
+                f"Field '{field}' must be a boolean",
+                source=source,
+                event_id=event_id,
+            )
+        )
+    return value
+
+
+def _parse_player_role(value: Any, *, source: str, event_id: str) -> PlayerRole | None:
+    if value is None:
+        return None
+    if not isinstance(value, str):
+        raise ContentParseError(
+            _format_error(
+                "Field 'player_role' must be a string or null",
+                source=source,
+                event_id=event_id,
+            )
+        )
+    try:
+        return PlayerRole(value)
+    except ValueError as exc:
+        raise ContentParseError(
+            _format_error(
+                f"Unknown player_role {value!r}",
+                source=source,
+                event_id=event_id,
+            )
+        ) from exc
 
 
 def _format_error(message: str, *, source: str, event_id: str | None) -> str:

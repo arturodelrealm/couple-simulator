@@ -226,6 +226,7 @@ def _choice_event(
     mismatch_actions: tuple[ActionDefinition, ...] = (),
     outcomes: tuple[OutcomeDefinition, ...] = (),
     default_actions: tuple[ActionDefinition, ...] = (),
+    use_answer_bank: bool = True,
 ) -> EventDefinition:
     return EventDefinition(
         id="duo_choice",
@@ -265,6 +266,7 @@ def _choice_event(
         outcomes=outcomes,
         default_actions=default_actions,
         mismatch_actions=mismatch_actions,
+        use_answer_bank=use_answer_bank,
     )
 
 
@@ -287,6 +289,20 @@ def test_partner_b_matching_bank_applies_match_bonus_not_personal() -> None:
         and action.args.get("delta") == 5
         for action in resolution.client_actions
     )
+
+
+def test_use_answer_bank_false_ignores_partner_a_answers() -> None:
+    event = _choice_event(use_answer_bank=False)
+    session = _partner_b_session()
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
+    )
+    assert session.state.finances == 70
+    assert session.state.partner_a.simulation_relation_happiness == 70
+    assert session.state.partner_b.simulation_relation_happiness == 70
 
 
 def test_partner_b_disagreeing_bank_uses_winner_option_and_penalties() -> None:

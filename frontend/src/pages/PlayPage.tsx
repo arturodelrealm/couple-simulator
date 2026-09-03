@@ -8,6 +8,7 @@ import { DialogueBubble } from "../components/play/DialogueBubble";
 import { EventCard } from "../components/play/EventCard";
 import { EventContinueButton } from "../components/play/EventContinueButton";
 import { GameOverScreen } from "../components/play/GameOverScreen";
+import { HouseholdPanel } from "../components/play/HouseholdPanel";
 import { LifeStoryPanel } from "../components/play/LifeStoryPanel";
 import { NextQuestionButton } from "../components/play/NextQuestionButton";
 import { PlayLayout } from "../components/play/PlayLayout";
@@ -26,6 +27,7 @@ function statsFromState(state: SimulationState): StatsBarValues {
     finances: state.finances,
     children: state.children,
     quality_of_life: state.quality_of_life,
+    wellness: state.wellness,
   };
 }
 
@@ -139,6 +141,7 @@ export function PlayPage() {
         childrenCount={run.state.children}
       />
       <StatsBar values={stats} />
+      <HouseholdPanel housing={run.state.housing} mascot={run.state.mascot} />
       {actionError ? <ErrorMessage message={actionError} /> : null}
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_300px] lg:items-start">
         {currentEvent ? (

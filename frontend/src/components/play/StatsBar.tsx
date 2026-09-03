@@ -75,7 +75,7 @@ export function StatsBar({ values }: StatsBarProps) {
 
   return (
     <section className="rounded-3xl border border-purple-50 bg-white px-8 py-5 shadow-sm">
-      <div className="grid grid-cols-2 gap-6 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-6 lg:grid-cols-5">
         {STAT_CONFIG.map((stat) => (
           <StatMeter
             key={stat.key}

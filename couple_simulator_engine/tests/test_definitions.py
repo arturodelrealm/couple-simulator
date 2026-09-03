@@ -87,3 +87,5 @@ def test_event_definition_fields_match_schema() -> None:
     assert event.life_stage is None
     assert event.questions[0].options[0].actions[0].when is not None
     assert event.questions[0].options[1].actions == ()
+    assert event.player_role is None
+    assert event.use_answer_bank is True

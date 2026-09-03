@@ -129,6 +129,8 @@ def test_optional_fields_use_spec_defaults(tmp_path: Path) -> None:
     assert event.mismatch_actions == ()
     assert event.weight == 1.0
     assert event.max_occurrences == 1
+    assert event.player_role is None
+    assert event.use_answer_bank is True
     assert event.questions[0].options[0].actions == ()
 
 
@@ -272,3 +274,21 @@ def test_text_field_rejects_non_string_non_object(tmp_path: Path) -> None:
     }
     with pytest.raises(ContentParseError, match="string or TextPresentation"):
         load_event_file(_write_event(tmp_path, "bad_type.json", payload))
+
+
+def test_player_role_and_use_answer_bank_fields(tmp_path: Path) -> None:
+    path = _write_event(
+        tmp_path,
+        "b_only.json",
+        _minimal_event(player_role="partner_b", use_answer_bank=False),
+    )
+    event = load_event_file(path)
+    assert event.player_role is not None
+    assert event.player_role.value == "partner_b"
+    assert event.use_answer_bank is False
+
+
+def test_unknown_player_role_raises(tmp_path: Path) -> None:
+    path = _write_event(tmp_path, "bad_role.json", _minimal_event(player_role="npc"))
+    with pytest.raises(ContentParseError, match="Unknown player_role"):
+        load_event_file(path)

@@ -4,12 +4,31 @@ export type SimulationRunStatus = "ACTIVE" | "FINISHED";
 
 export type SimulationLifeStage = "youth" | "adult" | "elderly";
 
+export type SimulationHousingType = "apartment" | "house";
+
+export type SimulationHousingQuality = "bad" | "ok" | "excellent";
+
+export type SimulationHousing = {
+  place: string;
+  type: SimulationHousingType | string;
+  quality: SimulationHousingQuality | string;
+};
+
+export type SimulationMascot = {
+  species: string;
+  name: string;
+};
+
 export type SimulationState = {
   age: number;
   compatibility: number;
   finances: number;
   quality_of_life: number;
   children: number;
+  wellness: number;
+  housing: SimulationHousing;
+  mascot: SimulationMascot | null;
+  tags: Record<string, unknown>;
   life_stage: SimulationLifeStage | string;
   relationship_status: string;
 };

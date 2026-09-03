@@ -33,3 +33,14 @@ class PlayerRole(StrEnum):
 
 class ConflictStrategy(StrEnum):
     WEIGHTED_PLAYER = "weighted_player"
+
+
+class HousingType(StrEnum):
+    APARTMENT = "apartment"
+    HOUSE = "house"
+
+
+class HousingQuality(StrEnum):
+    BAD = "bad"
+    OK = "ok"
+    EXCELLENT = "excellent"
