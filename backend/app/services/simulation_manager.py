@@ -7,6 +7,7 @@ from functools import lru_cache
 from typing import Any, cast
 from uuid import UUID
 
+from couple_simulator_engine.config import DEFAULT_MAX_EVENTS
 from couple_simulator_engine.content.catalog import (
     load_catalog,
     package_events_directory,
@@ -36,7 +37,12 @@ from app.services.simulation_mapper import (
     public_simulation_state,
     simulation_state_to_dict,
 )
-from app.shared.enums import GameStatus, PlayerRole, SimulationRunStatus
+from app.shared.enums import (
+    GameStatus,
+    PlayerRole,
+    SimulationRunKind,
+    SimulationRunStatus,
+)
 from app.shared.exceptions import AppError
 from app.shared.i18n import translate as _
 
@@ -127,6 +133,9 @@ class SimulationManager:
             raise AppError("GAME_NOT_FOUND", _("Game not found"), status_code=404)
         _require_ready_for_start(game, player_role)
         partner_a = _partner_a(game)
+        resolved_max_events = (
+            max_events if max_events is not None else DEFAULT_MAX_EVENTS
+        )
 
         engine_partner_b: EnginePlayer | None
         if player_role == PlayerRole.PARTNER_B.value:
@@ -138,7 +147,7 @@ class SimulationManager:
             partner_b=engine_partner_b,
             player_role=player_role,
             seed=seed,
-            max_events=max_events,
+            max_events=resolved_max_events,
         )
         run_number = _next_run_number(db, game_id, player_role)
         now = datetime.now(timezone.utc)
@@ -151,7 +160,9 @@ class SimulationManager:
             id=UUID(session.session_id),
             game_id=game.id,
             player_role=player_role,
+            run_kind=SimulationRunKind.SIMULATION.value,
             run_number=run_number,
+            skipped_event_ids=[],
             created_at=now,
             updated_at=now,
         )

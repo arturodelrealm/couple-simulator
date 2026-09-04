@@ -9,7 +9,7 @@ from app.models import (
 )
 from app.schemas.game import GameCreate
 from app.services import game_service
-from app.shared.enums import PlayerRole, SimulationRunStatus
+from app.shared.enums import PlayerRole, SimulationRunKind, SimulationRunStatus
 
 
 def _add_run(
@@ -61,6 +61,8 @@ def test_two_active_runs_same_game_and_role_are_allowed(db_session: Session):
     assert {run.id for run in runs} == {first.id, second.id}
     assert all(run.status == SimulationRunStatus.ACTIVE.value for run in runs)
     assert all(run.player_role == PlayerRole.PARTNER_A.value for run in runs)
+    assert all(run.run_kind == SimulationRunKind.SIMULATION.value for run in runs)
+    assert all(run.skipped_event_ids == [] for run in runs)
 
 
 def test_deleting_game_cascades_to_runs_answers_and_timeline(db_session: Session):

@@ -7,7 +7,7 @@ from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
-from app.shared.enums import SimulationRunStatus
+from app.shared.enums import SimulationRunKind, SimulationRunStatus
 
 if TYPE_CHECKING:
     from app.models.game import Game
@@ -28,6 +28,11 @@ class SimulationRun(Base):
         index=True,
     )
     player_role: Mapped[str] = mapped_column(String(32))
+    run_kind: Mapped[str] = mapped_column(
+        String(32),
+        default=SimulationRunKind.SIMULATION.value,
+        server_default=SimulationRunKind.SIMULATION.value,
+    )
     run_number: Mapped[int] = mapped_column(Integer)
     status: Mapped[str] = mapped_column(
         String(32),
@@ -48,6 +53,11 @@ class SimulationRun(Base):
     state_snapshot: Mapped[dict[str, Any]] = mapped_column(JSONB)
     event_variables: Mapped[dict[str, Any]] = mapped_column(JSONB, default=dict)
     max_events: Mapped[int] = mapped_column(Integer)
+    skipped_event_ids: Mapped[list[str]] = mapped_column(
+        JSONB,
+        default=list,
+        nullable=False,
+    )
     end_reason: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),

@@ -9,6 +9,7 @@ export type StatsBarValues = Record<SimulationStatKey, number>;
 
 export type StatsBarProps = {
   values: StatsBarValues;
+  orientation?: "horizontal" | "vertical";
 };
 
 function StatMeter({
@@ -70,12 +71,26 @@ function StatMeter({
   );
 }
 
-export function StatsBar({ values }: StatsBarProps) {
+export function StatsBar({
+  values,
+  orientation = "horizontal",
+}: StatsBarProps) {
   const { t } = useTranslation();
+  const isVertical = orientation === "vertical";
 
   return (
-    <section className="rounded-3xl border border-purple-50 bg-white px-8 py-5 shadow-sm">
-      <div className="grid grid-cols-2 gap-6 lg:grid-cols-5">
+    <aside
+      className={`rounded-3xl border border-slate-200 bg-white shadow-sm ${
+        isVertical ? "p-5" : "px-8 py-5"
+      }`}
+    >
+      <div
+        className={
+          isVertical
+            ? "flex flex-col gap-5"
+            : "grid grid-cols-2 gap-6 lg:grid-cols-5"
+        }
+      >
         {STAT_CONFIG.map((stat) => (
           <StatMeter
             key={stat.key}
@@ -88,6 +103,6 @@ export function StatsBar({ values }: StatsBarProps) {
           />
         ))}
       </div>
-    </section>
+    </aside>
   );
 }

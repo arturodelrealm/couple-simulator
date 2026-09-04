@@ -23,11 +23,14 @@ export function PlayAvatar({
   const dataUri = createAvatarDataUri(config, seed, size);
   const badgeSideClass =
     badgeAlign === "right" ? "-bottom-1 -right-1" : "-bottom-1 -left-1";
+  const compact = size <= 56;
+  const badgeSizeClass = compact ? "h-5 w-5 text-[10px]" : "h-7 w-7 text-xs";
+  const borderClass = compact ? "border-[3px]" : "border-4";
 
   return (
     <div className="relative shrink-0">
       <div
-        className="overflow-hidden rounded-full border-4 border-white shadow-md"
+        className={`overflow-hidden rounded-full border-white shadow-md ${borderClass}`}
         style={{ width: size, height: size, background }}
       >
         <img
@@ -39,7 +42,7 @@ export function PlayAvatar({
         />
       </div>
       <div
-        className={`absolute flex h-7 w-7 items-center justify-center rounded-full bg-white font-display text-xs font-extrabold shadow ${badgeSideClass}`}
+        className={`absolute flex items-center justify-center rounded-full bg-white font-display font-extrabold shadow ${badgeSizeClass} ${badgeSideClass}`}
         style={{ color: badgeColor }}
       >
         {age}

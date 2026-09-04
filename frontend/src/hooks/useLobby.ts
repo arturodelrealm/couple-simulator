@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { ApiClientError } from "../services/apiClient";
 import { getGame } from "../services/gameService";
+import { getPartnerAQuestionnaire } from "../services/partnerAQuestionnaireService";
 import { listSimulationRuns } from "../services/simulationService";
 import {
   clearCurrentGame,
@@ -13,7 +14,11 @@ import {
   type StoredCurrentGame,
 } from "../shared/gameStorage";
 import { toErrorMessage } from "../shared/errors";
-import { getGameStepPath, getPlayPath } from "../shared/gameNavigation";
+import {
+  getGameStepPath,
+  getPartnerAQuestionnairePath,
+  getPlayPath,
+} from "../shared/gameNavigation";
 
 export function useLobby() {
   const { t } = useTranslation();
@@ -34,8 +39,20 @@ export function useLobby() {
     try {
       const game = await getGame(currentGame.game_id);
       saveCurrentGameFromGame(game);
+      try {
+        const questionnaire = await getPartnerAQuestionnaire(game.id);
+        if (!questionnaire.progress.complete) {
+          navigate(getPartnerAQuestionnairePath(game.id));
+          return;
+        }
+      } catch (err) {
+        if (!(err instanceof ApiClientError && err.code === "GAME_NOT_READY")) {
+          throw err;
+        }
+      }
       const listed = await listSimulationRuns(game.id, {
         status: "ACTIVE",
+        player_role: "partner_b",
         page: 1,
         per_page: 1,
       });

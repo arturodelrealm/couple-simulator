@@ -81,9 +81,27 @@
       "inviteCopied": "Link copied!",
       "hint": "You can close this page and return later — your match will be recovered automatically."
     },
+    "questionnaire": {
+      "title": "Partner A questions",
+      "progress": "{{current}} of {{total}}",
+      "choicesPrompt": "What do you choose?",
+      "skipEvent": "Skip this event",
+      "unskipEvent": "Unskip this event",
+      "saveAnswers": "Save answers",
+      "complete": "Questionnaire complete",
+      "completeHint": "You can still edit or unskip events, or go back to the lobby.",
+      "startCta": "Answer Partner A questions",
+      "continueCta": "Continue Partner A questions",
+      "status": {
+        "pending": "Pending",
+        "answered": "Answered",
+        "skipped": "Skipped"
+      }
+    },
     "play": {
       "title": "Our Life Story",
       "lifeEvent": "Life Event",
+      "eventYear": "Year {{year}}",
       "choicesPrompt": "What do you decide?",
       "lifeStory": "Life Story",
       "atAGlance": "At a glance",
@@ -122,7 +140,12 @@
       "household": {
         "house": "Home",
         "mascot": "Mascot",
-        "noMascot": "No mascot"
+        "noMascot": "No mascot",
+        "species": {
+          "cat": "Cat",
+          "dog": "Dog",
+          "hamster": "Hamster"
+        }
       },
       "housingType": {
         "apartment": "Apartment",
@@ -137,7 +160,8 @@
         "title": "A Life Well Lived",
         "yourStory": "Your Story",
         "playAgain": "Play Again",
-        "ages": "{{partnerAName}} is {{partnerAAge}}, {{partnerBName}} is {{partnerBAge}}."
+        "ages": "{{partnerAName}} is {{partnerAAge}}, {{partnerBName}} is {{partnerBAge}}.",
+        "agreements": "You agreed on {{matches}} of {{compared}} questions."
       },
       "errors": {
         "runNotFound": "This simulation run was not found.",

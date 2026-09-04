@@ -32,7 +32,7 @@ def _parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
         "--max-events",
         type=int,
         default=None,
-        help="Maximum events in this session (default: 5)",
+        help="Maximum events in this session (default: 15)",
     )
     return parser.parse_args(argv)
 

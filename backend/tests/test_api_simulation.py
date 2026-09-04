@@ -206,6 +206,25 @@ def test_post_partner_b_run_requires_complete_lobby_b(
     assert invalid.json()["errors"][0]["code"] == "INVALID_PLAYER_ROLE"
 
 
+def test_post_partner_b_without_max_events_stores_fifteen(
+    client: TestClient,
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    game_id = _create_ready_game(client, "api-sim-b-max-events", valid_avatar_config)
+    _complete_partner_b(client, game_id, valid_avatar_config)
+
+    response = client.post(
+        f"/api/games/{game_id}/simulation/runs",
+        json={"player_role": "partner_b", "seed": 3},
+    )
+    assert response.status_code == 201
+    run_id = response.json()["data"]["run_id"]
+    orm_run = db_session.get(SimulationRun, UUID(run_id))
+    assert orm_run is not None
+    assert orm_run.max_events == 15
+
+
 def test_get_current_event_after_start(
     client: TestClient,
     valid_avatar_config: dict[str, str],

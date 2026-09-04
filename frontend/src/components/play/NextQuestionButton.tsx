@@ -18,7 +18,7 @@ export function NextQuestionButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="w-full rounded-2xl border-2 border-purple-200 bg-white px-5 py-3 font-display text-base font-bold text-purple-700 transition-all hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-50"
+      className="w-full rounded-2xl border-2 border-sky-200 bg-white px-5 py-3 font-display text-base font-bold text-sky-700 transition-all hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {label ?? t("game.play.nextQuestion")}
     </button>

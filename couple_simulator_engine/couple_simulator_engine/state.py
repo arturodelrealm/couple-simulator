@@ -52,6 +52,8 @@ class SimulationState:
     children: int = 0
     wellness: int = 50
     mismatches: int = 0
+    matches: int = 0
+    compared_questions: int = 0
     housing: Housing = field(default_factory=Housing)
     mascot: Mascot | None = None
     tags: dict[str, Any] = field(default_factory=dict)
@@ -89,6 +91,8 @@ class SimulationState:
             "children": self.children,
             "wellness": self.wellness,
             "mismatches": self.mismatches,
+            "matches": self.matches,
+            "compared_questions": self.compared_questions,
             "housing": {
                 "place": self.housing.place,
                 "type": self.housing.type.value,

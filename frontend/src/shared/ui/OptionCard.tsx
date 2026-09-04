@@ -21,7 +21,7 @@ export function OptionCard({
       aria-pressed={selected}
       className={`flex flex-col items-center rounded-lg border-2 p-2 transition-colors ${
         selected
-          ? "border-indigo-600 bg-indigo-50"
+          ? "border-sky-600 bg-sky-50"
           : "border-slate-200 bg-white hover:border-slate-300"
       }`}
     >

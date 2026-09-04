@@ -3,13 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import { ChoiceCard } from "../components/play/ChoiceCard";
-import { CoupleHeader } from "../components/play/CoupleHeader";
 import { DialogueBubble } from "../components/play/DialogueBubble";
 import { EventCard } from "../components/play/EventCard";
 import { EventContinueButton } from "../components/play/EventContinueButton";
 import { GameOverScreen } from "../components/play/GameOverScreen";
 import { HouseholdPanel } from "../components/play/HouseholdPanel";
-import { LifeStoryPanel } from "../components/play/LifeStoryPanel";
 import { NextQuestionButton } from "../components/play/NextQuestionButton";
 import { PartnerAnswerReveal } from "../components/play/PartnerAnswerReveal";
 import { PlayLayout } from "../components/play/PlayLayout";
@@ -21,6 +19,7 @@ import { resolvePlayPartnerB } from "../shared/play/resolvePlayPartnerB";
 import { translateContent } from "../shared/play/translateContent";
 import { ErrorMessage } from "../shared/ui/ErrorMessage";
 import { LoadingState } from "../shared/ui/LoadingState";
+import { theme } from "../shared/ui/theme";
 
 function statsFromState(state: SimulationState): StatsBarValues {
   return {
@@ -88,14 +87,14 @@ export function PlayPage() {
           {showSetupLink ? (
             <Link
               to={`/games/${gameId}/player-a`}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              className="text-sm font-medium text-sky-700 hover:text-sky-800"
             >
               {t("game.play.errors.goToSetup")}
             </Link>
           ) : (
             <Link
               to="/lobby"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              className="text-sm font-medium text-sky-700 hover:text-sky-800"
             >
               {t("game.nav.backToLobby")}
             </Link>
@@ -129,6 +128,8 @@ export function PlayPage() {
         partnerBAge={partnerBAge}
         stats={stats}
         timeline={run.timeline}
+        matches={run.state.matches}
+        compared={run.state.compared_questions}
         onPlayAgain={() => {
           void playAgain();
         }}
@@ -142,25 +143,30 @@ export function PlayPage() {
   const choicesDisabled = choicesLocked;
 
   return (
-    <PlayLayout progressFillPercent={Math.min(100, run.events_played * 20)}>
-      <CoupleHeader
-        partnerAName={partnerAName}
-        partnerAAvatar={
-          run.state.partner_a_avatar ?? game.partner_a.avatar_config ?? {}
-        }
-        partnerASeed={gameId}
-        partnerBAvatar={partnerB.avatarConfig}
-        partnerBSeed={partnerB.seed}
-        partnerBName={partnerBName}
-        lifeStage={run.state.life_stage}
-        age={run.state.age}
-        partnerBDisplayAge={partnerB.displayAge}
-        childrenCount={run.state.children}
+    <PlayLayout contentClassName="mx-auto max-w-7xl space-y-4 px-6 py-4">
+      <HouseholdPanel
+        housing={run.state.housing}
+        mascot={run.state.mascot}
+        partnerA={{
+          name: partnerAName,
+          avatar:
+            run.state.partner_a_avatar ?? game.partner_a.avatar_config ?? {},
+          seed: gameId,
+          age: run.state.age,
+          background: theme.partnerA.background,
+          badgeColor: theme.partnerA.color,
+        }}
+        partnerB={{
+          name: partnerBName,
+          avatar: partnerB.avatarConfig,
+          seed: partnerB.seed,
+          age: partnerBAge,
+          background: theme.partnerB.background,
+          badgeColor: theme.partnerB.color,
+        }}
       />
-      <StatsBar values={stats} />
-      <HouseholdPanel housing={run.state.housing} mascot={run.state.mascot} />
       {actionError ? <ErrorMessage message={actionError} /> : null}
-      <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_300px] lg:items-start">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr_260px] lg:items-start">
         {currentEvent ? (
           <EventCard
             title={translateContent(currentEvent.event.title, contentParams)}
@@ -172,6 +178,8 @@ export function PlayPage() {
                   )
                 : null
             }
+            year={run.state.age}
+            eventId={currentEvent.event.event_id}
           >
             {showChoices && currentQuestion ? (
               <>
@@ -246,7 +254,7 @@ export function PlayPage() {
         ) : (
           <LoadingState message={t("common.loading")} />
         )}
-        <LifeStoryPanel timeline={run.timeline} stats={stats} />
+        <StatsBar values={stats} orientation="vertical" />
       </div>
     </PlayLayout>
   );

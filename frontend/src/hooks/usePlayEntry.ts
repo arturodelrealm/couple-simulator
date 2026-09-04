@@ -11,6 +11,7 @@ import {
 import { toErrorMessage } from "../shared/errors";
 import {
   getConfirmPath,
+  getPartnerAQuestionnairePath,
   getPlayPath,
   getPlayerBSetupPath,
   isGameReadyToPlay,
@@ -54,6 +55,11 @@ export function usePlayEntry() {
       try {
         const game = await getGame(gameId);
         if (cancelled) {
+          return;
+        }
+
+        if (playerRole === "partner_a") {
+          navigate(getPartnerAQuestionnairePath(gameId), { replace: true });
           return;
         }
 

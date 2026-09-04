@@ -2,14 +2,17 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import {
+  getPartnerAQuestionnairePath,
   getPlayEntryPath,
   getPlayerBSetupPath,
 } from "../../shared/gameNavigation";
+import { theme } from "../../shared/ui/theme";
 
 export type ConfirmActionsProps = {
   gameId: string;
   canPlay: boolean;
-  hasActiveRunA: boolean;
+  continueQuestionnaire: boolean;
+  questionnaireProgressLabel: string | null;
   hasActiveRunB: boolean;
   partnerBComplete: boolean;
 };
@@ -18,7 +21,7 @@ const gradientCta =
   "block w-full rounded-2xl px-5 py-3 text-center font-display text-base font-bold text-white transition-all hover:opacity-90 active:scale-95";
 
 const secondaryCta =
-  "block w-full rounded-2xl border-2 border-purple-100 bg-white px-5 py-3 text-center font-display text-base font-bold text-slate-700 transition-all hover:border-purple-300 hover:bg-purple-50";
+  "block w-full rounded-2xl border-2 border-slate-200 bg-white px-5 py-3 text-center font-display text-base font-bold text-slate-700 transition-all hover:border-sky-300 hover:bg-sky-50";
 
 const disabledCta =
   "block w-full cursor-not-allowed rounded-2xl px-5 py-3 text-center font-display text-base font-bold text-white opacity-50";
@@ -26,7 +29,8 @@ const disabledCta =
 export function ConfirmActions({
   gameId,
   canPlay,
-  hasActiveRunA,
+  continueQuestionnaire,
+  questionnaireProgressLabel,
   hasActiveRunB,
   partnerBComplete,
 }: ConfirmActionsProps) {
@@ -36,26 +40,33 @@ export function ConfirmActions({
   return (
     <div className="flex flex-col gap-3">
       {canPlay ? (
-        <Link
-          to={getPlayEntryPath(gameId, "partner_a")}
-          className={gradientCta}
-          style={{
-            background: "linear-gradient(135deg, #a78bfa, #f472b6)",
-          }}
-        >
-          {t(
-            hasActiveRunA
-              ? "game.play.continueAsPartnerA"
-              : "game.play.startAsPartnerA",
-          )}
-        </Link>
+        <div className="space-y-2">
+          <Link
+            to={getPartnerAQuestionnairePath(gameId)}
+            className={gradientCta}
+            style={{
+              background: theme.ctaGradient,
+            }}
+          >
+            {t(
+              continueQuestionnaire
+                ? "game.questionnaire.continueCta"
+                : "game.questionnaire.startCta",
+            )}
+          </Link>
+          {questionnaireProgressLabel ? (
+            <p className="text-center text-sm text-slate-500">
+              {questionnaireProgressLabel}
+            </p>
+          ) : null}
+        </div>
       ) : null}
       {canPlayAsB ? (
         <Link
           to={getPlayEntryPath(gameId, "partner_b")}
           className={gradientCta}
           style={{
-            background: "linear-gradient(135deg, #a78bfa, #f472b6)",
+            background: theme.ctaGradient,
           }}
         >
           {t(
@@ -71,7 +82,7 @@ export function ConfirmActions({
             disabled
             className={disabledCta}
             style={{
-              background: "linear-gradient(135deg, #a78bfa, #f472b6)",
+              background: theme.ctaGradient,
             }}
           >
             {t("game.play.startAsPartnerB")}

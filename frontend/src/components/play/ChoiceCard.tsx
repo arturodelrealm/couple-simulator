@@ -30,8 +30,8 @@ export function ChoiceCard({
     : partnerPicked
       ? "border-amber-400 bg-amber-50"
       : selected
-        ? "border-purple-400 bg-purple-50"
-        : "border-purple-100";
+        ? "border-sky-400 bg-sky-50"
+        : "border-slate-200";
 
   return (
     <button
@@ -39,11 +39,11 @@ export function ChoiceCard({
       onClick={onSelect}
       disabled={disabled}
       aria-pressed={selected}
-      className={`group w-full rounded-2xl border-2 bg-white px-5 py-4 text-left transition-all duration-200 hover:border-purple-300 hover:bg-purple-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-purple-300 disabled:cursor-not-allowed disabled:pointer-events-none ${borderClass}`}
+      className={`group w-full rounded-2xl border-2 bg-white px-5 py-4 text-left transition-all duration-200 hover:border-sky-300 hover:bg-sky-50 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-sky-300 disabled:cursor-not-allowed disabled:pointer-events-none ${borderClass}`}
     >
       <div className="flex items-center gap-4">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-purple-100 transition-colors group-hover:bg-purple-200">
-          <span className="font-display text-sm font-extrabold text-purple-700">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-100 transition-colors group-hover:bg-sky-200">
+          <span className="font-display text-sm font-extrabold text-sky-700">
             {choiceLetter(index)}
           </span>
         </div>

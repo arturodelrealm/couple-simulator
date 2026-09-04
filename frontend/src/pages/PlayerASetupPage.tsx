@@ -59,7 +59,7 @@ export function PlayerASetupPage() {
           </h1>
           <Link
             to="/lobby"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            className="text-sm font-medium text-sky-700 hover:text-sky-800"
           >
             {t("game.nav.backToLobby")}
           </Link>
@@ -73,7 +73,7 @@ export function PlayerASetupPage() {
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
             placeholder={t("game.playerA.namePlaceholder")}
             maxLength={255}
           />
@@ -95,7 +95,7 @@ export function PlayerASetupPage() {
                   value={option}
                   checked={sex === option}
                   onChange={() => setSex(option)}
-                  className="text-indigo-600 focus:ring-indigo-500"
+                  className="text-sky-600 focus:ring-sky-500"
                 />
                 {t(SEX_LABEL_KEYS[option])}
               </label>

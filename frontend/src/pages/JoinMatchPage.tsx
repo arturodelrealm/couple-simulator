@@ -36,7 +36,7 @@ export function JoinMatchPage() {
           </h1>
           <Link
             to="/lobby"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            className="text-sm font-medium text-sky-700 hover:text-sky-800"
           >
             {t("game.nav.backToLobby")}
           </Link>
@@ -50,7 +50,7 @@ export function JoinMatchPage() {
             type="text"
             value={matchName}
             onChange={(e) => setMatchName(e.target.value)}
-            className="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border border-slate-300 px-3 py-2 font-mono focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
             placeholder={t("game.join.matchNamePlaceholder")}
             maxLength={32}
             autoComplete="off"
@@ -65,7 +65,7 @@ export function JoinMatchPage() {
           type="button"
           onClick={onJoinAsPartnerB}
           disabled={isSubmitting}
-          className="w-full rounded-2xl border-2 border-purple-100 bg-white px-5 py-3 text-center font-display text-base font-bold text-slate-700 transition-all hover:border-purple-300 hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full rounded-2xl border-2 border-slate-200 bg-white px-5 py-3 text-center font-display text-base font-bold text-slate-700 transition-all hover:border-sky-300 hover:bg-sky-50 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {t("game.join.iamPartnerB")}
         </button>

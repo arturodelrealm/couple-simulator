@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.middleware.locale import LocaleMiddleware
 from app.routers.games import router as games_router
+from app.routers.partner_a_questionnaire import router as partner_a_questionnaire_router
 from app.routers.simulation import router as simulation_router
 from app.schemas.responses import ok
 from app.shared.exception_handlers import (
@@ -33,6 +34,11 @@ app.add_exception_handler(Exception, unhandled_exception_handler)
 
 api_router = APIRouter()
 api_router.include_router(simulation_router, prefix="/games", tags=["simulation"])
+api_router.include_router(
+    partner_a_questionnaire_router,
+    prefix="/games",
+    tags=["partner-a-questionnaire"],
+)
 api_router.include_router(games_router, prefix="/games", tags=["games"])
 app.include_router(api_router, prefix=settings.api_prefix)
 

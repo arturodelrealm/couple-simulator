@@ -22,7 +22,7 @@ def test_package_importable() -> None:
         == "weighted_player"
     )
     config = couple_simulator_engine.GameConfig()
-    assert config.max_events == 5
+    assert config.max_events == 15
     assert config.conflict_partner_b_weight == 0.65
     assert config.conflict_partner_a_weight == 0.35
     assert config.answer_bank_preference_boost == 2.0

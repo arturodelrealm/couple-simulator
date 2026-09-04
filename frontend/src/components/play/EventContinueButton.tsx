@@ -1,5 +1,7 @@
 import { useTranslation } from "react-i18next";
 
+import { theme } from "../../shared/ui/theme";
+
 export type EventContinueButtonProps = {
   onClick: () => void;
   disabled?: boolean;
@@ -18,7 +20,7 @@ export function EventContinueButton({
       disabled={disabled}
       className="w-full rounded-2xl px-5 py-3 font-display text-base font-bold text-white transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
       style={{
-        background: "linear-gradient(135deg, #a78bfa, #f472b6)",
+        background: theme.ctaGradient,
       }}
     >
       {t("game.play.continueNextEvent")}
