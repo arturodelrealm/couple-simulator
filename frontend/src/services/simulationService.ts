@@ -1,3 +1,5 @@
+import type { AvatarConfig } from "../shared/avatar/avataaarsVariants";
+
 import { apiRequest } from "./apiClient";
 
 export type SimulationRunStatus = "ACTIVE" | "FINISHED";
@@ -31,6 +33,8 @@ export type SimulationState = {
   tags: Record<string, unknown>;
   life_stage: SimulationLifeStage | string;
   relationship_status: string;
+  partner_a_avatar: AvatarConfig | null;
+  partner_b_avatar: AvatarConfig | null;
 };
 
 export type SimulationPlayerRole = "partner_a" | "partner_b";
@@ -117,6 +121,7 @@ export type EventPresentation = {
 export type CurrentEvent = {
   run_id: string;
   event: EventPresentation;
+  partner_answers: EventAnswer[] | null;
 };
 
 export type EventAnswer = {

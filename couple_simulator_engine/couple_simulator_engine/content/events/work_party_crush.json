@@ -1,0 +1,230 @@
+{
+  "id": "work_party_crush",
+  "title": "events.work_party_crush.title",
+  "description": "events.work_party_crush.description",
+  "tags": ["relationship", "decision"],
+  "life_stage": null,
+  "player_role": "partner_b",
+  "use_answer_bank": false,
+  "eligibility": {
+    "type": "all",
+    "items": [
+      {
+        "type": "compare",
+        "path": "state/compatibility",
+        "op": "lt",
+        "value": 40
+      },
+      {
+        "type": "compare",
+        "path": "state/tags/infidelity_asked",
+        "op": "neq",
+        "value": true
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "what_to_do",
+      "text": "events.work_party_crush.questions.what_to_do",
+      "options": [
+        {
+          "id": "keep_playing",
+          "text": "events.work_party_crush.options.keep_playing",
+          "actions": [
+            {
+              "type": "set_event_var",
+              "args": {
+                "variable": "caught_roll",
+                "value": {
+                  "distribution": {
+                    "kind": "uniform",
+                    "params": { "min": 1, "max": 100 }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "decline_situation",
+          "text": "events.work_party_crush.options.decline_situation",
+          "actions": []
+        },
+        {
+          "id": "block_and_tell",
+          "text": "events.work_party_crush.options.block_and_tell",
+          "actions": []
+        },
+        {
+          "id": "block_silent",
+          "text": "events.work_party_crush.options.block_silent",
+          "actions": []
+        },
+        {
+          "id": "tell_and_leave",
+          "text": "events.work_party_crush.options.tell_and_leave",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "keep_playing_caught",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/what_to_do",
+            "op": "eq",
+            "value": "keep_playing"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/caught_roll",
+            "op": "lte",
+            "value": 30
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "compatibility",
+            "delta": -30
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.work_party_crush.conversations.caught_partner_a"
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_b",
+            "text_key": "events.work_party_crush.conversations.caught_partner_b"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.work_party_crush.timeline.affair_discovered",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "keep_playing_secret",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/what_to_do",
+            "op": "eq",
+            "value": "keep_playing"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/caught_roll",
+            "op": "gt",
+            "value": 30
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": -5
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.work_party_crush.timeline.secret_affair",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "block_and_tell",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "block_and_tell"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "compatibility",
+            "delta": 5
+          }
+        }
+      ]
+    },
+    {
+      "id": "tell_and_leave",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "tell_and_leave"
+      },
+      "actions": [
+        {
+          "type": "set_relationship_status",
+          "args": {
+            "status": "separated"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.work_party_crush.timeline.broke_up",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mark_infidelity_asked",
+      "when": null,
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "infidelity_asked",
+            "value": true
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "weight_rules": [
+    {
+      "when": {
+        "type": "compare",
+        "path": "state/compatibility",
+        "op": "lt",
+        "value": 20
+      },
+      "weight": 3.0
+    }
+  ],
+  "max_occurrences": 1
+}

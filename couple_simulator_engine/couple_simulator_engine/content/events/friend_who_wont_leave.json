@@ -1,0 +1,235 @@
+{
+  "id": "friend_who_wont_leave",
+  "title": "events.friend_who_wont_leave.title",
+  "description": "events.friend_who_wont_leave.description",
+  "tags": ["housing", "relationship", "decision"],
+  "life_stage": null,
+  "eligibility": null,
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "what_to_do",
+      "text": "events.friend_who_wont_leave.questions.what_to_do",
+      "options": [
+        {
+          "id": "lock_out",
+          "text": "events.friend_who_wont_leave.options.lock_out",
+          "actions": []
+        },
+        {
+          "id": "ask_nicely",
+          "text": "events.friend_who_wont_leave.options.ask_nicely",
+          "actions": []
+        },
+        {
+          "id": "split_rent",
+          "text": "events.friend_who_wont_leave.options.split_rent",
+          "actions": []
+        },
+        {
+          "id": "let_stay",
+          "text": "events.friend_who_wont_leave.options.let_stay",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "lock_out",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "lock_out"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -12, "max": -8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 3, "max": 7 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.friend_who_wont_leave.conversations.lock_out"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.friend_who_wont_leave.timeline.lock_out",
+            "category": "housing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "ask_nicely",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "ask_nicely"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -12, "max": -8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 3, "max": 7 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.friend_who_wont_leave.conversations.ask_nicely"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.friend_who_wont_leave.timeline.ask_nicely",
+            "category": "housing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "split_rent",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "split_rent"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -7, "max": -3 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.friend_who_wont_leave.conversations.split_rent"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.friend_who_wont_leave.timeline.split_rent",
+            "category": "housing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "let_stay",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "let_stay"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 8, "max": 12 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -12, "max": -8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.friend_who_wont_leave.conversations.let_stay"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.friend_who_wont_leave.timeline.let_stay",
+            "category": "housing"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.friend_who_wont_leave.conversations.mismatch"
+      }
+    }
+  ],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

@@ -9,6 +9,7 @@ from couple_simulator_engine.content.definitions import (
     EventDefinition,
     OptionDefinition,
     QuestionDefinition,
+    WeightRuleDefinition,
 )
 from couple_simulator_engine.engine import GameEngine
 from couple_simulator_engine.enums import LifeStage, PlayerRole, PlayerSex
@@ -57,6 +58,7 @@ def _event(
     eligibility: dict[str, object] | None = None,
     life_stage: LifeStage | None = None,
     weight: float = 1.0,
+    weight_rules: tuple[WeightRuleDefinition, ...] = (),
     max_occurrences: int = 1,
     player_role: PlayerRole | None = None,
     use_answer_bank: bool = True,
@@ -79,6 +81,7 @@ def _event(
         default_actions=(),
         mismatch_actions=(),
         weight=weight,
+        weight_rules=weight_rules,
         max_occurrences=max_occurrences,
         player_role=player_role,
         use_answer_bank=use_answer_bank,
@@ -141,6 +144,81 @@ def test_weighted_selection_favors_higher_weight() -> None:
         ("low", 1.0),
         ("high", 99.0),
     }
+
+
+_COMPAT_LT_20: dict[str, object] = {
+    "type": "compare",
+    "path": "state/compatibility",
+    "op": "lt",
+    "value": 20,
+}
+
+
+def _set_compatibility(session: GameSession, value: int) -> None:
+    session.state.partner_a.set_simulation_relation_happiness(value)
+    session.state.partner_b.set_simulation_relation_happiness(value)
+
+
+def test_weight_rules_override_base_weight_when_condition_matches() -> None:
+    event = _event(
+        "conditional",
+        weight=1.0,
+        weight_rules=(WeightRuleDefinition(when=_COMPAT_LT_20, weight=2.0),),
+    )
+    catalog = ContentCatalog([event])
+    session = _session()
+    _set_compatibility(session, 15)
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    select_next_event(session, catalog)
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert pairs[0][1] == 2.0
+
+
+def test_weight_rules_fall_back_to_base_weight_when_no_rule_matches() -> None:
+    event = _event(
+        "conditional",
+        weight=1.0,
+        weight_rules=(WeightRuleDefinition(when=_COMPAT_LT_20, weight=2.0),),
+    )
+    catalog = ContentCatalog([event])
+    session = _session()
+    _set_compatibility(session, 25)
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    select_next_event(session, catalog)
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert pairs[0][1] == 1.0
+
+
+def test_weight_rules_use_first_matching_rule() -> None:
+    event = _event(
+        "conditional",
+        weight=1.0,
+        weight_rules=(
+            WeightRuleDefinition(when=_COMPAT_LT_20, weight=2.0),
+            WeightRuleDefinition(
+                when={
+                    "type": "compare",
+                    "path": "state/compatibility",
+                    "op": "lt",
+                    "value": 40,
+                },
+                weight=5.0,
+            ),
+        ),
+    )
+    catalog = ContentCatalog([event])
+    session = _session()
+    _set_compatibility(session, 15)
+    mock_rng = MagicMock()
+    mock_rng.weighted_choice.side_effect = lambda pairs: pairs[0][0]
+    session.rng = mock_rng
+    select_next_event(session, catalog)
+    pairs = mock_rng.weighted_choice.call_args[0][0]
+    assert pairs[0][1] == 2.0
 
 
 def _loaded(

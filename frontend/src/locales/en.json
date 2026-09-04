@@ -96,6 +96,11 @@
       "completePartnerBFirst": "Complete Partner B setup first.",
       "continueNextEvent": "Continue",
       "nextQuestion": "Next question",
+      "partnerReveal": {
+        "waiting": "Let's see what your partner thinks...",
+        "theirChoice": "Your partner",
+        "missing": "{{name}} didn't answer this one."
+      },
       "partnerB": "Partner B",
       "age": "Age {{age}}",
       "childrenOverflow": "+{{count}}",
@@ -261,6 +266,329 @@
       "options": {
         "quit_job": "Quit the job",
         "push_through": "Push through"
+      }
+    },
+    "going_bald": {
+      "title": "Going bald",
+      "description": "The hairline is receding and you two have to pick a plan.",
+      "questions": {
+        "what_to_do": "Oh no, {{partnerBName}} is going bald. What do you think is best?",
+        "what_to_do_self": "Oh no, you're going bald. What do you think is best?"
+      },
+      "options": {
+        "let_nature": "Let nature do its thing and wear the bald patch with pride.",
+        "buzz_cut": "Buzz it off and own being bald like a grown-up.",
+        "implant": "Look into a hair transplant.",
+        "hide_it": "Get creative with haircuts to hide the bald spots."
+      },
+      "conversations": {
+        "let_nature": "Bald patch out in the open. No drama.",
+        "buzz_cut": "Buzzed it. We're owning this.",
+        "implant": "It cost us, but the hair is coming back.",
+        "hide_it": "Every morning it's a new haircut to cover this.",
+        "mismatch": "Well... it's your hair, but I want you to know I don't agree."
+      }
+    },
+    "friend_who_wont_leave": {
+      "title": "The friend who won't leave",
+      "description": "A friend who came from Madrid asked to crash for a few days after a brutal trip. Those days turned into months, and the hints aren't landing anymore.",
+      "questions": {
+        "what_to_do": "What do you do with him?"
+      },
+      "options": {
+        "lock_out": "Leave his bags outside and change the lock.",
+        "ask_nicely": "Ask him nicely to find somewhere else.",
+        "split_rent": "He can stay if he chips in on the rent.",
+        "let_stay": "That's what friends are for. He can stay as long as he needs."
+      },
+      "conversations": {
+        "lock_out": "Bags outside, new lock. The free hotel is closed.",
+        "ask_nicely": "We asked nicely. It was time he found his own place.",
+        "split_rent": "If he stays, he chips in on rent. That makes it hurt less.",
+        "let_stay": "He can stay. That's what friends do, even if the place feels small.",
+        "mismatch": "We're not on the same page about the friend. This is going to get awkward."
+      },
+      "timeline": {
+        "lock_out": "Changed the lock on our houseguest",
+        "ask_nicely": "Asked him to find somewhere else",
+        "split_rent": "The friend stays, but he chips in on rent",
+        "let_stay": "The friend stays as long as he needs"
+      }
+    },
+    "entertaining_job_offers": {
+      "title": "Entertaining job offers",
+      "description": "{{partnerAName}} got offered a really fun job. Several options are on the table, and finances aren't good enough to shrug them off.",
+      "questions": {
+        "which_offer": "Which one do we take?"
+      },
+      "options": {
+        "calama_big_salary": "Huge salary in Calama: excellent house up north, but we're moving far away.",
+        "puerto_aysen_good_salary": "Good pay in Puerto Aysén: ok house down south, better vibes.",
+        "san_fernando_mid_salary": "Mid-high salary in San Fernando: ok house and a moderate move.",
+        "daily_commute": "Better pay than now, but 1 hr 15 of daily commuting in the city."
+      },
+      "conversations": {
+        "calama_big_salary": "Calama it is. The money is serious, but the desert and the distance hit hard.",
+        "puerto_aysen_good_salary": "Puerto Aysén sounds nice. South, a decent house, and a calmer pace.",
+        "san_fernando_mid_salary": "San Fernando — middle ground. Not a huge move, not huge money, but it adds up.",
+        "daily_commute": "We stay put, but that daily commute will wreck us. The job pays; the traffic doesn't.",
+        "mismatch": "Fine, some things are a couple decision — but we're talking about my career here."
+      },
+      "timeline": {
+        "calama_big_salary": "Took the job in Calama",
+        "puerto_aysen_good_salary": "Took the job in Puerto Aysén",
+        "san_fernando_mid_salary": "Took the job in San Fernando",
+        "daily_commute": "Took the job with a daily commute"
+      }
+    },
+    "adult_content_deal": {
+      "title": "The playful friend's business",
+      "description": "A peculiar, very playful friend pitches a business. He says you've got everything you need: you're good-looking and elegant. He asks if you want to make adult content. He swears you'll go viral and make serious money, but it isn't a one-off: it's a two-year contract.",
+      "questions": {
+        "what_to_do": "What do you do?"
+      },
+      "options": {
+        "go_all_in": "Money and shame are two things we don't have. Let's go!",
+        "mask_only": "Mmm, it's tempting, but I'd want to hide my face with a mask.",
+        "decline_values": "My Catholic school values don't allow it. No thanks."
+      },
+      "conversations": {
+        "go_all_in": "We signed the two years. The money comes in, and the embarrassment... we'll deal with that later.",
+        "mask_only": "We're in, but with a mask. The face stays off camera; the rest doesn't.",
+        "decline_values": "Thanks, but no. Catholic school still has a hold on us.",
+        "mismatch": "We're nowhere near agreeing on shooting adult content."
+      },
+      "timeline": {
+        "adult_cinema_job": "Started a new job in adult cinema"
+      }
+    },
+    "buy_luxury_car": {
+      "title": "Time to treat ourselves?",
+      "description": "Finances are in great shape and we can think about something fancier. A few premium cars are on the table.",
+      "questions": {
+        "which_car": "Which one do we get?"
+      },
+      "options": {
+        "bmw_320i": "BMW 320i — elegant, sporty, with that iconic grille",
+        "audi_a4": "Audi A4 2.0 TFSI — understated, techy, with quattro AWD",
+        "mercedes_c200": "Mercedes-Benz C200 — classic luxury, comfort, and status",
+        "volvo_xc40": "Volvo XC40 Recharge — premium SUV, safe, with Scandinavian flair"
+      },
+      "conversations": {
+        "bmw_320i": "BMW 320i in the driveway. You feel that sporty handling from the first start.",
+        "audi_a4": "Audi A4 is ours. Tech, leather, and that sense we've stepped up a level.",
+        "mercedes_c200": "Mercedes C200. Comfort, status, and the star on the wheel. We look different now.",
+        "volvo_xc40": "Volvo XC40. Safe, premium, and room to hit the mountains in style.",
+        "mismatch": "We couldn't agree on a luxury car. The splurge will have to wait."
+      },
+      "timeline": {
+        "bmw_320i": "We bought a BMW 320i",
+        "audi_a4": "We bought an Audi A4",
+        "mercedes_c200": "We bought a Mercedes-Benz C200",
+        "volvo_xc40": "We bought a Volvo XC40"
+      }
+    },
+    "buy_mid_range_car": {
+      "title": "Time to buy a car?",
+      "description": "Finances are looking good and we can finally think about getting our own wheels. A few mid-range models are on the table.",
+      "questions": {
+        "which_car": "Which one do we get?"
+      },
+      "options": {
+        "chevrolet_onix": "Chevrolet Onix 1.4 LT — compact, affordable, great for the city",
+        "nissan_kicks": "Nissan Kicks Advance — small SUV, comfy with good ground clearance",
+        "toyota_corolla": "Toyota Corolla XEi — the reliable classic, no surprises",
+        "mazda_3": "Mazda 3 2.0 — the nicest pick of the bunch, great to drive"
+      },
+      "conversations": {
+        "chevrolet_onix": "Onix is ours. Small, efficient, and fits in any parking spot.",
+        "nissan_kicks": "Kicks in the driveway. Tall, comfy, and ready for a weekend in the mountains.",
+        "toyota_corolla": "New Corolla. Classic, reliable, and it won't leave us stranded on the highway.",
+        "mazda_3": "Mazda 3. Drives like a dream and we feel a step up every time we head out.",
+        "mismatch": "We couldn't agree on a car. On foot for a while longer."
+      },
+      "timeline": {
+        "chevrolet_onix": "We bought a Chevrolet Onix",
+        "nissan_kicks": "We bought a Nissan Kicks",
+        "toyota_corolla": "We bought a Toyota Corolla",
+        "mazda_3": "We bought a Mazda 3"
+      }
+    },
+    "upgrade_housing": {
+      "title": "Time to move?",
+      "description": "Finances are looking good and we can afford something better. A few options are on the table.",
+      "questions": {
+        "which_home": "Where do we move?"
+      },
+      "options": {
+        "trapenses_house": "A nice house in Los Trapenses",
+        "nunoa_apartment": "An excellent apartment in Ñuñoa",
+        "pedro_valdivia_apartment": "A good apartment in Pedro de Valdivia Norte",
+        "chicureo_house": "An excellent house in a Chicureo gated community",
+        "metro_salvador_apartment": "An excellent apartment near Metro Salvador"
+      },
+      "conversations": {
+        "trapenses_house": "House in Los Trapenses. Space, views, and fresh air.",
+        "nunoa_apartment": "Apartment in Ñuñoa, close to everything.",
+        "pedro_valdivia_apartment": "Apartment in Pedro de Valdivia Norte. Solid, comfortable, not too far out.",
+        "chicureo_house": "House in a Chicureo gated community. Pool, grill, and that closed-neighborhood life.",
+        "metro_salvador_apartment": "Apartment near Metro Salvador. Downtown in minutes and a great building.",
+        "mismatch": "It seems like we have different life goals."
+      },
+      "timeline": {
+        "trapenses_house": "We moved to Los Trapenses",
+        "nunoa_apartment": "We moved to Ñuñoa",
+        "pedro_valdivia_apartment": "We moved to Pedro de Valdivia Norte",
+        "chicureo_house": "We moved to Chicureo",
+        "metro_salvador_apartment": "We moved to Metro Salvador"
+      }
+    },
+    "work_party_crush": {
+      "title": "Someone from the party",
+      "description": "Things don't seem to be going well with {{partnerAName}}, and you met someone at a coworker's birthday party. After chatting for a while you open up about your problems, and they reply with suggestive photos saying: \"Maybe I can help you out.\"",
+      "questions": {
+        "what_to_do": "What do you do?"
+      },
+      "options": {
+        "keep_playing": "Keep playing along — what they don't know won't hurt them.",
+        "decline_situation": "Tell them you're not comfortable with this.",
+        "block_and_tell": "Block them and tell {{partnerAName}}.",
+        "block_silent": "Block them and say nothing.",
+        "tell_and_leave": "Tell {{partnerAName}} what happened and end the relationship."
+      },
+      "conversations": {
+        "caught_partner_a": "I found out. Did you really do this?",
+        "caught_partner_b": "When a lioness neglects her lion, he goes looking for Bambi."
+      },
+      "timeline": {
+        "affair_discovered": "The affair came to light",
+        "secret_affair": "We kept playing along in secret",
+        "broke_up": "We ended the relationship"
+      }
+    },
+    "how_well_do_you_know": {
+      "title": "How well do you know your partner!",
+      "description": "The classic quiz. Six questions to see if you actually know each other.",
+      "questions": {
+        "first_kiss": "Who gave the first kiss?",
+        "first_kiss_guess": "Guess what {{partnerAName}} put: who gave the first kiss?",
+        "better_gifts": "Who gives better gifts?",
+        "better_gifts_guess": "Guess what {{partnerAName}} put: who gives better gifts?",
+        "messier": "Who is messier?",
+        "messier_guess": "Guess what {{partnerAName}} put: who is messier?",
+        "more_jealous": "Who is more jealous?",
+        "more_jealous_guess": "Guess what {{partnerAName}} put: who is more jealous?",
+        "better_cook": "Who cooks better?",
+        "better_cook_guess": "Guess what {{partnerAName}} put: who cooks better?",
+        "said_love_first": "Who said I love you first?",
+        "said_love_first_guess": "Guess what {{partnerAName}} put: who said I love you first?"
+      },
+      "options": {
+        "partner_a": "{{partnerAName}}",
+        "partner_b": "{{partnerBName}}"
+      },
+      "conversations": {
+        "score_0": "Zero out of six. This isn't a couple, it's a mystery.",
+        "score_1": "Just one. Do we even live together?",
+        "score_2": "Only two. We're kind of flying blind here.",
+        "score_3": "Three out of six. Mid: not great, not terrible.",
+        "score_4": "Four right. We know each other... somewhat.",
+        "score_5": "Almost a clean sweep. Just one slipped away.",
+        "score_6": "Six out of six! We know each other by heart."
+      },
+      "timeline": {
+        "quiz": "Played how well do you know your partner"
+      }
+    },
+    "aunt_pepita_inheritance": {
+      "title": "Aunt Pepita's inheritance",
+      "description": "You got 2 million pesos from distant Aunt Pepita. What do you do with the money?",
+      "questions": {
+        "what_to_do": "What do we do with the 2 million?"
+      },
+      "options": {
+        "brazil_vacation": "A solid week-long vacation in Brazil",
+        "save_money": "Save it — the one who saves always has something",
+        "wardrobe_refresh": "Time to upgrade the wardrobe",
+        "donate_hogar_cristo": "Donate it to Hogar de Cristo",
+        "all_on_red": "All in on red"
+      },
+      "conversations": {
+        "brazil_vacation": "A week in Brazil: beach, caipirinhas, zero guilt. Wellness went up on its own.",
+        "save_money": "Straight into savings. The one who saves always has something.",
+        "wardrobe_refresh": "Wardrobe upgrade: blazer and sweater for both of us. New level unlocked.",
+        "donate_hogar_cristo": "Aunt Pepita's money went straight to Hogar de Cristo. Felt right.",
+        "all_on_red_win": "RED HIT! The 2 million multiplied. We made money and laughed all the way to the bank.",
+        "all_on_red_win_partner_b": "Told you. Trust the red.",
+        "all_on_red_lose": "Nothing. Zero. The roulette ate the 2 million like they were free drinks. Bye money, bye peace of mind.",
+        "all_on_red_lose_partner_b": "I said we shouldn't... but we bet it all anyway."
+      },
+      "timeline": {
+        "donation": "Donated Aunt Pepita's inheritance to Hogar de Cristo"
+      }
+    },
+    "partner_b_headache": {
+      "title": "The headache won't quit",
+      "description": "{{partnerBName}} has had a headache for 4 days. Money's tight and the pain isn't going away.",
+      "questions": {
+        "what_to_do": "{{partnerBName}} has had a headache for 4 days. What do we do?",
+        "what_to_do_self": "You've had a headache for 4 days. What do we do?"
+      },
+      "options": {
+        "medical_check": "Go to a doctor's checkup.",
+        "wait_it_out": "Wait to heal or die, whichever comes first."
+      },
+      "conversations": {
+        "medical_check": "We went to the checkup. It costs money, but at least we know what it is.",
+        "hospitalized": "I told you. Now we're stuck with hospital bills on top of everything.",
+        "recovered": "It passed on its own. We got lucky, but I didn't love that gamble.",
+        "mismatch": "So much disagreement over a headache."
+      },
+      "timeline": {
+        "ignored_illness": "{{partnerBName}} got sick and did nothing about it"
+      }
+    },
+    "separation_reconciliation": {
+      "title": "One last chance",
+      "description": "You're separated and things are tense. Maybe there's still something to try — or maybe not.",
+      "questions": {
+        "how_to_return": "What would you like {{partnerBName}} to do to win the relationship back?",
+        "how_to_return_self": "What would you do to win the relationship back?"
+      },
+      "options": {
+        "guitar_serenade": "Show up with a guitar at a family event of yours and dedicate a sweet song they wrote.",
+        "instagram_likes": "Like every story you post on Instagram.",
+        "photo_letter": "Write a letter with photos, remembering all the good times you shared.",
+        "beg_on_knees": "Beg on their knees.",
+        "no_second_chances": "There are no good second acts in this life (except Shrek)."
+      },
+      "conversations": {
+        "guitar_serenade": "They showed up with a guitar at my family BBQ and sang a song they wrote. Ridiculous and sweet at the same time.",
+        "instagram_likes": "Liked everything — even the 3 a.m. coffee story. At least the effort showed.",
+        "photo_letter": "A letter with photos from trips, birthdays, and the old apartment. We laughed, cried, and talked seriously again.",
+        "beg_on_knees": "On their knees in the square with people watching. Total embarrassment, but it felt real.",
+        "no_second_chances": "Shrek, yes. Us, no. That simple.",
+        "mismatch": "We couldn't even agree on how to come back. We're done."
+      },
+      "timeline": {
+        "attempt": "We tried to come back after the separation"
+      }
+    },
+    "separation_closure": {
+      "title": "The end",
+      "description": "You already tried. You're still apart and there's nothing left to say.",
+      "questions": {
+        "farewell": "What's left to say?"
+      },
+      "options": {
+        "say_goodbye": "Say goodbye."
+      },
+      "conversations": {
+        "partner_a": "Thanks for all the good times. I really hope you're okay.",
+        "partner_b": "Same. Take care. It was good while it lasted."
+      },
+      "timeline": {
+        "final_goodbye": "We said goodbye for good"
       }
     }
   }

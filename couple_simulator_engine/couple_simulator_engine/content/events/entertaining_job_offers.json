@@ -1,0 +1,299 @@
+{
+  "id": "entertaining_job_offers",
+  "title": "events.entertaining_job_offers.title",
+  "description": "events.entertaining_job_offers.description",
+  "tags": ["career", "financial", "housing", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/finances",
+    "op": "lt",
+    "value": 60
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "which_offer",
+      "text": "events.entertaining_job_offers.questions.which_offer",
+      "options": [
+        {
+          "id": "calama_big_salary",
+          "text": "events.entertaining_job_offers.options.calama_big_salary",
+          "actions": []
+        },
+        {
+          "id": "puerto_aysen_good_salary",
+          "text": "events.entertaining_job_offers.options.puerto_aysen_good_salary",
+          "actions": []
+        },
+        {
+          "id": "san_fernando_mid_salary",
+          "text": "events.entertaining_job_offers.options.san_fernando_mid_salary",
+          "actions": []
+        },
+        {
+          "id": "daily_commute",
+          "text": "events.entertaining_job_offers.options.daily_commute",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "calama_big_salary",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_offer",
+        "op": "eq",
+        "value": "calama_big_salary"
+      },
+      "actions": [
+        {
+          "type": "set_housing",
+          "args": {
+            "place": "Calama",
+            "type": "house",
+            "quality": "excellent"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": 25
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 2, "max": 5 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -15, "max": -5 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.entertaining_job_offers.conversations.calama_big_salary"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.entertaining_job_offers.timeline.calama_big_salary",
+            "category": "career"
+          }
+        }
+      ]
+    },
+    {
+      "id": "puerto_aysen_good_salary",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_offer",
+        "op": "eq",
+        "value": "puerto_aysen_good_salary"
+      },
+      "actions": [
+        {
+          "type": "set_housing",
+          "args": {
+            "place": "Puerto Aysén",
+            "type": "house",
+            "quality": "ok"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": 15
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 5, "max": 10 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 4, "max": 8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.entertaining_job_offers.conversations.puerto_aysen_good_salary"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.entertaining_job_offers.timeline.puerto_aysen_good_salary",
+            "category": "career"
+          }
+        }
+      ]
+    },
+    {
+      "id": "san_fernando_mid_salary",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_offer",
+        "op": "eq",
+        "value": "san_fernando_mid_salary"
+      },
+      "actions": [
+        {
+          "type": "set_housing",
+          "args": {
+            "place": "San Fernando",
+            "type": "house",
+            "quality": "ok"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": 10
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 2, "max": 5 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 2, "max": 5 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.entertaining_job_offers.conversations.san_fernando_mid_salary"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.entertaining_job_offers.timeline.san_fernando_mid_salary",
+            "category": "career"
+          }
+        }
+      ]
+    },
+    {
+      "id": "daily_commute",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_offer",
+        "op": "eq",
+        "value": "daily_commute"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": 8
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 5, "max": 10 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": -15
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.entertaining_job_offers.conversations.daily_commute"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.entertaining_job_offers.timeline.daily_commute",
+            "category": "career"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.entertaining_job_offers.conversations.mismatch"
+      }
+    }
+  ],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

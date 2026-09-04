@@ -19,8 +19,8 @@ def test_default_initial_values() -> None:
     state = SimulationState()
     assert state.age == 22
     assert state.compatibility == 100
-    assert state.finances == 50
-    assert state.quality_of_life == 50
+    assert state.finances == 15
+    assert state.quality_of_life == 20
     assert state.children == 0
     assert state.wellness == 50
     assert state.mascot is None
@@ -96,8 +96,8 @@ def test_clamp_age_min() -> None:
 def test_to_dict_aligns_with_rules_evaluator_paths() -> None:
     state = SimulationState()
     payload = state.to_dict()
-    assert payload["finances"] == 50
-    assert payload["quality_of_life"] == 50
+    assert payload["finances"] == 15
+    assert payload["quality_of_life"] == 20
     assert payload["wellness"] == 50
     assert payload["housing"] == {
         "place": "Providencia",
@@ -113,7 +113,7 @@ def test_to_dict_aligns_with_rules_evaluator_paths() -> None:
     assert payload["life_stage"] == "youth"
     assert payload["relationship_status"] == "together"
     context = {"state": payload}
-    assert context["state"]["finances"] == 50
+    assert context["state"]["finances"] == 15
 
 
 def test_player_fields() -> None:

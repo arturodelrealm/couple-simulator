@@ -1,0 +1,248 @@
+{
+  "id": "going_bald",
+  "title": "events.going_bald.title",
+  "description": "events.going_bald.description",
+  "tags": ["preference", "decision", "relationship"],
+  "life_stage": null,
+  "eligibility": null,
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "what_to_do",
+      "text": {
+        "default_key": "events.going_bald.questions.what_to_do",
+        "by_role": {
+          "partner_b": "events.going_bald.questions.what_to_do_self"
+        }
+      },
+      "options": [
+        {
+          "id": "let_nature",
+          "text": "events.going_bald.options.let_nature",
+          "actions": []
+        },
+        {
+          "id": "buzz_cut",
+          "text": "events.going_bald.options.buzz_cut",
+          "actions": []
+        },
+        {
+          "id": "implant",
+          "text": "events.going_bald.options.implant",
+          "actions": []
+        },
+        {
+          "id": "hide_it",
+          "text": "events.going_bald.options.hide_it",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "let_nature",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "let_nature"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 10, "max": 14 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -7, "max": -3 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.going_bald.conversations.let_nature"
+          }
+        },
+        {
+          "type": "update_avatar",
+          "args": {
+            "player": "partner_b",
+            "attribute": "topVariant",
+            "value": "sides"
+          }
+        }
+      ]
+    },
+    {
+      "id": "buzz_cut",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "buzz_cut"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 6, "max": 10 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.going_bald.conversations.buzz_cut"
+          }
+        },
+        {
+          "type": "update_avatar",
+          "args": {
+            "player": "partner_b",
+            "attribute": "topVariant",
+            "value": "noHair"
+          }
+        }
+      ]
+    },
+    {
+      "id": "implant",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "implant"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -7, "max": -3 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 3, "max": 7 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -7, "max": -3 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.going_bald.conversations.implant"
+          }
+        }
+      ]
+    },
+    {
+      "id": "hide_it",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "hide_it"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -10, "max": -6 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -7, "max": -3 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.going_bald.conversations.hide_it"
+          }
+        },
+        {
+          "type": "update_avatar",
+          "args": {
+            "player": "partner_b",
+            "attribute": "topVariant",
+            "value": "hat"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.going_bald.conversations.mismatch"
+      }
+    }
+  ],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

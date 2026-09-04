@@ -1,0 +1,149 @@
+{
+  "id": "adult_content_deal",
+  "title": "events.adult_content_deal.title",
+  "description": "events.adult_content_deal.description",
+  "tags": ["career", "financial", "relationship", "decision"],
+  "life_stage": null,
+  "eligibility": null,
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "what_to_do",
+      "text": "events.adult_content_deal.questions.what_to_do",
+      "options": [
+        {
+          "id": "go_all_in",
+          "text": "events.adult_content_deal.options.go_all_in",
+          "actions": []
+        },
+        {
+          "id": "mask_only",
+          "text": "events.adult_content_deal.options.mask_only",
+          "actions": []
+        },
+        {
+          "id": "decline_values",
+          "text": "events.adult_content_deal.options.decline_values",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "go_all_in",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "go_all_in"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": 25
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": 5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": -2
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.adult_content_deal.conversations.go_all_in"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.adult_content_deal.timeline.adult_cinema_job",
+            "category": "career"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mask_only",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "mask_only"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": 15
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": 1
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.adult_content_deal.conversations.mask_only"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.adult_content_deal.timeline.adult_cinema_job",
+            "category": "career"
+          }
+        }
+      ]
+    },
+    {
+      "id": "decline_values",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "decline_values"
+      },
+      "actions": [
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.adult_content_deal.conversations.decline_values"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.adult_content_deal.conversations.mismatch"
+      }
+    }
+  ],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

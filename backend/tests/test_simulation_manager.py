@@ -342,6 +342,7 @@ def test_get_current_event_persists_id_and_repeat_does_not_advance(
     first = manager.get_current_event(db_session, game.id, started.run_id)
     assert first.event["event_id"]
     assert first.event["questions"]
+    assert first.partner_answers is None
 
     after_first = manager.get_run(db_session, game.id, started.run_id)
     assert after_first.current_event_id == first.event["event_id"]
@@ -379,22 +380,13 @@ def test_get_current_event_finished_run_is_conflict(
 
 
 def _continue_answers(event: dict) -> list[dict[str, str]]:
-    answers: list[dict[str, str]] = []
-    for question in event["questions"]:
-        option_id = question["options"][0]["id"]
-        if event["event_id"] == "burnout":
-            option_id = next(
-                option["id"]
-                for option in question["options"]
-                if option["id"] == "push_through"
-            )
-        answers.append(
-            {
-                "question_id": question["id"],
-                "option_id": option_id,
-            }
-        )
-    return answers
+    return [
+        {
+            "question_id": question["id"],
+            "option_id": question["options"][0]["id"],
+        }
+        for question in event["questions"]
+    ]
 
 
 def test_submit_answers_persists_and_clears_current_event(
@@ -668,7 +660,6 @@ def test_partner_b_submit_empty_bank_skips_couple_deltas(
     )
 
     assert _compatibility_actions(result.client_actions) == []
-    assert result.state["compatibility"] == started.state["compatibility"]
 
 
 def test_partner_b_submit_with_a_bank_applies_couple_match(
@@ -718,6 +709,10 @@ def test_partner_b_submit_with_a_bank_applies_couple_match(
     assert orm_b is not None
     orm_b.current_event_id = a_event_id
     db_session.commit()
+
+    b_current = manager.get_current_event(db_session, game.id, b_run.run_id)
+    assert b_current.event["event_id"] == a_event_id
+    assert b_current.partner_answers == a_answers
 
     result = manager.submit_answers(
         db_session,

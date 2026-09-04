@@ -36,6 +36,8 @@ class SimulationStateRead(BaseModel):
     tags: dict[str, Any] = Field(default_factory=dict)
     life_stage: str
     relationship_status: str
+    partner_a_avatar: dict[str, Any] | None = None
+    partner_b_avatar: dict[str, Any] | None = None
 
 
 class SimulationAnswerRead(BaseModel):
@@ -95,9 +97,15 @@ class EventPresentationRead(BaseModel):
     questions: list[QuestionPresentationRead]
 
 
+class PartnerAnswerRead(BaseModel):
+    question_id: str
+    option_id: str
+
+
 class CurrentEventRead(BaseModel):
     run_id: UUID
     event: EventPresentationRead
+    partner_answers: list[PartnerAnswerRead] | None = None
 
 
 class EventAnswerItem(BaseModel):

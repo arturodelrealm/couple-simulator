@@ -10,6 +10,7 @@ from couple_simulator_engine.state import Housing, Mascot, SimulationState
 
 from app.schemas.simulation import SimulationStateRead
 from app.services.simulation_mapper import (
+    engine_player_from_dict,
     engine_player_to_dict,
     public_simulation_state,
     simulation_state_from_dict,
@@ -44,6 +45,8 @@ def test_simulation_state_read_omits_removed_stats():
     assert "housing" in SimulationStateRead.model_fields
     assert "mascot" in SimulationStateRead.model_fields
     assert "tags" in SimulationStateRead.model_fields
+    assert "partner_a_avatar" in SimulationStateRead.model_fields
+    assert "partner_b_avatar" in SimulationStateRead.model_fields
 
 
 def test_from_dict_ignores_legacy_career_and_adventures():
@@ -98,6 +101,8 @@ def test_to_dict_and_public_state_omit_removed_keys():
     }
     assert public["mascot"] is None
     assert public["tags"] == {}
+    assert public["partner_a_avatar"] is None
+    assert public["partner_b_avatar"] is None
 
 
 def test_from_dict_legacy_snapshot_without_household_uses_defaults():
@@ -141,3 +146,62 @@ def test_to_dict_from_dict_round_trips_non_default_household():
     SimulationStateRead.model_validate(public)
     assert public["housing"]["type"] == "house"
     assert public["mascot"] == {"species": "cat", "name": "Michi"}
+
+
+def test_public_simulation_state_includes_partner_avatars():
+    snapshot = _base_snapshot()
+    snapshot["partner_a"] = engine_player_to_dict(
+        Player(
+            id="a",
+            name="Alex",
+            sex=PlayerSex.OTHER,
+            avatar_config={"topVariant": "bob", "facialHairProbability": 100},
+        ),
+    )
+    snapshot["partner_b"] = engine_player_to_dict(
+        Player(
+            id="b",
+            name="Blake",
+            sex=PlayerSex.OTHER,
+            avatar_config={"topVariant": "shortFlat"},
+        ),
+    )
+    state = simulation_state_from_dict(snapshot)
+    public = public_simulation_state(state)
+
+    SimulationStateRead.model_validate(public)
+    assert public["partner_a_avatar"] == {
+        "topVariant": "bob",
+        "facialHairProbability": 100,
+    }
+    assert public["partner_b_avatar"] == {"topVariant": "shortFlat"}
+    persisted = simulation_state_to_dict(state)
+    restored = simulation_state_from_dict(persisted)
+    assert restored.partner_a.avatar_config == {
+        "topVariant": "bob",
+        "facialHairProbability": 100,
+    }
+
+
+def test_avatar_probabilities_coerce_json_floats_and_digit_strings():
+    player = engine_player_from_dict(
+        {
+            "id": "a",
+            "name": "Alex",
+            "sex": PlayerSex.OTHER.value,
+            "game_age": 22,
+            "game_relation_happiness": 100,
+            "simulation_age": 22,
+            "simulation_relation_happiness": 100,
+            "avatar_config": {
+                "topVariant": "bob",
+                "facialHairProbability": 0.0,
+                "accessoriesProbability": "100",
+            },
+        }
+    )
+    assert player.avatar_config == {
+        "topVariant": "bob",
+        "facialHairProbability": 0,
+        "accessoriesProbability": 100,
+    }

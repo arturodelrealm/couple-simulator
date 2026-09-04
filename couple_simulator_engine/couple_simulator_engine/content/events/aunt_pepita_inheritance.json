@@ -1,0 +1,270 @@
+{
+  "id": "aunt_pepita_inheritance",
+  "title": "events.aunt_pepita_inheritance.title",
+  "description": "events.aunt_pepita_inheritance.description",
+  "tags": ["financial", "leisure", "decision"],
+  "life_stage": null,
+  "eligibility": null,
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "what_to_do",
+      "text": "events.aunt_pepita_inheritance.questions.what_to_do",
+      "options": [
+        {
+          "id": "brazil_vacation",
+          "text": "events.aunt_pepita_inheritance.options.brazil_vacation",
+          "actions": []
+        },
+        {
+          "id": "save_money",
+          "text": "events.aunt_pepita_inheritance.options.save_money",
+          "actions": []
+        },
+        {
+          "id": "wardrobe_refresh",
+          "text": "events.aunt_pepita_inheritance.options.wardrobe_refresh",
+          "actions": []
+        },
+        {
+          "id": "donate_hogar_cristo",
+          "text": "events.aunt_pepita_inheritance.options.donate_hogar_cristo",
+          "actions": []
+        },
+        {
+          "id": "all_on_red",
+          "text": "events.aunt_pepita_inheritance.options.all_on_red",
+          "actions": [
+            {
+              "type": "set_event_var",
+              "args": {
+                "variable": "roulette_roll",
+                "value": {
+                  "distribution": {
+                    "kind": "uniform",
+                    "params": { "min": 1, "max": 100 }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "brazil_vacation",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "brazil_vacation"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": 10
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.aunt_pepita_inheritance.conversations.brazil_vacation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "save_money",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "save_money"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": 5
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.aunt_pepita_inheritance.conversations.save_money"
+          }
+        }
+      ]
+    },
+    {
+      "id": "wardrobe_refresh",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "wardrobe_refresh"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": 5
+          }
+        },
+        {
+          "type": "update_avatar",
+          "args": {
+            "player": "partner_a",
+            "attribute": "clothesVariant",
+            "value": "collarAndSweater"
+          }
+        },
+        {
+          "type": "update_avatar",
+          "args": {
+            "player": "partner_b",
+            "attribute": "clothesVariant",
+            "value": "collarAndSweater"
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.aunt_pepita_inheritance.conversations.wardrobe_refresh"
+          }
+        }
+      ]
+    },
+    {
+      "id": "donate_hogar_cristo",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "donate_hogar_cristo"
+      },
+      "actions": [
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.aunt_pepita_inheritance.timeline.donation",
+            "category": "financial"
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.aunt_pepita_inheritance.conversations.donate_hogar_cristo"
+          }
+        }
+      ]
+    },
+    {
+      "id": "all_on_red_win",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/what_to_do",
+            "op": "eq",
+            "value": "all_on_red"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/roulette_roll",
+            "op": "lte",
+            "value": 50
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": 10
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": 5
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.aunt_pepita_inheritance.conversations.all_on_red_win"
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_b",
+            "text_key": "events.aunt_pepita_inheritance.conversations.all_on_red_win_partner_b"
+          }
+        }
+      ]
+    },
+    {
+      "id": "all_on_red_lose",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/what_to_do",
+            "op": "eq",
+            "value": "all_on_red"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/roulette_roll",
+            "op": "gt",
+            "value": 50
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": -5
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.aunt_pepita_inheritance.conversations.all_on_red_lose"
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_b",
+            "text_key": "events.aunt_pepita_inheritance.conversations.all_on_red_lose_partner_b"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useParams } from "react-router-dom";
 
@@ -18,6 +18,7 @@ import {
 } from "../services/simulationService";
 import { toErrorMessage } from "../shared/errors";
 import { getPlayPath } from "../shared/gameNavigation";
+import { partnerAnswerMap } from "../shared/play/partnerAnswerBank";
 import { translateContent } from "../shared/play/translateContent";
 import {
   clearCurrentGame,
@@ -111,6 +112,8 @@ function asStartPlayerRole(role: string): SimulationPlayerRole {
   return role === "partner_b" ? "partner_b" : "partner_a";
 }
 
+const PARTNER_REVEAL_DELAY_MS = 500;
+
 async function loadSimulationPlay(
   gameId: string,
   runId: string,
@@ -171,6 +174,7 @@ export function useSimulationPlay() {
   const [actionError, setActionError] = useState<string | null>(null);
   const [isContinuing, setIsContinuing] = useState(false);
   const [isPlayingAgain, setIsPlayingAgain] = useState(false);
+  const [partnerRevealReady, setPartnerRevealReady] = useState(false);
   const submitInFlightRef = useRef(false);
   const continueInFlightRef = useRef(false);
 
@@ -211,6 +215,7 @@ export function useSimulationPlay() {
       setEventStep(loaded.eventStep);
       setQuestionIndex(0);
       setSelectedOptions({});
+      setPartnerRevealReady(false);
       setResolution(null);
       setGameFinished(loaded.eventStep === "game-over");
       submitInFlightRef.current = false;
@@ -283,6 +288,12 @@ export function useSimulationPlay() {
     [currentEvent, eventStep, gameId, runId, t],
   );
 
+  const bankAnswers = useMemo(
+    () => partnerAnswerMap(currentEvent?.partner_answers),
+    [currentEvent],
+  );
+  const showsPartnerReveal = bankAnswers !== null;
+
   const selectOption = useCallback(
     (optionId: string) => {
       if (eventStep !== "answering" || !currentEvent) {
@@ -293,15 +304,19 @@ export function useSimulationPlay() {
       if (!question) {
         return;
       }
+      if (showsPartnerReveal && selectedOptions[question.id] !== undefined) {
+        return;
+      }
       const nextOptions = { ...selectedOptions, [question.id]: optionId };
       setSelectedOptions(nextOptions);
       const isLastQuestion = questionIndex + 1 >= questions.length;
-      if (isLastQuestion) {
+      if (isLastQuestion && !showsPartnerReveal) {
         void submitCollectedAnswers(nextOptions);
       }
     },
     [
       currentEvent,
+      showsPartnerReveal,
       eventStep,
       questionIndex,
       selectedOptions,
@@ -318,10 +333,23 @@ export function useSimulationPlay() {
     if (!question || selectedOptions[question.id] === undefined) {
       return;
     }
-    setQuestionIndex((index) =>
-      index + 1 < questions.length ? index + 1 : index,
-    );
-  }, [currentEvent, eventStep, questionIndex, selectedOptions]);
+    if (showsPartnerReveal && !partnerRevealReady) {
+      return;
+    }
+    if (questionIndex + 1 >= questions.length) {
+      void submitCollectedAnswers(selectedOptions);
+      return;
+    }
+    setQuestionIndex((index) => index + 1);
+  }, [
+    currentEvent,
+    showsPartnerReveal,
+    eventStep,
+    partnerRevealReady,
+    questionIndex,
+    selectedOptions,
+    submitCollectedAnswers,
+  ]);
 
   const submitAnswers = useCallback(() => {
     void submitCollectedAnswers(selectedOptions);
@@ -352,6 +380,7 @@ export function useSimulationPlay() {
       setCurrentEvent(nextEvent);
       setQuestionIndex(0);
       setSelectedOptions({});
+      setPartnerRevealReady(false);
       setResolution(null);
       submitInFlightRef.current = false;
       setEventStep("answering");
@@ -402,8 +431,41 @@ export function useSimulationPlay() {
   const selectedOptionId = currentQuestion
     ? (selectedOptions[currentQuestion.id] ?? null)
     : null;
+  const partnerOptionId =
+    currentQuestion && bankAnswers !== null
+      ? (bankAnswers[currentQuestion.id] ?? null)
+      : null;
   const hasMoreQuestions = questionIndex + 1 < questions.length;
   const dialogue = dialogueFromClientActions(resolution ?? []);
+
+  useEffect(() => {
+    setPartnerRevealReady(false);
+    if (!showsPartnerReveal || selectedOptionId === null) {
+      return;
+    }
+    const timerId = window.setTimeout(() => {
+      setPartnerRevealReady(true);
+    }, PARTNER_REVEAL_DELAY_MS);
+    return () => {
+      window.clearTimeout(timerId);
+    };
+  }, [questionIndex, selectedOptionId, showsPartnerReveal]);
+
+  const partnerRevealPhase: "hidden" | "waiting" | "revealed" =
+    !showsPartnerReveal || selectedOptionId === null
+      ? "hidden"
+      : partnerRevealReady
+        ? "revealed"
+        : "waiting";
+  const choicesLocked =
+    eventStep !== "answering" ||
+    (showsPartnerReveal && selectedOptionId !== null);
+  const showAdvanceButton =
+    hasMoreQuestions || (showsPartnerReveal && selectedOptionId !== null);
+  const advanceDisabled =
+    eventStep !== "answering" ||
+    selectedOptionId === null ||
+    (showsPartnerReveal && !partnerRevealReady);
 
   return {
     gameId,
@@ -414,6 +476,11 @@ export function useSimulationPlay() {
     questionIndex,
     currentQuestion,
     selectedOptionId,
+    partnerOptionId,
+    partnerRevealPhase,
+    choicesLocked,
+    showAdvanceButton,
+    advanceDisabled,
     hasMoreQuestions,
     resolution,
     dialogue,

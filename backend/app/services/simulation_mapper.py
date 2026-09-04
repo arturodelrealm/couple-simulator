@@ -37,6 +37,10 @@ _BACKEND_SEX_TO_ENGINE: dict[str, PlayerSex] = {
     BackendPlayerSex.PREFER_NOT_TO_SAY.value: PlayerSex.OTHER,
 }
 
+_AVATAR_PROBABILITY_KEYS = frozenset(
+    {"accessoriesProbability", "facialHairProbability"}
+)
+
 
 def engine_sex_from_player(sex: str | None) -> PlayerSex:
     if sex is None:
@@ -55,12 +59,40 @@ def engine_sex_from_player(sex: str | None) -> PlayerSex:
     return mapped
 
 
-def _avatar_config_as_str_dict(
+def _probability_int(value: Any) -> int | None:
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, int):
+        parsed = value
+    elif isinstance(value, float) and value.is_integer():
+        parsed = int(value)
+    elif isinstance(value, str) and value.isdigit():
+        parsed = int(value)
+    else:
+        return None
+    if parsed < 0 or parsed > 100:
+        return None
+    return parsed
+
+
+def _avatar_config_dict(
     config: dict[str, Any] | None,
-) -> dict[str, str] | None:
+) -> dict[str, str | int] | None:
     if config is None:
         return None
-    return {str(key): str(value) for key, value in config.items()}
+    parsed: dict[str, str | int] = {}
+    for key, value in config.items():
+        field = str(key)
+        if field in _AVATAR_PROBABILITY_KEYS:
+            probability = _probability_int(value)
+            if probability is not None:
+                parsed[field] = probability
+            continue
+        if isinstance(value, bool) or not isinstance(value, int):
+            parsed[field] = str(value)
+        else:
+            parsed[field] = value
+    return parsed
 
 
 def lobby_player_to_engine(player: Player) -> EnginePlayer:
@@ -73,7 +105,7 @@ def lobby_player_to_engine(player: Player) -> EnginePlayer:
         sex=engine_sex_from_player(player.sex),
         game_age=player.game_age,
         game_relation_happiness=player.game_relation_happiness,
-        avatar_config=_avatar_config_as_str_dict(avatar),
+        avatar_config=_avatar_config_dict(avatar),
     )
 
 
@@ -93,9 +125,7 @@ def engine_player_to_dict(player: EnginePlayer) -> dict[str, Any]:
 
 def engine_player_from_dict(data: dict[str, Any]) -> EnginePlayer:
     avatar_raw = data.get("avatar_config")
-    avatar = (
-        _avatar_config_as_str_dict(avatar_raw) if isinstance(avatar_raw, dict) else None
-    )
+    avatar = _avatar_config_dict(avatar_raw) if isinstance(avatar_raw, dict) else None
     return EnginePlayer(
         id=str(data["id"]),
         name=str(data["name"]),
@@ -183,8 +213,16 @@ def simulation_state_from_dict(data: dict[str, Any]) -> SimulationState:
     return SimulationState(**kwargs)
 
 
+def _public_avatar(player: EnginePlayer) -> dict[str, str | int] | None:
+    if player.avatar_config is None:
+        return None
+    return dict(player.avatar_config)
+
+
 def public_simulation_state(state: SimulationState) -> dict[str, Any]:
     payload: dict[str, Any] = dict(state.to_dict())
+    payload["partner_a_avatar"] = _public_avatar(state.partner_a)
+    payload["partner_b_avatar"] = _public_avatar(state.partner_b)
     return payload
 
 

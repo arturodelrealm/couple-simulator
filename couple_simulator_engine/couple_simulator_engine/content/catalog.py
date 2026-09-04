@@ -29,5 +29,5 @@ def load_catalog(path: str | Path) -> ContentCatalog:
 
 
 def package_events_directory() -> Path:
-    """Directory of packaged dummy events (`content/events/`)."""
+    """Directory of packaged game events (`content/events/`)."""
     return Path(__file__).resolve().parent / "events"

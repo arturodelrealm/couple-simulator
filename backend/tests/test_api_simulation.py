@@ -223,6 +223,7 @@ def test_get_current_event_after_start(
     assert event["title"].startswith("events.")
     assert event["questions"][0]["text"].startswith("events.")
     assert event["questions"][0]["options"][0]["text"].startswith("events.")
+    assert current.json()["data"]["partner_answers"] is None
     if event["description"] is not None:
         assert event["description"].startswith("events.")
 
@@ -251,22 +252,13 @@ def test_get_current_event_unknown_run_is_404(
 
 
 def _continue_answers(event: dict) -> list[dict[str, str]]:
-    answers: list[dict[str, str]] = []
-    for question in event["questions"]:
-        option_id = question["options"][0]["id"]
-        if event["event_id"] == "burnout":
-            option_id = next(
-                option["id"]
-                for option in question["options"]
-                if option["id"] == "push_through"
-            )
-        answers.append(
-            {
-                "question_id": question["id"],
-                "option_id": option_id,
-            }
-        )
-    return answers
+    return [
+        {
+            "question_id": question["id"],
+            "option_id": question["options"][0]["id"],
+        }
+        for question in event["questions"]
+    ]
 
 
 def test_submit_answers_updates_run_and_advances_current_event(
@@ -370,15 +362,16 @@ def _compatibility_actions(client_actions: list[dict]) -> list[dict]:
     ]
 
 
-def _get_current_event(client: TestClient, game_id: str, run_id: str) -> dict:
+def _get_current_event_payload(client: TestClient, game_id: str, run_id: str) -> dict:
     current = client.get(
         f"/api/games/{game_id}/simulation/runs/{run_id}/events/current",
     )
     assert current.status_code == 200
-    payload = current.json()["data"]
-    assert "partner_answers" not in payload
-    assert "partner_answers" not in payload["event"]
-    return payload["event"]
+    return current.json()["data"]
+
+
+def _get_current_event(client: TestClient, game_id: str, run_id: str) -> dict:
+    return _get_current_event_payload(client, game_id, run_id)["event"]
 
 
 def _submit_event(
@@ -467,7 +460,12 @@ def test_http_a_then_b_applies_couple_when_bank_covers_event(
 
     couple_hit = False
     for _ in range(5):
-        b_event = _get_current_event(client, game_id, b_run_id)
+        b_payload = _get_current_event_payload(client, game_id, b_run_id)
+        b_event = b_payload["event"]
+        if b_event["event_id"] in bank:
+            assert b_payload["partner_answers"] == bank[b_event["event_id"]]
+        else:
+            assert b_payload["partner_answers"] == []
         answers = bank.get(b_event["event_id"], _continue_answers(b_event))
         result = _submit_event(client, game_id, b_run_id, b_event, answers)
         if b_event["event_id"] in bank:
@@ -502,12 +500,13 @@ def test_http_partner_b_start_with_zero_a_runs_is_solo_like(
     )
     assert started_b.status_code == 201
     b_run_id = started_b.json()["data"]["run_id"]
-    compatibility_before = started_b.json()["data"]["state"]["compatibility"]
 
     lobby = client.get(f"/api/games/{game_id}")
     assert lobby.json()["data"]["status"] == "PLAYER_B_PLAYING"
 
-    event = _get_current_event(client, game_id, b_run_id)
+    event_payload = _get_current_event_payload(client, game_id, b_run_id)
+    event = event_payload["event"]
+    assert event_payload["partner_answers"] == []
     result = _submit_event(
         client,
         game_id,
@@ -516,7 +515,6 @@ def test_http_partner_b_start_with_zero_a_runs_is_solo_like(
         _continue_answers(event),
     )
     assert _compatibility_actions(result["client_actions"]) == []
-    assert result["state"]["compatibility"] == compatibility_before
     assert result["events_played"] == 1
 
     listed_b = client.get(

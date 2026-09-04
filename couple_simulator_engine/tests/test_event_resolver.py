@@ -3,12 +3,10 @@
 from unittest.mock import MagicMock
 
 import pytest
+from fixture_events import FIXTURE_EVENTS_DIRECTORY
 
 from couple_simulator_engine.config import GameConfig
-from couple_simulator_engine.content.catalog import (
-    load_catalog,
-    package_events_directory,
-)
+from couple_simulator_engine.content.catalog import load_catalog
 from couple_simulator_engine.content.definitions import (
     ActionDefinition,
     EventDefinition,
@@ -51,7 +49,7 @@ def _session(
 
 
 def _catalog_event(event_id: str) -> EventDefinition:
-    catalog = load_catalog(package_events_directory())
+    catalog = load_catalog(FIXTURE_EVENTS_DIRECTORY)
     event = catalog.get(event_id)
     assert event is not None
     return event
@@ -81,7 +79,7 @@ def test_buy_house_light_purchase_path() -> None:
     )
     assert resolution.applied_outcome_ids == ["purchase"]
     assert session.state.finances == 35
-    assert session.state.quality_of_life == 60
+    assert session.state.quality_of_life == 30
     assert any(
         action.type == "modify_stat" and action.args.get("variable") == "finances"
         for action in resolution.client_actions
@@ -100,7 +98,7 @@ def test_career_offer_accept_applies_accepted_only() -> None:
         [Answer(question_id="career_choice", option_id="accept")],
     )
     assert resolution.applied_outcome_ids == ["accepted"]
-    assert session.state.quality_of_life == 65
+    assert session.state.quality_of_life == 35
 
 
 def test_two_outcomes_both_apply_when_when_is_true() -> None:
@@ -149,7 +147,7 @@ def test_two_outcomes_both_apply_when_when_is_true() -> None:
     )
     assert resolution.applied_outcome_ids == ["one", "two"]
     assert session.state.finances == 51
-    assert session.state.quality_of_life == 52
+    assert session.state.quality_of_life == 22
 
 
 def test_default_actions_when_no_outcome_matches() -> None:
@@ -281,7 +279,7 @@ def test_partner_b_matching_bank_applies_match_bonus_not_personal() -> None:
     )
     assert session.state.partner_a.simulation_relation_happiness == 75
     assert session.state.partner_b.simulation_relation_happiness == 75
-    assert session.state.finances == 70
+    assert session.state.finances == 35
     assert session.answers[0].option_id == "opt_b"
     assert any(
         action.type == "modify_stat"
@@ -300,7 +298,7 @@ def test_use_answer_bank_false_ignores_partner_a_answers() -> None:
         [Answer(question_id="q1", option_id="opt_b")],
         partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
     )
-    assert session.state.finances == 70
+    assert session.state.finances == 35
     assert session.state.partner_a.simulation_relation_happiness == 70
     assert session.state.partner_b.simulation_relation_happiness == 70
 
@@ -316,7 +314,7 @@ def test_partner_b_disagreeing_bank_uses_winner_option_and_penalties() -> None:
         [Answer(question_id="q1", option_id="opt_b")],
         partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
     )
-    assert session.state.finances == 51
+    assert session.state.finances == 16
     assert session.state.partner_a.simulation_relation_happiness == 62
     assert session.state.partner_b.simulation_relation_happiness == 58
     assert session.answers[0].option_id == "opt_b"
@@ -331,7 +329,7 @@ def test_partner_b_no_bank_skips_couple_and_personal_deltas() -> None:
         [Answer(question_id="q1", option_id="opt_b")],
         partner_a_answers=None,
     )
-    assert session.state.finances == 70
+    assert session.state.finances == 35
     assert session.state.partner_a.simulation_relation_happiness == 70
     assert session.state.partner_b.simulation_relation_happiness == 70
 
@@ -368,8 +366,8 @@ def test_mismatch_actions_run_when_partners_disagree() -> None:
         [Answer(question_id="q1", option_id="opt_b")],
         partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
     )
-    assert session.state.quality_of_life == 57
-    assert session.state.finances == 70
+    assert session.state.quality_of_life == 27
+    assert session.state.finances == 35
 
 
 def test_partner_b_incomplete_bank_is_solo() -> None:
@@ -381,7 +379,7 @@ def test_partner_b_incomplete_bank_is_solo() -> None:
         [Answer(question_id="q1", option_id="opt_b")],
         partner_a_answers=[],
     )
-    assert session.state.finances == 70
+    assert session.state.finances == 35
     assert session.state.partner_a.simulation_relation_happiness == 70
 
 
@@ -506,5 +504,68 @@ def test_mismatch_actions_skipped_when_answers_match() -> None:
         [Answer(question_id="q1", option_id="opt_a")],
         partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
     )
-    assert session.state.quality_of_life == 50
-    assert session.state.finances == 51
+    assert session.state.quality_of_life == 20
+    assert session.state.finances == 16
+
+
+def test_couple_flags_include_per_question_match_count() -> None:
+    event = EventDefinition(
+        id="quiz",
+        title="Quiz",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="q1",
+                text="Q1",
+                options=(
+                    OptionDefinition(id="opt_a", text="A"),
+                    OptionDefinition(id="opt_b", text="B"),
+                ),
+            ),
+            QuestionDefinition(
+                id="q2",
+                text="Q2",
+                options=(
+                    OptionDefinition(id="opt_a", text="A"),
+                    OptionDefinition(id="opt_b", text="B"),
+                ),
+            ),
+        ),
+        outcomes=(
+            OutcomeDefinition(
+                id="one_hit",
+                when={
+                    "type": "compare",
+                    "path": "flags/match_count",
+                    "op": "eq",
+                    "value": 1,
+                },
+                actions=(
+                    ActionDefinition(
+                        type="set_event_var",
+                        args={"variable": "hits", "value": 1},
+                    ),
+                ),
+            ),
+        ),
+        default_actions=(),
+        mismatch_actions=(),
+    )
+    session = _partner_b_session()
+    resolution = resolve_event(
+        session,
+        event,
+        [
+            Answer(question_id="q1", option_id="opt_a"),
+            Answer(question_id="q2", option_id="opt_b"),
+        ],
+        partner_a_answers=[
+            Answer(question_id="q1", option_id="opt_a"),
+            Answer(question_id="q2", option_id="opt_a"),
+        ],
+    )
+    assert resolution.applied_outcome_ids == ["one_hit"]
+    assert session.event_variables == {}

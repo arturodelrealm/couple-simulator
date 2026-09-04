@@ -11,11 +11,13 @@ from couple_simulator_engine.content.catalog import (
     load_catalog,
     package_events_directory,
 )
+from couple_simulator_engine.content.definitions import EventDefinition
 from couple_simulator_engine.engine import GameEngine
 from couple_simulator_engine.player import Player as EnginePlayer
 from couple_simulator_engine.resolution.event_resolver import AnswerValidationError
 from couple_simulator_engine.session import Answer, EventPresentation
 from couple_simulator_engine.snapshot import (
+    LoadedGame,
     PlayerRoleName,
     RunSnapshot,
     run_snapshot_from_session,
@@ -83,6 +85,7 @@ class SimulationRunList:
 class CurrentEventView:
     run_id: UUID
     event: dict[str, Any]
+    partner_answers: list[dict[str, str]] | None = None
 
 
 @dataclass(frozen=True)
@@ -238,15 +241,7 @@ class SimulationManager:
                     _("No eligible events remain"),
                     status_code=409,
                 )
-            presentation = self._engine.present_event(
-                event,
-                player_role=loaded.player_role,
-                player_sex=loaded.session.player.sex,
-            )
-            return CurrentEventView(
-                run_id=orm_run.id,
-                event=_event_presentation_to_dict(presentation),
-            )
+            return self._current_event_view(orm_run.id, loaded, event)
 
         event = self._engine.select_next_event(loaded)
         if event is None:
@@ -264,15 +259,7 @@ class SimulationManager:
         exported = self._engine.export_snapshot(loaded)
         _apply_run_snapshot(orm_run, exported.active_run)
         db.commit()
-        presentation = self._engine.present_event(
-            event,
-            player_role=loaded.player_role,
-            player_sex=loaded.session.player.sex,
-        )
-        return CurrentEventView(
-            run_id=orm_run.id,
-            event=_event_presentation_to_dict(presentation),
-        )
+        return self._current_event_view(orm_run.id, loaded, event)
 
     def submit_answers(
         self,
@@ -336,6 +323,23 @@ class SimulationManager:
             game_finished=resolution.game_finished or end.finished,
         )
 
+    def _current_event_view(
+        self,
+        run_id: UUID,
+        loaded: LoadedGame,
+        event: EventDefinition,
+    ) -> CurrentEventView:
+        presentation = self._engine.present_event(
+            event,
+            player_role=loaded.player_role,
+            player_sex=loaded.session.player.sex,
+        )
+        return CurrentEventView(
+            run_id=run_id,
+            event=_event_presentation_to_dict(presentation),
+            partner_answers=_partner_answers_payload(loaded, event),
+        )
+
     def _load_game_and_run(
         self,
         db: Session,
@@ -353,6 +357,28 @@ class SimulationManager:
                 status_code=404,
             )
         return game, orm_run
+
+
+def _partner_answers_payload(
+    loaded: LoadedGame,
+    event: EventDefinition,
+) -> list[dict[str, str]] | None:
+    if loaded.player_role != PlayerRole.PARTNER_B.value:
+        return None
+    if not event.use_answer_bank:
+        return None
+    option_by_question: dict[str, str] = {}
+    for entry in loaded.answer_bank.entries:
+        if entry.event_id == event.id:
+            option_by_question[entry.question_id] = entry.option_id
+    return [
+        {
+            "question_id": question.id,
+            "option_id": option_by_question[question.id],
+        }
+        for question in event.questions
+        if question.id in option_by_question
+    ]
 
 
 def _event_presentation_to_dict(presentation: EventPresentation) -> dict[str, Any]:

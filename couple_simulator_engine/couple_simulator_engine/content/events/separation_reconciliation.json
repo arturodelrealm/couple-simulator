@@ -1,0 +1,294 @@
+{
+  "id": "separation_reconciliation",
+  "title": "events.separation_reconciliation.title",
+  "description": "events.separation_reconciliation.description",
+  "tags": ["relationship", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/relationship_status",
+    "op": "eq",
+    "value": "separated"
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "how_to_return",
+      "text": {
+        "default_key": "events.separation_reconciliation.questions.how_to_return",
+        "by_role": {
+          "partner_b": "events.separation_reconciliation.questions.how_to_return_self"
+        }
+      },
+      "options": [
+        {
+          "id": "guitar_serenade",
+          "text": "events.separation_reconciliation.options.guitar_serenade",
+          "actions": []
+        },
+        {
+          "id": "instagram_likes",
+          "text": "events.separation_reconciliation.options.instagram_likes",
+          "actions": []
+        },
+        {
+          "id": "photo_letter",
+          "text": "events.separation_reconciliation.options.photo_letter",
+          "actions": []
+        },
+        {
+          "id": "beg_on_knees",
+          "text": "events.separation_reconciliation.options.beg_on_knees",
+          "actions": []
+        },
+        {
+          "id": "no_second_chances",
+          "text": "events.separation_reconciliation.options.no_second_chances",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "always",
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "try_return",
+            "value": true
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.separation_reconciliation.timeline.attempt",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "guitar_serenade_match",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "flags/answers_match",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "type": "compare",
+            "path": "answers/how_to_return",
+            "op": "eq",
+            "value": "guitar_serenade"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "set_relationship_status",
+          "args": {
+            "status": "together"
+          }
+        },
+        {
+          "type": "set_stat",
+          "args": {
+            "variable": "compatibility",
+            "value": 40
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_b",
+            "text_key": "events.separation_reconciliation.conversations.guitar_serenade"
+          }
+        }
+      ]
+    },
+    {
+      "id": "instagram_likes_match",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "flags/answers_match",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "type": "compare",
+            "path": "answers/how_to_return",
+            "op": "eq",
+            "value": "instagram_likes"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "set_relationship_status",
+          "args": {
+            "status": "together"
+          }
+        },
+        {
+          "type": "set_stat",
+          "args": {
+            "variable": "compatibility",
+            "value": 40
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.separation_reconciliation.conversations.instagram_likes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "photo_letter_match",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "flags/answers_match",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "type": "compare",
+            "path": "answers/how_to_return",
+            "op": "eq",
+            "value": "photo_letter"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "set_relationship_status",
+          "args": {
+            "status": "together"
+          }
+        },
+        {
+          "type": "set_stat",
+          "args": {
+            "variable": "compatibility",
+            "value": 40
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "both",
+            "text_key": "events.separation_reconciliation.conversations.photo_letter"
+          }
+        }
+      ]
+    },
+    {
+      "id": "beg_on_knees_match",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "flags/answers_match",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "type": "compare",
+            "path": "answers/how_to_return",
+            "op": "eq",
+            "value": "beg_on_knees"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "set_relationship_status",
+          "args": {
+            "status": "together"
+          }
+        },
+        {
+          "type": "set_stat",
+          "args": {
+            "variable": "compatibility",
+            "value": 40
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_b",
+            "text_key": "events.separation_reconciliation.conversations.beg_on_knees"
+          }
+        }
+      ]
+    },
+    {
+      "id": "no_second_chances_match",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "flags/answers_match",
+            "op": "eq",
+            "value": true
+          },
+          {
+            "type": "compare",
+            "path": "answers/how_to_return",
+            "op": "eq",
+            "value": "no_second_chances"
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "both",
+            "text_key": "events.separation_reconciliation.conversations.no_second_chances"
+          }
+        },
+        {
+          "type": "end_game",
+          "args": {
+            "reason": "separation_breakup"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.separation_reconciliation.conversations.mismatch"
+      }
+    },
+    {
+      "type": "end_game",
+      "args": {
+        "reason": "separation_breakup"
+      }
+    }
+  ],
+  "weight": 100000.0,
+  "max_occurrences": 1
+}

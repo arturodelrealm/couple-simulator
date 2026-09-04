@@ -127,6 +127,47 @@ def test_modify_stat_compatibility_updates_partner_happiness() -> None:
     assert result[0].args["delta"] == -10
 
 
+def test_set_stat_assigns_absolute_value() -> None:
+    session = _session(finances=50)
+    action = ActionDefinition(
+        type="set_stat",
+        args={"variable": "finances", "value": 12},
+    )
+    result = apply_action(action, _ctx(session), session, session.rng)
+    assert session.state.finances == 12
+    assert result[0].type == "set_stat"
+    assert result[0].args == {
+        "variable": "finances",
+        "value": 12,
+        "new_value": 12,
+    }
+
+
+def test_set_stat_compatibility_assigns_both_partners() -> None:
+    session = _session()
+    session.state.partner_a.set_simulation_relation_happiness(90)
+    session.state.partner_b.set_simulation_relation_happiness(40)
+    action = ActionDefinition(
+        type="set_stat",
+        args={"variable": "compatibility", "value": 70},
+    )
+    result = apply_action(action, _ctx(session), session, session.rng)
+    assert session.state.partner_a.simulation_relation_happiness == 70
+    assert session.state.partner_b.simulation_relation_happiness == 70
+    assert session.state.compatibility == 70
+    assert result[0].args["new_value"] == 70
+
+
+def test_set_stat_clamps_compatibility() -> None:
+    session = _session()
+    action = ActionDefinition(
+        type="set_stat",
+        args={"variable": "compatibility", "value": 140},
+    )
+    apply_action(action, _ctx(session), session, session.rng)
+    assert session.state.compatibility == 100
+
+
 def test_set_event_var_mutates_session_only() -> None:
     session = _session()
     finances = session.state.finances
@@ -421,3 +462,97 @@ def test_set_tag_rejects_invalid_key() -> None:
             session.rng,
         )
     assert session.state.tags == {}
+
+
+def test_update_avatar_sets_attribute_on_partner_and_emits_payload() -> None:
+    session = _session()
+    session.state.partner_a.avatar_config = {"topVariant": "shortCurly"}
+    session.state.partner_b.avatar_config = {"topVariant": "bob"}
+    result = apply_action(
+        ActionDefinition(
+            type="update_avatar",
+            args={
+                "player": "partner_a",
+                "attribute": "topVariant",
+                "value": "shavedSides",
+            },
+        ),
+        _ctx(session),
+        session,
+        session.rng,
+    )
+    assert session.state.partner_a.avatar_config == {"topVariant": "shavedSides"}
+    assert session.state.partner_b.avatar_config == {"topVariant": "bob"}
+    assert result[0].type == "update_avatar"
+    assert result[0].args == {
+        "player": "partner_a",
+        "attribute": "topVariant",
+        "value": "shavedSides",
+        "avatar_config": {"topVariant": "shavedSides"},
+    }
+
+
+def test_update_avatar_creates_config_and_updates_partner_b() -> None:
+    session = _session()
+    assert session.state.partner_b.avatar_config is None
+    result = apply_action(
+        ActionDefinition(
+            type="update_avatar",
+            args={
+                "player": "partner_b",
+                "attribute": "facialHairProbability",
+                "value": 100,
+            },
+        ),
+        _ctx(session),
+        session,
+        session.rng,
+    )
+    assert session.state.partner_b.avatar_config == {"facialHairProbability": 100}
+    assert session.state.partner_a.avatar_config is None
+    assert result[0].args["player"] == "partner_b"
+    assert result[0].args["value"] == 100
+
+
+def test_update_avatar_rejects_invalid_player_attribute_and_value() -> None:
+    session = _session()
+    session.state.partner_a.avatar_config = {"topVariant": "bob"}
+    with pytest.raises(ValueError, match="Invalid player"):
+        apply_action(
+            ActionDefinition(
+                type="update_avatar",
+                args={
+                    "player": "partner_c",
+                    "attribute": "topVariant",
+                    "value": "bob",
+                },
+            ),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+    with pytest.raises(ValueError, match="Invalid attribute"):
+        apply_action(
+            ActionDefinition(
+                type="update_avatar",
+                args={"player": "partner_a", "attribute": "hat", "value": "bob"},
+            ),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+    with pytest.raises(ValueError, match="Invalid value"):
+        apply_action(
+            ActionDefinition(
+                type="update_avatar",
+                args={
+                    "player": "partner_a",
+                    "attribute": "facialHairProbability",
+                    "value": 150,
+                },
+            ),
+            _ctx(session),
+            session,
+            session.rng,
+        )
+    assert session.state.partner_a.avatar_config == {"topVariant": "bob"}

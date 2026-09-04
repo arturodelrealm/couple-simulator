@@ -1,15 +1,14 @@
 """Evaluation context and ``should_apply`` wrapper (spec §11)."""
 
+from fixture_events import FIXTURE_EVENTS_DIRECTORY
+
 from couple_simulator_engine.conditions import (
     build_evaluation_context,
     evaluation_mode,
     should_apply,
 )
 from couple_simulator_engine.config import GameConfig
-from couple_simulator_engine.content.catalog import (
-    load_catalog,
-    package_events_directory,
-)
+from couple_simulator_engine.content.catalog import load_catalog
 from couple_simulator_engine.content.definitions import EventDefinition
 from couple_simulator_engine.enums import PlayerSex
 from couple_simulator_engine.player import Player
@@ -65,7 +64,7 @@ def _session(
 
 
 def _catalog_event(event_id: str) -> EventDefinition:
-    catalog = load_catalog(package_events_directory())
+    catalog = load_catalog(FIXTURE_EVENTS_DIRECTORY)
     event = catalog.get(event_id)
     assert event is not None
     return event

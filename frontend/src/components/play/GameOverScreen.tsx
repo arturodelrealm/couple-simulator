@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import type { TimelineEntry } from "../../services/simulationService";
@@ -94,16 +95,24 @@ export function GameOverScreen({
             <ErrorMessage message={errorMessage} />
           </div>
         ) : null}
-        <button
-          type="button"
-          onClick={onPlayAgain}
-          disabled={playAgainDisabled}
-          className="flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-display text-base font-bold text-white transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-          style={{ background: "linear-gradient(135deg, #a78bfa, #f472b6)" }}
-        >
-          <PlayRefreshIcon className="h-4 w-4" />
-          {t("game.play.gameOver.playAgain")}
-        </button>
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={onPlayAgain}
+            disabled={playAgainDisabled}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-display text-base font-bold text-white transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+            style={{ background: "linear-gradient(135deg, #a78bfa, #f472b6)" }}
+          >
+            <PlayRefreshIcon className="h-4 w-4" />
+            {t("game.play.gameOver.playAgain")}
+          </button>
+          <Link
+            to="/lobby"
+            className="block w-full rounded-2xl border-2 border-purple-100 bg-white px-5 py-3 text-center font-display text-base font-bold text-slate-700 transition-all hover:border-purple-300 hover:bg-purple-50"
+          >
+            {t("game.nav.backToLobby")}
+          </Link>
+        </div>
       </div>
     </div>
   );

@@ -7,10 +7,12 @@ from typing import Any
 from couple_simulator_engine.actions.distributions import resolve_value
 from couple_simulator_engine.actions.registry import register_action_handler
 from couple_simulator_engine.actions.types import EvaluationContext
+from couple_simulator_engine.clamp import clamp_stat
 from couple_simulator_engine.enums import (
     HousingQuality,
     HousingType,
     LifeStage,
+    RelationshipStatus,
     SessionStatus,
 )
 from couple_simulator_engine.rng import SeededRNG
@@ -68,6 +70,38 @@ def handle_modify_stat(
             args={
                 "variable": variable,
                 "delta": new - old,
+                "new_value": new,
+            },
+        )
+    ]
+
+
+def handle_set_stat(
+    args: dict[str, Any],
+    ctx: EvaluationContext,
+    session: GameSession,
+    rng: SeededRNG,
+) -> list[ClientAction]:
+    variable = args["variable"]
+    requested = _as_int_delta(resolve_value(args["value"], rng))
+    if variable == "age":
+        assigned = clamp_stat("age", requested)
+        for partner in session.state.partners():
+            partner.set_simulation_age(assigned)
+        new = session.state.age
+    elif variable == "compatibility":
+        assigned = clamp_stat("compatibility", requested)
+        for partner in session.state.partners():
+            partner.set_simulation_relation_happiness(assigned)
+        new = session.state.compatibility
+    else:
+        new = session.state.set_stat(variable, requested)
+    return [
+        ClientAction(
+            type="set_stat",
+            args={
+                "variable": variable,
+                "value": new,
                 "new_value": new,
             },
         )
@@ -242,6 +276,27 @@ def _tag_key(value: Any) -> str:
     return key
 
 
+def handle_set_relationship_status(
+    args: dict[str, Any],
+    ctx: EvaluationContext,
+    session: GameSession,
+    rng: SeededRNG,
+) -> list[ClientAction]:
+    status_raw = args["status"]
+    status = (
+        status_raw
+        if isinstance(status_raw, RelationshipStatus)
+        else RelationshipStatus(status_raw)
+    )
+    session.state.relationship_status = status
+    return [
+        ClientAction(
+            type="set_relationship_status",
+            args={"status": status.value},
+        )
+    ]
+
+
 def handle_set_tag(
     args: dict[str, Any],
     ctx: EvaluationContext,
@@ -259,7 +314,85 @@ def handle_set_tag(
     return [ClientAction(type="set_tag", args={"key": key, "value": stored})]
 
 
+_AVATAR_PLAYERS = frozenset({"partner_a", "partner_b"})
+_AVATAR_PROBABILITY_KEYS = frozenset(
+    {"accessoriesProbability", "facialHairProbability"}
+)
+_AVATAR_VARIANT_KEYS = frozenset(
+    {
+        "topVariant",
+        "eyesVariant",
+        "eyebrowsVariant",
+        "mouthVariant",
+        "facialHairVariant",
+        "clothesVariant",
+        "accessoriesVariant",
+        "skinColor",
+        "hairColor",
+        "facialHairColor",
+        "clothesColor",
+    }
+)
+_AVATAR_ATTRIBUTE_KEYS = _AVATAR_VARIANT_KEYS | _AVATAR_PROBABILITY_KEYS
+
+
+def _avatar_player_role(value: Any) -> str:
+    role = _require_non_empty_str(value, "player")
+    if role not in _AVATAR_PLAYERS:
+        raise ValueError(f"Invalid player: {value!r}")
+    return role
+
+
+def _avatar_attribute(value: Any) -> str:
+    attribute = _require_non_empty_str(value, "attribute")
+    if attribute not in _AVATAR_ATTRIBUTE_KEYS:
+        raise ValueError(f"Invalid attribute: {value!r}")
+    return attribute
+
+
+def _avatar_attribute_value(attribute: str, value: Any) -> str | int:
+    if attribute in _AVATAR_PROBABILITY_KEYS:
+        if isinstance(value, bool) or not isinstance(value, int):
+            raise ValueError(f"Invalid value: {value!r}")
+        if value < 0 or value > 100:
+            raise ValueError(f"Invalid value: {value!r}")
+        return value
+    return _require_non_empty_str(value, "value")
+
+
+def handle_update_avatar(
+    args: dict[str, Any],
+    ctx: EvaluationContext,
+    session: GameSession,
+    rng: SeededRNG,
+) -> list[ClientAction]:
+    player_role = _avatar_player_role(args["player"])
+    attribute = _avatar_attribute(args["attribute"])
+    stored = _avatar_attribute_value(attribute, args["value"])
+    partner = (
+        session.state.partner_b
+        if player_role == "partner_b"
+        else session.state.partner_a
+    )
+    existing = partner.avatar_config
+    current = dict(existing) if existing is not None else {}
+    current[attribute] = stored
+    partner.avatar_config = current
+    return [
+        ClientAction(
+            type="update_avatar",
+            args={
+                "player": player_role,
+                "attribute": attribute,
+                "value": stored,
+                "avatar_config": dict(current),
+            },
+        )
+    ]
+
+
 register_action_handler("modify_stat", handle_modify_stat)
+register_action_handler("set_stat", handle_set_stat)
 register_action_handler("set_event_var", handle_set_event_var)
 register_action_handler("add_conversation", handle_add_conversation)
 register_action_handler("add_timeline_entry", handle_add_timeline_entry)
@@ -267,4 +400,6 @@ register_action_handler("advance_life_stage", handle_advance_life_stage)
 register_action_handler("end_game", handle_end_game)
 register_action_handler("set_housing", handle_set_housing)
 register_action_handler("set_mascot", handle_set_mascot)
+register_action_handler("set_relationship_status", handle_set_relationship_status)
 register_action_handler("set_tag", handle_set_tag)
+register_action_handler("update_avatar", handle_update_avatar)
