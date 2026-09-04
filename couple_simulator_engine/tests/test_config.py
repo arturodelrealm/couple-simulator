@@ -14,6 +14,17 @@ def test_game_config_defaults() -> None:
     assert config.compatibility_match_bonus == 5
     assert config.conflict_winner_bonus == 2
     assert config.conflict_loser_penalty == 2
+    assert config.passive_income_default == 2
+    assert config.passive_income_by_band == {"low": 4, "mid": 6, "high": 8}
+    assert config.passive_upkeep_children == 2
+    assert config.passive_upkeep_excellent_housing == 1
+    assert config.passive_income_enabled is True
+
+
+def test_passive_income_defaults_match_spec() -> None:
+    config = GameConfig()
+    assert config.passive_income_default == 2
+    assert config.passive_income_by_band == {"low": 4, "mid": 6, "high": 8}
 
 
 def test_player_role_and_conflict_strategy() -> None:

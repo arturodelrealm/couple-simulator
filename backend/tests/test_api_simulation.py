@@ -1,6 +1,11 @@
-from uuid import uuid4
+from uuid import UUID, uuid4
 
 from fastapi.testclient import TestClient
+from sqlalchemy.orm import Session
+
+from app.models.simulation_run import SimulationRun
+
+_COUPLE_DELTA_TEST_EVENT = "going_bald"
 
 
 def _create_ready_game(
@@ -404,6 +409,7 @@ def _answers_by_event(run_answers: list[dict]) -> dict[str, list[dict[str, str]]
 
 def test_http_a_then_b_applies_couple_when_bank_covers_event(
     client: TestClient,
+    db_session: Session,
     valid_avatar_config: dict[str, str],
 ):
     game_id = _create_ready_game(client, "api-sim-a-then-b", valid_avatar_config)
@@ -419,6 +425,10 @@ def test_http_a_then_b_applies_couple_when_bank_covers_event(
     )
     assert started_a.status_code == 201
     a_run_id = started_a.json()["data"]["run_id"]
+    orm_a = db_session.get(SimulationRun, UUID(a_run_id))
+    assert orm_a is not None
+    orm_a.current_event_id = _COUPLE_DELTA_TEST_EVENT
+    db_session.commit()
     a_event = _get_current_event(client, game_id, a_run_id)
     a_answers = _continue_answers(a_event)
     a_submit = _submit_event(client, game_id, a_run_id, a_event, a_answers)

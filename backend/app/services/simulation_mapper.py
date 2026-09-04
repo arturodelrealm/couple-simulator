@@ -174,6 +174,7 @@ def simulation_state_to_dict(state: SimulationState) -> dict[str, Any]:
         "quality_of_life": state.quality_of_life,
         "children": state.children,
         "wellness": state.wellness,
+        "mismatches": state.mismatches,
         "housing": _housing_to_dict(state.housing),
         "mascot": _mascot_to_dict(state.mascot),
         "tags": dict(state.tags),
@@ -195,6 +196,8 @@ def simulation_state_from_dict(data: dict[str, Any]) -> SimulationState:
         kwargs["children"] = int(data["children"])
     if "wellness" in data:
         kwargs["wellness"] = int(data["wellness"])
+    if "mismatches" in data:
+        kwargs["mismatches"] = int(data["mismatches"])
     if "housing" in data:
         kwargs["housing"] = _housing_from_dict(data["housing"])
     if "mascot" in data:

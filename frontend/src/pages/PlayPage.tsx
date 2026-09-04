@@ -114,7 +114,11 @@ export function PlayPage() {
   );
   const partnerBName = partnerB.nameFromApi ?? t("game.play.partnerB");
   const partnerBAge = partnerB.displayAge;
-  const contentParams = { partnerAName, partnerBName };
+  const contentParams = {
+    partnerAName,
+    partnerBName,
+    mascotName: run.state.mascot?.name ?? "",
+  };
 
   if (eventStep === "game-over") {
     return (

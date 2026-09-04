@@ -28,6 +28,7 @@ export type SimulationState = {
   quality_of_life: number;
   children: number;
   wellness: number;
+  mismatches: number;
   housing: SimulationHousing;
   mascot: SimulationMascot | null;
   tags: Record<string, unknown>;

@@ -1,0 +1,296 @@
+{
+  "id": "couples_therapy_suggestion",
+  "title": "events.couples_therapy_suggestion.title",
+  "description": "events.couples_therapy_suggestion.description",
+  "tags": ["relationship", "family", "financial", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/compatibility",
+    "op": "lt",
+    "value": 35
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "therapy_choice",
+      "text": {
+        "default_key": "events.couples_therapy_suggestion.questions.therapy_choice",
+        "by_role": {
+          "partner_b": "events.couples_therapy_suggestion.questions.therapy_choice_self"
+        }
+      },
+      "options": [
+        {
+          "id": "not_interested",
+          "text": "events.couples_therapy_suggestion.options.not_interested",
+          "actions": []
+        },
+        {
+          "id": "whatever_it_takes",
+          "text": "events.couples_therapy_suggestion.options.whatever_it_takes",
+          "actions": [
+            {
+              "type": "set_event_var",
+              "args": {
+                "variable": "therapy_roll",
+                "value": {
+                  "distribution": {
+                    "kind": "uniform",
+                    "params": { "min": 1, "max": 100 }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        {
+          "id": "budget_therapy",
+          "text": "events.couples_therapy_suggestion.options.budget_therapy",
+          "actions": [
+            {
+              "type": "set_event_var",
+              "args": {
+                "variable": "therapy_roll",
+                "value": {
+                  "distribution": {
+                    "kind": "uniform",
+                    "params": { "min": 1, "max": 100 }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "not_interested",
+      "when": {
+        "type": "compare",
+        "path": "answers/therapy_choice",
+        "op": "eq",
+        "value": "not_interested"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": -5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "compatibility",
+            "delta": -5
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.couples_therapy_suggestion.conversations.not_interested"
+          }
+        }
+      ]
+    },
+    {
+      "id": "whatever_it_takes_breakup",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/therapy_choice",
+            "op": "eq",
+            "value": "whatever_it_takes"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/therapy_roll",
+            "op": "lte",
+            "value": 35
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -15
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "compatibility",
+            "delta": -10
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.couples_therapy_suggestion.conversations.therapy_breakup"
+          }
+        }
+      ]
+    },
+    {
+      "id": "whatever_it_takes_works",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/therapy_choice",
+            "op": "eq",
+            "value": "whatever_it_takes"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/therapy_roll",
+            "op": "gt",
+            "value": 35
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -15
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "compatibility",
+            "delta": 15
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.couples_therapy_suggestion.conversations.therapy_works"
+          }
+        }
+      ]
+    },
+    {
+      "id": "budget_therapy_breakup",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/therapy_choice",
+            "op": "eq",
+            "value": "budget_therapy"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/therapy_roll",
+            "op": "lte",
+            "value": 65
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "compatibility",
+            "delta": -10
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.couples_therapy_suggestion.conversations.therapy_breakup"
+          }
+        }
+      ]
+    },
+    {
+      "id": "budget_therapy_works",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/therapy_choice",
+            "op": "eq",
+            "value": "budget_therapy"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/therapy_roll",
+            "op": "gt",
+            "value": 65
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "compatibility",
+            "delta": 15
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.couples_therapy_suggestion.conversations.therapy_works"
+          }
+        }
+      ]
+    },
+    {
+      "id": "went_to_therapy",
+      "when": {
+        "type": "compare",
+        "path": "answers/therapy_choice",
+        "op": "in",
+        "value": ["whatever_it_takes", "budget_therapy"]
+      },
+      "actions": [
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.couples_therapy_suggestion.timeline.went_to_therapy",
+            "category": "relationship"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

@@ -1,0 +1,128 @@
+{
+  "id": "unplanned_pregnancy",
+  "title": "events.unplanned_pregnancy.title",
+  "description": "events.unplanned_pregnancy.description",
+  "tags": ["family", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "all",
+    "items": [
+      {
+        "type": "compare",
+        "path": "state/tags/want_kids",
+        "op": "eq",
+        "value": false
+      },
+      {
+        "type": "compare",
+        "path": "state/children",
+        "op": "eq",
+        "value": 0
+      }
+    ]
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "what_to_do",
+      "text": "events.unplanned_pregnancy.questions.what_to_do",
+      "options": [
+        {
+          "id": "boy",
+          "text": "events.unplanned_pregnancy.options.boy",
+          "actions": []
+        },
+        {
+          "id": "girl",
+          "text": "events.unplanned_pregnancy.options.girl",
+          "actions": []
+        },
+        {
+          "id": "abortion",
+          "text": "events.unplanned_pregnancy.options.abortion",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "boy",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "boy"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "children",
+            "delta": 1
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -5
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.unplanned_pregnancy.timeline.baby_born",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "girl",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "girl"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "children",
+            "delta": 1
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -5
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.unplanned_pregnancy.timeline.baby_born",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "abortion",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "abortion"
+      },
+      "actions": []
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 0.3,
+  "max_occurrences": 1
+}

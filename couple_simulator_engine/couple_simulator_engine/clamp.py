@@ -8,6 +8,7 @@ STAT_MAX = 100
 _STAT_BOUNDS: dict[str, tuple[int | None, int | None]] = {
     "age": (AGE_MIN, None),
     "children": (CHILDREN_MIN, None),
+    "mismatches": (CHILDREN_MIN, None),
     "compatibility": (STAT_MIN, STAT_MAX),
     "finances": (STAT_MIN, STAT_MAX),
     "quality_of_life": (STAT_MIN, STAT_MAX),

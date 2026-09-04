@@ -220,6 +220,22 @@ def test_add_conversation_passthrough_text_key() -> None:
     assert result[0].args["params"]["name"] == "Alex"
 
 
+def test_add_conversation_resolves_partner_b_name_in_params() -> None:
+    session = _session()
+    partner_b = Player(id="p-b", name="Blake", sex=PlayerSex.FEMALE)
+    session.state.partner_b = partner_b
+    action = ActionDefinition(
+        type="add_conversation",
+        args={
+            "speaker": "partner_a",
+            "text_key": "events.want_kids_decision.conversations.yes",
+            "params": {"partnerBName": "{{partner_b.name}}"},
+        },
+    )
+    result = apply_action(action, _ctx(session), session, session.rng)
+    assert result[0].args["params"]["partnerBName"] == "Blake"
+
+
 def test_add_conversation_includes_text_key_alongside_literal_text() -> None:
     session = _session()
     action = ActionDefinition(

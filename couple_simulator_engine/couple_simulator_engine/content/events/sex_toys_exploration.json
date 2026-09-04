@@ -1,0 +1,172 @@
+{
+  "id": "sex_toys_exploration",
+  "title": "events.sex_toys_exploration.title",
+  "description": "events.sex_toys_exploration.description",
+  "tags": ["relationship", "leisure", "decision"],
+  "life_stage": null,
+  "eligibility": null,
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "what_to_get",
+      "text": "events.sex_toys_exploration.questions.what_to_get",
+      "options": [
+        {
+          "id": "handcuffs_ropes",
+          "text": "events.sex_toys_exploration.options.handcuffs_ropes",
+          "actions": []
+        },
+        {
+          "id": "tarzan_costume",
+          "text": "events.sex_toys_exploration.options.tarzan_costume",
+          "actions": []
+        },
+        {
+          "id": "little_whip",
+          "text": "events.sex_toys_exploration.options.little_whip",
+          "actions": []
+        },
+        {
+          "id": "skip_this_time",
+          "text": "events.sex_toys_exploration.options.skip_this_time",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "handcuffs_ropes",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_get",
+        "op": "eq",
+        "value": "handcuffs_ropes"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 1, "max": 5 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -1
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.sex_toys_exploration.conversations.handcuffs_ropes"
+          }
+        }
+      ]
+    },
+    {
+      "id": "tarzan_costume",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_get",
+        "op": "eq",
+        "value": "tarzan_costume"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 1, "max": 5 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -1
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.sex_toys_exploration.conversations.tarzan_costume"
+          }
+        }
+      ]
+    },
+    {
+      "id": "little_whip",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_get",
+        "op": "eq",
+        "value": "little_whip"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 1, "max": 5 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -1
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.sex_toys_exploration.conversations.little_whip"
+          }
+        }
+      ]
+    },
+    {
+      "id": "skip_this_time",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_get",
+        "op": "eq",
+        "value": "skip_this_time"
+      },
+      "actions": [
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.sex_toys_exploration.conversations.skip_this_time"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

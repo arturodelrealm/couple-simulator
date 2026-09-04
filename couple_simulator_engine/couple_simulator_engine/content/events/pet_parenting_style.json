@@ -1,0 +1,172 @@
+{
+  "id": "pet_parenting_style",
+  "title": "events.pet_parenting_style.title",
+  "description": "events.pet_parenting_style.description",
+  "tags": ["family", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/mascot",
+    "op": "neq",
+    "value": null
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "rearing_style",
+      "text": "events.pet_parenting_style.questions.rearing_style",
+      "options": [
+        {
+          "id": "free_roam_bedroom",
+          "text": "events.pet_parenting_style.options.free_roam_bedroom",
+          "actions": []
+        },
+        {
+          "id": "restricted_premium_food",
+          "text": "events.pet_parenting_style.options.restricted_premium_food",
+          "actions": []
+        },
+        {
+          "id": "basics_only",
+          "text": "events.pet_parenting_style.options.basics_only",
+          "actions": []
+        },
+        {
+          "id": "instagram_page",
+          "text": "events.pet_parenting_style.options.instagram_page",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "free_roam_bedroom",
+      "when": {
+        "type": "compare",
+        "path": "answers/rearing_style",
+        "op": "eq",
+        "value": "free_roam_bedroom"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": 5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": "restricted_premium_food",
+      "when": {
+        "type": "compare",
+        "path": "answers/rearing_style",
+        "op": "eq",
+        "value": "restricted_premium_food"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": 5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": -5
+          }
+        }
+      ]
+    },
+    {
+      "id": "basics_only",
+      "when": {
+        "type": "compare",
+        "path": "answers/rearing_style",
+        "op": "eq",
+        "value": "basics_only"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -5, "max": 5 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -5, "max": 5 }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "instagram_page",
+      "when": {
+        "type": "compare",
+        "path": "answers/rearing_style",
+        "op": "eq",
+        "value": "instagram_page"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": -5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": -5
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 10.0,
+  "max_occurrences": 1
+}
