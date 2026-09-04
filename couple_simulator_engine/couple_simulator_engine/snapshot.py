@@ -64,6 +64,8 @@ def copy_simulation_state(state: SimulationState) -> SimulationState:
         children=state.children,
         wellness=state.wellness,
         mismatches=state.mismatches,
+        matches=state.matches,
+        compared_questions=state.compared_questions,
         housing=copy_housing(state.housing),
         mascot=copy_mascot(state.mascot),
         tags=dict(state.tags),

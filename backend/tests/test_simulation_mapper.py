@@ -43,6 +43,8 @@ def test_simulation_state_read_omits_removed_stats():
     assert "adventures" not in SimulationStateRead.model_fields
     assert "wellness" in SimulationStateRead.model_fields
     assert "mismatches" in SimulationStateRead.model_fields
+    assert "matches" in SimulationStateRead.model_fields
+    assert "compared_questions" in SimulationStateRead.model_fields
     assert "housing" in SimulationStateRead.model_fields
     assert "mascot" in SimulationStateRead.model_fields
     assert "tags" in SimulationStateRead.model_fields
@@ -77,6 +79,9 @@ def test_from_dict_uses_engine_defaults_when_couple_stats_missing():
     assert state.life_stage == defaults.life_stage
     assert state.relationship_status == defaults.relationship_status
     assert state.wellness == defaults.wellness
+    assert state.mismatches == defaults.mismatches
+    assert state.matches == defaults.matches
+    assert state.compared_questions == defaults.compared_questions
     assert state.housing == defaults.housing
     assert state.mascot is None
     assert state.tags == {}

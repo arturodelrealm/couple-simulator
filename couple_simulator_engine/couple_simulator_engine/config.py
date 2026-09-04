@@ -2,6 +2,8 @@
 
 from dataclasses import dataclass, field
 
+DEFAULT_MAX_EVENTS = 15
+
 
 def _default_passive_income_by_band() -> dict[str, int]:
     return {"low": 4, "mid": 6, "high": 8}
@@ -9,7 +11,7 @@ def _default_passive_income_by_band() -> dict[str, int]:
 
 @dataclass
 class GameConfig:
-    max_events: int = 5
+    max_events: int = DEFAULT_MAX_EVENTS
     conflict_partner_b_weight: float = 0.65
     conflict_partner_a_weight: float = 0.35
     answer_bank_preference_boost: float = 2.0

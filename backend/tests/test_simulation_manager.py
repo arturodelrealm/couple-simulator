@@ -1,6 +1,7 @@
 from unittest.mock import patch
 
 import pytest
+from couple_simulator_engine.config import DEFAULT_MAX_EVENTS
 from couple_simulator_engine.enums import PlayerSex as EnginePlayerSex
 from couple_simulator_engine.snapshot import LoadedGame
 from sqlalchemy import select
@@ -8,12 +9,13 @@ from sqlalchemy.orm import Session
 
 from app.models.game import Game
 from app.models.player import Player
+from app.models.simulation_answer import SimulationAnswer
 from app.models.simulation_run import SimulationRun
 from app.schemas.game import GameCreate, GameUpdate
 from app.services import game_service
-from app.services.simulation_manager import SimulationManager
-from app.services.simulation_mapper import engine_sex_from_player
-from app.shared.enums import GameStatus, PlayerRole, PlayerSex
+from app.services.simulation_manager import SimulationManager, _load_game
+from app.services.simulation_mapper import engine_sex_from_player, game_snapshot_from_db
+from app.shared.enums import GameStatus, PlayerRole, PlayerSex, SimulationRunKind
 from app.shared.exceptions import AppError
 from app.shared.player_game_stats import GAME_AGE_DEFAULT
 
@@ -97,6 +99,8 @@ def test_start_run_inserts_active_run_and_leaves_lobby_age(
 
     orm_run = db_session.get(SimulationRun, view.run_id)
     assert orm_run is not None
+    assert orm_run.run_kind == SimulationRunKind.SIMULATION.value
+    assert orm_run.skipped_event_ids == []
     mutated = dict(orm_run.state_snapshot)
     mutated["partner_a"] = dict(mutated["partner_a"])
     mutated["partner_a"]["simulation_age"] = 40
@@ -731,3 +735,96 @@ def test_partner_b_submit_with_a_bank_applies_couple_match(
     match_actions = _compatibility_actions(result.client_actions)
     assert match_actions
     assert any(action["args"].get("delta") == 5 for action in match_actions)
+
+
+def test_start_run_partner_b_omitted_max_events_persists_default(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    game = _create_ready_game(
+        db_session, "sim-b-max-events-default", valid_avatar_config
+    )
+    _configure_complete_partner_b(db_session, game.id, valid_avatar_config)
+    manager = SimulationManager()
+
+    view = manager.start_run(
+        db_session,
+        game.id,
+        PlayerRole.PARTNER_B.value,
+        seed=3,
+    )
+
+    assert view.max_events == DEFAULT_MAX_EVENTS
+    assert DEFAULT_MAX_EVENTS == 15
+    orm_run = db_session.get(SimulationRun, view.run_id)
+    assert orm_run is not None
+    assert orm_run.max_events == 15
+    assert orm_run.run_kind == SimulationRunKind.SIMULATION.value
+
+
+def test_start_run_explicit_max_events_overrides_default(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    game = _create_ready_game(
+        db_session, "sim-max-events-override", valid_avatar_config
+    )
+    manager = SimulationManager()
+
+    view = manager.start_run(
+        db_session,
+        game.id,
+        PlayerRole.PARTNER_A.value,
+        seed=4,
+        max_events=3,
+    )
+
+    orm_run = db_session.get(SimulationRun, view.run_id)
+    assert orm_run is not None
+    assert orm_run.max_events == 3
+
+
+def test_partner_b_loaded_bank_includes_questionnaire_answers(
+    db_session: Session,
+    valid_avatar_config: dict[str, str],
+):
+    game = _create_ready_game(db_session, "sim-bank-from-prep", valid_avatar_config)
+    _configure_complete_partner_b(db_session, game.id, valid_avatar_config)
+    manager = SimulationManager()
+
+    prep_view = manager.start_run(
+        db_session,
+        game.id,
+        PlayerRole.PARTNER_A.value,
+        seed=5,
+    )
+    prep = db_session.get(SimulationRun, prep_view.run_id)
+    assert prep is not None
+    prep.run_kind = SimulationRunKind.QUESTIONNAIRE.value
+    prep.answers.append(
+        SimulationAnswer(
+            event_id="prep-event",
+            question_id="prep-q",
+            option_id="prep-opt",
+            sort_index=0,
+        ),
+    )
+    db_session.commit()
+
+    b_view = manager.start_run(
+        db_session,
+        game.id,
+        PlayerRole.PARTNER_B.value,
+        seed=6,
+    )
+    b_run = db_session.get(SimulationRun, b_view.run_id)
+    assert b_run is not None
+    hydrated = _load_game(db_session, game.id)
+    assert hydrated is not None
+    snapshot = game_snapshot_from_db(hydrated, b_run)
+    loaded = manager._engine.load_game(snapshot)
+    bank_keys = {
+        (entry.event_id, entry.question_id, entry.option_id)
+        for entry in loaded.answer_bank.entries
+    }
+    assert ("prep-event", "prep-q", "prep-opt") in bank_keys

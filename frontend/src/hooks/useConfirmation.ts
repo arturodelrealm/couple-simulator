@@ -8,6 +8,7 @@ import {
   type Game,
   type GameInvite,
 } from "../services/gameService";
+import { getPartnerAQuestionnaire } from "../services/partnerAQuestionnaireService";
 import {
   listSimulationRuns,
   type SimulationRunList,
@@ -31,7 +32,11 @@ export function useConfirmation() {
   const [error, setError] = useState<string | null>(null);
   const [inviteCopied, setInviteCopied] = useState(false);
   const [inviteCopyError, setInviteCopyError] = useState<string | null>(null);
-  const [hasActiveRunA, setHasActiveRunA] = useState(false);
+  const [continueQuestionnaire, setContinueQuestionnaire] = useState(false);
+  const [questionnaireProgress, setQuestionnaireProgress] = useState<{
+    current: number;
+    total: number;
+  } | null>(null);
   const [hasActiveRunB, setHasActiveRunB] = useState(false);
 
   useEffect(() => {
@@ -49,12 +54,7 @@ export function useConfirmation() {
     Promise.all([
       getGame(gameId),
       getGameInvite(gameId),
-      listSimulationRuns(gameId, {
-        status: "ACTIVE",
-        player_role: "partner_a",
-        page: 1,
-        per_page: 1,
-      }).catch(() => emptyRunList),
+      getPartnerAQuestionnaire(gameId).catch(() => null),
       listSimulationRuns(gameId, {
         status: "ACTIVE",
         player_role: "partner_b",
@@ -62,7 +62,7 @@ export function useConfirmation() {
         per_page: 1,
       }).catch(() => emptyRunList),
     ])
-      .then(([loaded, loadedInvite, runsA, runsB]) => {
+      .then(([loaded, loadedInvite, questionnaire, runsB]) => {
         saveCurrentGameFromGame(loaded);
         touchCurrentGame();
         if (!isPlayerASetupComplete(loaded)) {
@@ -71,7 +71,15 @@ export function useConfirmation() {
         }
         setGame(loaded);
         setInvite(loadedInvite);
-        setHasActiveRunA(runsA.items.length > 0);
+        if (questionnaire) {
+          const done =
+            questionnaire.progress.answered + questionnaire.progress.skipped;
+          setContinueQuestionnaire(done > 0);
+          setQuestionnaireProgress({
+            current: done,
+            total: questionnaire.progress.total,
+          });
+        }
         setHasActiveRunB(runsB.items.length > 0);
       })
       .catch((err) => {
@@ -106,8 +114,9 @@ export function useConfirmation() {
     inviteUrl,
     isLoading,
     error,
-    hasActiveRunA,
     hasActiveRunB,
+    continueQuestionnaire,
+    questionnaireProgress,
     onCopyInvite,
     inviteCopied,
     inviteCopyError,

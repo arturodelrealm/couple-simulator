@@ -55,3 +55,7 @@ export function getGameStepPath(game: Game): string {
 export function getPlayPath(gameId: string, runId: string): string {
   return `/games/${gameId}/play/${runId}`;
 }
+
+export function getPartnerAQuestionnairePath(gameId: string): string {
+  return `/games/${gameId}/partner-a/questions`;
+}

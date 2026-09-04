@@ -1,11 +1,12 @@
 """Reproducibility tests for SeededRNG and GameConfig defaults."""
 
-from couple_simulator_engine.config import GameConfig
+from couple_simulator_engine.config import DEFAULT_MAX_EVENTS, GameConfig
 from couple_simulator_engine.rng import SeededRNG
 
 
 def test_game_config_default_max_events() -> None:
-    assert GameConfig().max_events == 5
+    assert GameConfig().max_events == DEFAULT_MAX_EVENTS
+    assert DEFAULT_MAX_EVENTS == 15
 
 
 def test_omitted_seed_is_stored_as_int() -> None:

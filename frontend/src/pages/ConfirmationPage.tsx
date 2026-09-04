@@ -22,8 +22,9 @@ export function ConfirmationPage() {
     inviteUrl,
     isLoading,
     error,
-    hasActiveRunA,
     hasActiveRunB,
+    continueQuestionnaire,
+    questionnaireProgress,
     onCopyInvite,
     inviteCopied,
     inviteCopyError,
@@ -72,7 +73,15 @@ export function ConfirmationPage() {
       <ConfirmActions
         gameId={gameId}
         canPlay={isGameReadyToPlay(game)}
-        hasActiveRunA={hasActiveRunA}
+        continueQuestionnaire={continueQuestionnaire}
+        questionnaireProgressLabel={
+          questionnaireProgress
+            ? t("game.questionnaire.progress", {
+                current: questionnaireProgress.current,
+                total: questionnaireProgress.total,
+              })
+            : null
+        }
         hasActiveRunB={hasActiveRunB}
         partnerBComplete={isPlayerBSetupComplete(game)}
       />

@@ -105,6 +105,13 @@ def _apply_actions(
             client_actions.extend(apply_action(action, ctx, session, session.rng))
 
 
+def _advance_one_year(session: GameSession) -> list[ClientAction]:
+    """Advance both partners' simulation age by one year after the event."""
+    for partner in session.state.partners():
+        partner.set_simulation_age(partner.simulation_age + 1)
+    return [ClientAction(type="advance_year", args={"age": session.state.age})]
+
+
 def _game_finished(
     session: GameSession, client_actions: Sequence[ClientAction]
 ) -> bool:
@@ -240,6 +247,10 @@ def resolve_event(
             flags=flags,
         )
 
+    if flags is not None:
+        session.state.matches += int(flags["match_count"])
+        session.state.compared_questions += len(event.questions)
+
     if flags is not None and event.apply_couple_deltas:
         if disagreements:
             session.state.mismatches += len(disagreements)
@@ -279,6 +290,7 @@ def resolve_event(
             flags=flags,
         )
 
+    client_actions.extend(_advance_one_year(session))
     client_actions.extend(
         apply_post_event_economy(
             session,

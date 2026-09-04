@@ -29,6 +29,8 @@ export type SimulationState = {
   children: number;
   wellness: number;
   mismatches: number;
+  matches: number;
+  compared_questions: number;
   housing: SimulationHousing;
   mascot: SimulationMascot | null;
   tags: Record<string, unknown>;

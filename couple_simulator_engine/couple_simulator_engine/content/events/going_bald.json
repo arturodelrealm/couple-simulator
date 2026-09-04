@@ -85,7 +85,7 @@
           "args": {
             "player": "partner_b",
             "attribute": "topVariant",
-            "value": "sides"
+            "value": "noHair"
           }
         }
       ]

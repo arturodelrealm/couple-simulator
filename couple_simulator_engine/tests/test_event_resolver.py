@@ -657,6 +657,8 @@ def test_mismatches_increment_per_disagreeing_question() -> None:
         ],
     )
     assert session.state.mismatches == 2
+    assert session.state.matches == 0
+    assert session.state.compared_questions == 2
 
 
 def _zero_effect_event(event_id: str = "noop_tick") -> EventDefinition:
@@ -719,3 +721,36 @@ def test_resolve_emits_post_event_economy_action() -> None:
     assert economy[0].args["upkeep_housing"] == 0
     assert economy[0].args["net"] == 2
     assert economy[0].args["income_band"] is None
+
+
+def test_resolve_advances_one_year_after_event() -> None:
+    session = _session(age=22)
+    resolution = resolve_event(
+        session,
+        _zero_effect_event(),
+        [Answer(question_id="q1", option_id="ok")],
+    )
+    assert session.state.age == 23
+    assert session.state.partner_a.simulation_age == 23
+    assert session.state.partner_b.simulation_age == 23
+    years = [
+        action
+        for action in resolution.client_actions
+        if action.type == "advance_year"
+    ]
+    assert len(years) == 1
+    assert years[0].args["age"] == 23
+
+
+def test_matching_answers_increment_matches() -> None:
+    event = _choice_event()
+    session = _partner_b_session()
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_a")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
+    )
+    assert session.state.matches == 1
+    assert session.state.compared_questions == 1
+    assert session.state.mismatches == 0

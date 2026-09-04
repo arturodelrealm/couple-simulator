@@ -24,6 +24,8 @@ def test_default_initial_values() -> None:
     assert state.children == 0
     assert state.wellness == 50
     assert state.mismatches == 0
+    assert state.matches == 0
+    assert state.compared_questions == 0
     assert state.mascot is None
     assert state.tags == {}
     assert state.housing.place == "Providencia"

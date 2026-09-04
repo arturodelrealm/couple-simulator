@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 import {
+  getPartnerAQuestionnairePath,
   getPlayEntryPath,
   getPlayerBSetupPath,
 } from "../../shared/gameNavigation";
@@ -9,7 +10,8 @@ import {
 export type ConfirmActionsProps = {
   gameId: string;
   canPlay: boolean;
-  hasActiveRunA: boolean;
+  continueQuestionnaire: boolean;
+  questionnaireProgressLabel: string | null;
   hasActiveRunB: boolean;
   partnerBComplete: boolean;
 };
@@ -26,7 +28,8 @@ const disabledCta =
 export function ConfirmActions({
   gameId,
   canPlay,
-  hasActiveRunA,
+  continueQuestionnaire,
+  questionnaireProgressLabel,
   hasActiveRunB,
   partnerBComplete,
 }: ConfirmActionsProps) {
@@ -36,19 +39,26 @@ export function ConfirmActions({
   return (
     <div className="flex flex-col gap-3">
       {canPlay ? (
-        <Link
-          to={getPlayEntryPath(gameId, "partner_a")}
-          className={gradientCta}
-          style={{
-            background: "linear-gradient(135deg, #a78bfa, #f472b6)",
-          }}
-        >
-          {t(
-            hasActiveRunA
-              ? "game.play.continueAsPartnerA"
-              : "game.play.startAsPartnerA",
-          )}
-        </Link>
+        <div className="space-y-2">
+          <Link
+            to={getPartnerAQuestionnairePath(gameId)}
+            className={gradientCta}
+            style={{
+              background: "linear-gradient(135deg, #a78bfa, #f472b6)",
+            }}
+          >
+            {t(
+              continueQuestionnaire
+                ? "game.questionnaire.continueCta"
+                : "game.questionnaire.startCta",
+            )}
+          </Link>
+          {questionnaireProgressLabel ? (
+            <p className="text-center text-sm text-slate-500">
+              {questionnaireProgressLabel}
+            </p>
+          ) : null}
+        </div>
       ) : null}
       {canPlayAsB ? (
         <Link

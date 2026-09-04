@@ -26,3 +26,8 @@ class PlayerSex(str, Enum):
 class SimulationRunStatus(str, Enum):
     ACTIVE = "ACTIVE"
     FINISHED = "FINISHED"
+
+
+class SimulationRunKind(str, Enum):
+    SIMULATION = "simulation"
+    QUESTIONNAIRE = "questionnaire"

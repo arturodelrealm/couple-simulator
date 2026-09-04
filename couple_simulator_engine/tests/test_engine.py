@@ -54,7 +54,7 @@ def test_new_session_places_player_on_partner_a_and_begins_simulation() -> None:
     assert session.state.partner_b.simulation_age == session.state.partner_b.game_age
     assert isinstance(session.rng.seed, int)
     assert session.rng.seed == 42
-    assert session.config.max_events == 5
+    assert session.config.max_events == 15
 
 
 def test_new_session_omitted_partner_b_uses_default() -> None:
