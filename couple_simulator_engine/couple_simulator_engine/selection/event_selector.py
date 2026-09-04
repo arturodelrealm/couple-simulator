@@ -49,17 +49,30 @@ def eligible_events(
     )
 
 
+def _resolve_base_weight(session: GameSession, event: EventDefinition) -> float:
+    """Return ``event.weight``, or the first matching ``weight_rules`` entry."""
+    if not event.weight_rules:
+        return event.weight
+    ctx = build_evaluation_context(session, event, [])
+    for rule in event.weight_rules:
+        if should_apply(rule.when, ctx):
+            return rule.weight
+    return event.weight
+
+
 def _selection_weight(
+    session: GameSession,
     event: EventDefinition,
     *,
     bank: AnswerBank | None,
     boost: float,
 ) -> float:
+    base = _resolve_base_weight(session, event)
     if bank is None or not event.use_answer_bank:
-        return event.weight
+        return base
     if bank.partner_a_answers(event) is None:
-        return event.weight
-    return event.weight * boost
+        return base
+    return base * boost
 
 
 def _pick_weighted(
@@ -74,7 +87,8 @@ def _pick_weighted(
     bank = loaded.answer_bank if prefer_bank else None
     boost = session.config.answer_bank_preference_boost if prefer_bank else 1.0
     pairs = [
-        (event, _selection_weight(event, bank=bank, boost=boost)) for event in eligible
+        (event, _selection_weight(session, event, bank=bank, boost=boost))
+        for event in eligible
     ]
     return session.rng.weighted_choice(pairs)
 

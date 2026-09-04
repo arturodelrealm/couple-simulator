@@ -1,0 +1,258 @@
+{
+  "id": "buy_mid_range_car",
+  "title": "events.buy_mid_range_car.title",
+  "description": "events.buy_mid_range_car.description",
+  "tags": ["financial", "leisure", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/finances",
+    "op": "gt",
+    "value": 40
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "which_car",
+      "text": "events.buy_mid_range_car.questions.which_car",
+      "options": [
+        {
+          "id": "chevrolet_onix",
+          "text": "events.buy_mid_range_car.options.chevrolet_onix",
+          "actions": []
+        },
+        {
+          "id": "nissan_kicks",
+          "text": "events.buy_mid_range_car.options.nissan_kicks",
+          "actions": []
+        },
+        {
+          "id": "toyota_corolla",
+          "text": "events.buy_mid_range_car.options.toyota_corolla",
+          "actions": []
+        },
+        {
+          "id": "mazda_3",
+          "text": "events.buy_mid_range_car.options.mazda_3",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "chevrolet_onix",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_car",
+        "op": "eq",
+        "value": "chevrolet_onix"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "car",
+            "value": "Chevrolet Onix"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -10
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 2, "max": 5 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.buy_mid_range_car.conversations.chevrolet_onix"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.buy_mid_range_car.timeline.chevrolet_onix",
+            "category": "financial"
+          }
+        }
+      ]
+    },
+    {
+      "id": "nissan_kicks",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_car",
+        "op": "eq",
+        "value": "nissan_kicks"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "car",
+            "value": "Nissan Kicks"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -12
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 3, "max": 6 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.buy_mid_range_car.conversations.nissan_kicks"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.buy_mid_range_car.timeline.nissan_kicks",
+            "category": "financial"
+          }
+        }
+      ]
+    },
+    {
+      "id": "toyota_corolla",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_car",
+        "op": "eq",
+        "value": "toyota_corolla"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "car",
+            "value": "Toyota Corolla"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -15
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 4, "max": 7 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.buy_mid_range_car.conversations.toyota_corolla"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.buy_mid_range_car.timeline.toyota_corolla",
+            "category": "financial"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mazda_3",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_car",
+        "op": "eq",
+        "value": "mazda_3"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "car",
+            "value": "Mazda 3"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -18
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 5, "max": 8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.buy_mid_range_car.conversations.mazda_3"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.buy_mid_range_car.timeline.mazda_3",
+            "category": "financial"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.buy_mid_range_car.conversations.mismatch"
+      }
+    }
+  ]
+}

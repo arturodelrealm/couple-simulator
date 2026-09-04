@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+from fixture_events import FIXTURE_EVENTS_DIRECTORY
+
 from couple_simulator_engine.config import GameConfig
 from couple_simulator_engine.content.catalog import (
     ContentCatalog,
@@ -23,16 +25,11 @@ def _player() -> Player:
 
 
 def _continue_answers(event: EventDefinition) -> list[Answer]:
-    """Pick options that do not trigger ``end_game`` (burnout quit)."""
-    answers: list[Answer] = []
-    for question in event.questions:
-        option_id = question.options[0].id
-        if event.id == "burnout":
-            option_id = next(
-                option.id for option in question.options if option.id == "push_through"
-            )
-        answers.append(Answer(question_id=question.id, option_id=option_id))
-    return answers
+    """Pick the first option for each question."""
+    return [
+        Answer(question_id=question.id, option_id=question.options[0].id)
+        for question in event.questions
+    ]
 
 
 def _run_until_finished(engine: GameEngine, session: GameSession) -> None:
@@ -73,7 +70,7 @@ def test_session_ends_when_max_events_reached() -> None:
 
 
 def test_burnout_end_game_finishes_session_early() -> None:
-    catalog = load_catalog(package_events_directory())
+    catalog = load_catalog(FIXTURE_EVENTS_DIRECTORY)
     burnout = catalog.get("burnout")
     assert burnout is not None
     engine = GameEngine(ContentCatalog([burnout]), GameConfig(max_events=5))

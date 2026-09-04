@@ -70,7 +70,11 @@ def _current_event_payload(view: CurrentEventView) -> dict:
             for question in view.event["questions"]
         ],
     )
-    return CurrentEventRead(run_id=view.run_id, event=event).model_dump()
+    return CurrentEventRead(
+        run_id=view.run_id,
+        event=event,
+        partner_answers=view.partner_answers,
+    ).model_dump()
 
 
 def _submit_payload(view: SubmitAnswersView) -> dict:

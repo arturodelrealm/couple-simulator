@@ -1,0 +1,365 @@
+{
+  "id": "how_well_do_you_know",
+  "title": "events.how_well_do_you_know.title",
+  "description": "events.how_well_do_you_know.description",
+  "tags": ["relationship", "leisure"],
+  "life_stage": null,
+  "eligibility": null,
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "first_kiss",
+      "text": {
+        "default_key": "events.how_well_do_you_know.questions.first_kiss",
+        "by_role": {
+          "partner_b": "events.how_well_do_you_know.questions.first_kiss_guess"
+        }
+      },
+      "options": [
+        {
+          "id": "partner_a",
+          "text": "events.how_well_do_you_know.options.partner_a",
+          "actions": []
+        },
+        {
+          "id": "partner_b",
+          "text": "events.how_well_do_you_know.options.partner_b",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "better_gifts",
+      "text": {
+        "default_key": "events.how_well_do_you_know.questions.better_gifts",
+        "by_role": {
+          "partner_b": "events.how_well_do_you_know.questions.better_gifts_guess"
+        }
+      },
+      "options": [
+        {
+          "id": "partner_a",
+          "text": "events.how_well_do_you_know.options.partner_a",
+          "actions": []
+        },
+        {
+          "id": "partner_b",
+          "text": "events.how_well_do_you_know.options.partner_b",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "messier",
+      "text": {
+        "default_key": "events.how_well_do_you_know.questions.messier",
+        "by_role": {
+          "partner_b": "events.how_well_do_you_know.questions.messier_guess"
+        }
+      },
+      "options": [
+        {
+          "id": "partner_a",
+          "text": "events.how_well_do_you_know.options.partner_a",
+          "actions": []
+        },
+        {
+          "id": "partner_b",
+          "text": "events.how_well_do_you_know.options.partner_b",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "more_jealous",
+      "text": {
+        "default_key": "events.how_well_do_you_know.questions.more_jealous",
+        "by_role": {
+          "partner_b": "events.how_well_do_you_know.questions.more_jealous_guess"
+        }
+      },
+      "options": [
+        {
+          "id": "partner_a",
+          "text": "events.how_well_do_you_know.options.partner_a",
+          "actions": []
+        },
+        {
+          "id": "partner_b",
+          "text": "events.how_well_do_you_know.options.partner_b",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "better_cook",
+      "text": {
+        "default_key": "events.how_well_do_you_know.questions.better_cook",
+        "by_role": {
+          "partner_b": "events.how_well_do_you_know.questions.better_cook_guess"
+        }
+      },
+      "options": [
+        {
+          "id": "partner_a",
+          "text": "events.how_well_do_you_know.options.partner_a",
+          "actions": []
+        },
+        {
+          "id": "partner_b",
+          "text": "events.how_well_do_you_know.options.partner_b",
+          "actions": []
+        }
+      ]
+    },
+    {
+      "id": "said_love_first",
+      "text": {
+        "default_key": "events.how_well_do_you_know.questions.said_love_first",
+        "by_role": {
+          "partner_b": "events.how_well_do_you_know.questions.said_love_first_guess"
+        }
+      },
+      "options": [
+        {
+          "id": "partner_a",
+          "text": "events.how_well_do_you_know.options.partner_a",
+          "actions": []
+        },
+        {
+          "id": "partner_b",
+          "text": "events.how_well_do_you_know.options.partner_b",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "score_0",
+      "when": {
+        "type": "compare",
+        "path": "flags/match_count",
+        "op": "eq",
+        "value": 0
+      },
+      "actions": [
+        {
+          "type": "set_stat",
+          "args": { "variable": "compatibility", "value": 10 }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "both",
+            "text_key": "events.how_well_do_you_know.conversations.score_0"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.how_well_do_you_know.timeline.quiz",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "score_1",
+      "when": {
+        "type": "compare",
+        "path": "flags/match_count",
+        "op": "eq",
+        "value": 1
+      },
+      "actions": [
+        {
+          "type": "set_stat",
+          "args": { "variable": "compatibility", "value": 20 }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "both",
+            "text_key": "events.how_well_do_you_know.conversations.score_1"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.how_well_do_you_know.timeline.quiz",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "score_2",
+      "when": {
+        "type": "compare",
+        "path": "flags/match_count",
+        "op": "eq",
+        "value": 2
+      },
+      "actions": [
+        {
+          "type": "set_stat",
+          "args": { "variable": "compatibility", "value": 30 }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "both",
+            "text_key": "events.how_well_do_you_know.conversations.score_2"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.how_well_do_you_know.timeline.quiz",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "score_3",
+      "when": {
+        "type": "compare",
+        "path": "flags/match_count",
+        "op": "eq",
+        "value": 3
+      },
+      "actions": [
+        {
+          "type": "set_stat",
+          "args": { "variable": "compatibility", "value": 40 }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "both",
+            "text_key": "events.how_well_do_you_know.conversations.score_3"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.how_well_do_you_know.timeline.quiz",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "score_4",
+      "when": {
+        "type": "compare",
+        "path": "flags/match_count",
+        "op": "eq",
+        "value": 4
+      },
+      "actions": [
+        {
+          "type": "set_stat",
+          "args": { "variable": "compatibility", "value": 50 }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "both",
+            "text_key": "events.how_well_do_you_know.conversations.score_4"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.how_well_do_you_know.timeline.quiz",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "score_5",
+      "when": {
+        "type": "compare",
+        "path": "flags/match_count",
+        "op": "eq",
+        "value": 5
+      },
+      "actions": [
+        {
+          "type": "set_stat",
+          "args": { "variable": "compatibility", "value": 60 }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "both",
+            "text_key": "events.how_well_do_you_know.conversations.score_5"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.how_well_do_you_know.timeline.quiz",
+            "category": "relationship"
+          }
+        }
+      ]
+    },
+    {
+      "id": "score_6",
+      "when": {
+        "type": "compare",
+        "path": "flags/match_count",
+        "op": "eq",
+        "value": 6
+      },
+      "actions": [
+        {
+          "type": "set_stat",
+          "args": { "variable": "compatibility", "value": 70 }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "both",
+            "text_key": "events.how_well_do_you_know.conversations.score_6"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.how_well_do_you_know.timeline.quiz",
+            "category": "relationship"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [
+    {
+      "type": "set_stat",
+      "args": { "variable": "compatibility", "value": 70 }
+    },
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "both",
+        "text_key": "events.how_well_do_you_know.conversations.score_6"
+      }
+    },
+    {
+      "type": "add_timeline_entry",
+      "args": {
+        "title_key": "events.how_well_do_you_know.timeline.quiz",
+        "category": "relationship"
+      }
+    }
+  ],
+  "mismatch_actions": [],
+  "weight": 100000.0,
+  "max_occurrences": 1
+}

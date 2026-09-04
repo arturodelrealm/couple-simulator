@@ -1,0 +1,76 @@
+{
+  "id": "separation_closure",
+  "title": "events.separation_closure.title",
+  "description": "events.separation_closure.description",
+  "tags": ["relationship"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "all",
+    "items": [
+      {
+        "type": "compare",
+        "path": "state/relationship_status",
+        "op": "eq",
+        "value": "separated"
+      },
+      {
+        "type": "compare",
+        "path": "state/tags/try_return",
+        "op": "eq",
+        "value": true
+      }
+    ]
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "farewell",
+      "text": "events.separation_closure.questions.farewell",
+      "options": [
+        {
+          "id": "say_goodbye",
+          "text": "events.separation_closure.options.say_goodbye",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "final_farewell",
+      "actions": [
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.separation_closure.conversations.partner_a"
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_b",
+            "text_key": "events.separation_closure.conversations.partner_b"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.separation_closure.timeline.final_goodbye",
+            "category": "relationship"
+          }
+        },
+        {
+          "type": "end_game",
+          "args": {
+            "reason": "separation_closure"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 100000.0,
+  "max_occurrences": 1
+}

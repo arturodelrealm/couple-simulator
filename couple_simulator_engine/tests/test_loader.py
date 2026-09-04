@@ -128,10 +128,52 @@ def test_optional_fields_use_spec_defaults(tmp_path: Path) -> None:
     assert event.default_actions == ()
     assert event.mismatch_actions == ()
     assert event.weight == 1.0
+    assert event.weight_rules == ()
     assert event.max_occurrences == 1
     assert event.player_role is None
     assert event.use_answer_bank is True
     assert event.questions[0].options[0].actions == ()
+
+
+def test_weight_rules_parsed(tmp_path: Path) -> None:
+    payload = _minimal_event(
+        weight=1.0,
+        weight_rules=[
+            {
+                "when": {
+                    "type": "compare",
+                    "path": "state/compatibility",
+                    "op": "lt",
+                    "value": 20,
+                },
+                "weight": 2.0,
+            }
+        ],
+    )
+    event = load_event_file(_write_event(tmp_path, "weighted.json", payload))
+
+    assert event.weight == 1.0
+    assert len(event.weight_rules) == 1
+    assert event.weight_rules[0].weight == 2.0
+    assert event.weight_rules[0].when is not None
+    assert event.weight_rules[0].when["path"] == "state/compatibility"
+
+
+def test_weight_rule_missing_weight_raises(tmp_path: Path) -> None:
+    payload = _minimal_event(
+        weight_rules=[
+            {
+                "when": {
+                    "type": "compare",
+                    "path": "state/age",
+                    "op": "gt",
+                    "value": 0,
+                }
+            }
+        ],
+    )
+    with pytest.raises(ContentParseError, match="requires field 'weight'"):
+        load_event_file(_write_event(tmp_path, "bad_weight_rule.json", payload))
 
 
 def test_eligibility_and_when_null_stored_as_none(tmp_path: Path) -> None:

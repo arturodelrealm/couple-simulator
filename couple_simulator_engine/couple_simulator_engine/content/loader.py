@@ -14,6 +14,7 @@ from couple_simulator_engine.content.definitions import (
     QuestionDefinition,
     TextField,
     TextPresentation,
+    WeightRuleDefinition,
 )
 from couple_simulator_engine.enums import LifeStage, PlayerRole
 
@@ -117,6 +118,7 @@ def _parse_event(data: dict[str, Any], *, source: str) -> EventDefinition:
             **ctx,
         ),
         weight=_parse_float(data.get("weight", DEFAULT_WEIGHT), field="weight", **ctx),
+        weight_rules=_parse_weight_rules(data.get("weight_rules", []), **ctx),
         max_occurrences=_parse_int(
             data.get("max_occurrences", DEFAULT_MAX_OCCURRENCES),
             field="max_occurrences",
@@ -288,6 +290,56 @@ def _parse_option(
         **ctx,
     )
     return OptionDefinition(id=option_id, text=text, actions=actions)
+
+
+def _parse_weight_rules(
+    data: Any,
+    *,
+    source: str,
+    event_id: str,
+) -> tuple[WeightRuleDefinition, ...]:
+    ctx = {"source": source, "event_id": event_id}
+    if not isinstance(data, list):
+        raise ContentParseError(
+            _format_error("Field 'weight_rules' must be a list", **ctx)
+        )
+    return tuple(
+        _parse_weight_rule(item, index=index, **ctx) for index, item in enumerate(data)
+    )
+
+
+def _parse_weight_rule(
+    data: Any,
+    *,
+    index: int,
+    source: str,
+    event_id: str,
+) -> WeightRuleDefinition:
+    ctx = {"source": source, "event_id": event_id}
+    if not isinstance(data, dict):
+        raise ContentParseError(
+            _format_error(
+                f"Weight rule at index {index} must be an object",
+                **ctx,
+            )
+        )
+    if "weight" not in data:
+        raise ContentParseError(
+            _format_error(
+                f"Weight rule at index {index} requires field 'weight'",
+                **ctx,
+            )
+        )
+    return WeightRuleDefinition(
+        when=_optional_condition(
+            data.get("when"), field=f"weight_rules[{index}] when", **ctx
+        ),
+        weight=_parse_float(
+            data["weight"],
+            field=f"weight_rules[{index}] weight",
+            **ctx,
+        ),
+    )
 
 
 def _parse_outcome(

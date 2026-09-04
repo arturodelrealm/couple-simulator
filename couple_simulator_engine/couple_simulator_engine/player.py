@@ -22,7 +22,7 @@ class Player:
     game_relation_happiness: int = DEFAULT_RELATION_HAPPINESS
     simulation_age: int = DEFAULT_GAME_AGE
     simulation_relation_happiness: int = DEFAULT_RELATION_HAPPINESS
-    avatar_config: dict[str, str] | None = None
+    avatar_config: dict[str, str | int] | None = None
 
     def begin_simulation(self) -> None:
         """Copy game stats into this run without changing persisted game fields."""

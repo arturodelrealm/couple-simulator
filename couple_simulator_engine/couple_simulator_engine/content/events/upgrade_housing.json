@@ -1,0 +1,286 @@
+{
+  "id": "upgrade_housing",
+  "title": "events.upgrade_housing.title",
+  "description": "events.upgrade_housing.description",
+  "tags": ["financial", "housing", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/finances",
+    "op": "gt",
+    "value": 75
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "which_home",
+      "text": "events.upgrade_housing.questions.which_home",
+      "options": [
+        {
+          "id": "trapenses_house",
+          "text": "events.upgrade_housing.options.trapenses_house",
+          "actions": []
+        },
+        {
+          "id": "nunoa_apartment",
+          "text": "events.upgrade_housing.options.nunoa_apartment",
+          "actions": []
+        },
+        {
+          "id": "pedro_valdivia_apartment",
+          "text": "events.upgrade_housing.options.pedro_valdivia_apartment",
+          "actions": []
+        },
+        {
+          "id": "chicureo_house",
+          "text": "events.upgrade_housing.options.chicureo_house",
+          "actions": []
+        },
+        {
+          "id": "metro_salvador_apartment",
+          "text": "events.upgrade_housing.options.metro_salvador_apartment",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "trapenses_house",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_home",
+        "op": "eq",
+        "value": "trapenses_house"
+      },
+      "actions": [
+        {
+          "type": "set_housing",
+          "args": {
+            "place": "Los Trapenses",
+            "type": "house",
+            "quality": "ok"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 1, "max": 15 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.upgrade_housing.conversations.trapenses_house"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.upgrade_housing.timeline.trapenses_house",
+            "category": "housing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "nunoa_apartment",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_home",
+        "op": "eq",
+        "value": "nunoa_apartment"
+      },
+      "actions": [
+        {
+          "type": "set_housing",
+          "args": {
+            "place": "Ñuñoa",
+            "type": "apartment",
+            "quality": "excellent"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 1, "max": 15 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.upgrade_housing.conversations.nunoa_apartment"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.upgrade_housing.timeline.nunoa_apartment",
+            "category": "housing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "pedro_valdivia_apartment",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_home",
+        "op": "eq",
+        "value": "pedro_valdivia_apartment"
+      },
+      "actions": [
+        {
+          "type": "set_housing",
+          "args": {
+            "place": "Pedro de Valdivia Norte",
+            "type": "apartment",
+            "quality": "ok"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 1, "max": 15 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.upgrade_housing.conversations.pedro_valdivia_apartment"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.upgrade_housing.timeline.pedro_valdivia_apartment",
+            "category": "housing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "chicureo_house",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_home",
+        "op": "eq",
+        "value": "chicureo_house"
+      },
+      "actions": [
+        {
+          "type": "set_housing",
+          "args": {
+            "place": "Chicureo",
+            "type": "house",
+            "quality": "excellent"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 1, "max": 15 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.upgrade_housing.conversations.chicureo_house"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.upgrade_housing.timeline.chicureo_house",
+            "category": "housing"
+          }
+        }
+      ]
+    },
+    {
+      "id": "metro_salvador_apartment",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_home",
+        "op": "eq",
+        "value": "metro_salvador_apartment"
+      },
+      "actions": [
+        {
+          "type": "set_housing",
+          "args": {
+            "place": "Metro Salvador",
+            "type": "apartment",
+            "quality": "excellent"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 1, "max": 15 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.upgrade_housing.conversations.metro_salvador_apartment"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.upgrade_housing.timeline.metro_salvador_apartment",
+            "category": "housing"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.upgrade_housing.conversations.mismatch"
+      }
+    }
+  ],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

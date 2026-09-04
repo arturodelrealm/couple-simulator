@@ -12,13 +12,14 @@ export type PlayPartnerBIdentity = {
 export function resolvePlayPartnerB(
   game: Game,
   simulationAge: number,
+  simulationAvatar?: AvatarConfig | null,
 ): PlayPartnerBIdentity {
   const partnerB = game.partner_b;
   if (partnerB) {
     const name = partnerB.name?.trim() ? partnerB.name : null;
     return {
       nameFromApi: name,
-      avatarConfig: partnerB.avatar_config ?? {},
+      avatarConfig: simulationAvatar ?? partnerB.avatar_config ?? {},
       seed: name ?? game.id,
       displayAge: simulationAge,
     };
@@ -27,7 +28,7 @@ export function resolvePlayPartnerB(
   const fallback = getOrCreatePartnerBPreferences(game.id, simulationAge);
   return {
     nameFromApi: null,
-    avatarConfig: fallback.avatar_config,
+    avatarConfig: simulationAvatar ?? fallback.avatar_config,
     seed: `${game.id}-partner-b`,
     displayAge: fallback.display_age,
   };

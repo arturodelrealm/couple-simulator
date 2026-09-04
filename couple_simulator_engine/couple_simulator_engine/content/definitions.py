@@ -50,6 +50,14 @@ class OutcomeDefinition:
 
 
 @dataclass(frozen=True)
+class WeightRuleDefinition:
+    """Optional conditional override for event selection weight."""
+
+    when: dict[str, Any] | None
+    weight: float
+
+
+@dataclass(frozen=True)
 class EventDefinition:
     id: str
     title: str
@@ -62,6 +70,7 @@ class EventDefinition:
     default_actions: tuple[ActionDefinition, ...]
     mismatch_actions: tuple[ActionDefinition, ...]
     weight: float = 1.0
+    weight_rules: tuple[WeightRuleDefinition, ...] = ()
     max_occurrences: int = 1
     player_role: PlayerRole | None = None
     use_answer_bank: bool = True

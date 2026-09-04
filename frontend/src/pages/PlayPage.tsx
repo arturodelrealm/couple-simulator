@@ -11,6 +11,7 @@ import { GameOverScreen } from "../components/play/GameOverScreen";
 import { HouseholdPanel } from "../components/play/HouseholdPanel";
 import { LifeStoryPanel } from "../components/play/LifeStoryPanel";
 import { NextQuestionButton } from "../components/play/NextQuestionButton";
+import { PartnerAnswerReveal } from "../components/play/PartnerAnswerReveal";
 import { PlayLayout } from "../components/play/PlayLayout";
 import { StatsBar, type StatsBarValues } from "../components/play/StatsBar";
 import { useSimulationPlay } from "../hooks/useSimulationPlay";
@@ -42,6 +43,11 @@ export function PlayPage() {
     eventStep,
     currentQuestion,
     selectedOptionId,
+    partnerOptionId,
+    partnerRevealPhase,
+    choicesLocked,
+    showAdvanceButton,
+    advanceDisabled,
     hasMoreQuestions,
     dialogue,
     isLoading,
@@ -101,9 +107,14 @@ export function PlayPage() {
 
   const stats = statsFromState(run.state);
   const partnerAName = game.partner_a.name ?? "";
-  const partnerB = resolvePlayPartnerB(game, run.state.age);
+  const partnerB = resolvePlayPartnerB(
+    game,
+    run.state.age,
+    run.state.partner_b_avatar,
+  );
   const partnerBName = partnerB.nameFromApi ?? t("game.play.partnerB");
   const partnerBAge = partnerB.displayAge;
+  const contentParams = { partnerAName, partnerBName };
 
   if (eventStep === "game-over") {
     return (
@@ -124,13 +135,15 @@ export function PlayPage() {
   }
 
   const showChoices = eventStep === "answering" || eventStep === "submitting";
-  const choicesDisabled = eventStep !== "answering";
+  const choicesDisabled = choicesLocked;
 
   return (
     <PlayLayout progressFillPercent={Math.min(100, run.events_played * 20)}>
       <CoupleHeader
         partnerAName={partnerAName}
-        partnerAAvatar={game.partner_a.avatar_config ?? {}}
+        partnerAAvatar={
+          run.state.partner_a_avatar ?? game.partner_a.avatar_config ?? {}
+        }
         partnerASeed={gameId}
         partnerBAvatar={partnerB.avatarConfig}
         partnerBSeed={partnerB.seed}
@@ -146,10 +159,13 @@ export function PlayPage() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-[1fr_300px] lg:items-start">
         {currentEvent ? (
           <EventCard
-            title={translateContent(currentEvent.event.title)}
+            title={translateContent(currentEvent.event.title, contentParams)}
             description={
               currentEvent.event.description
-                ? translateContent(currentEvent.event.description)
+                ? translateContent(
+                    currentEvent.event.description,
+                    contentParams,
+                  )
                 : null
             }
           >
@@ -159,22 +175,46 @@ export function PlayPage() {
                   {t("game.play.choicesPrompt")}
                 </p>
                 <p className="text-sm leading-relaxed text-slate-600">
-                  {translateContent(currentQuestion.text)}
+                  {translateContent(currentQuestion.text, contentParams)}
                 </p>
                 {currentQuestion.options.map((option, index) => (
                   <ChoiceCard
                     key={option.id}
                     index={index}
-                    text={translateContent(option.text)}
+                    text={translateContent(option.text, contentParams)}
                     selected={selectedOptionId === option.id}
+                    partnerPicked={
+                      partnerRevealPhase === "revealed" &&
+                      partnerOptionId === option.id
+                    }
+                    partnerLabel={
+                      partnerAName.trim() ||
+                      t("game.play.partnerReveal.theirChoice")
+                    }
                     disabled={choicesDisabled}
                     onSelect={() => selectOption(option.id)}
                   />
                 ))}
-                {hasMoreQuestions ? (
+                <PartnerAnswerReveal
+                  phase={partnerRevealPhase}
+                  missing={
+                    partnerRevealPhase === "revealed" &&
+                    partnerOptionId === null
+                  }
+                  partnerName={
+                    partnerAName.trim() ||
+                    t("game.play.partnerReveal.theirChoice")
+                  }
+                />
+                {showAdvanceButton ? (
                   <NextQuestionButton
                     onClick={goToNextQuestion}
-                    disabled={choicesDisabled || selectedOptionId === null}
+                    disabled={advanceDisabled}
+                    label={
+                      hasMoreQuestions
+                        ? undefined
+                        : t("game.play.continueNextEvent")
+                    }
                   />
                 ) : null}
               </>

@@ -96,6 +96,11 @@
       "completePartnerBFirst": "Completa primero la configuración de la pareja B.",
       "continueNextEvent": "Continuar",
       "nextQuestion": "Siguiente pregunta",
+      "partnerReveal": {
+        "waiting": "Veamos qué opina tu pareja...",
+        "theirChoice": "Tu pareja",
+        "missing": "{{name}} no respondió esta."
+      },
       "partnerB": "Pareja B",
       "age": "Edad {{age}}",
       "childrenOverflow": "+{{count}}",
@@ -261,6 +266,329 @@
       "options": {
         "quit_job": "Renunciar",
         "push_through": "Aguantar"
+      }
+    },
+    "going_bald": {
+      "title": "El parrón",
+      "description": "Se está yendo el pelo y hay que decidir qué hacer.",
+      "questions": {
+        "what_to_do": "Ay, {{partnerBName}} se está quedando calvo. ¿Qué crees que es mejor hacer?",
+        "what_to_do_self": "Ay, te estás quedando calvo. ¿Qué crees que es mejor hacer?"
+      },
+      "options": {
+        "let_nature": "Dejar que la naturaleza haga lo suyo y lucir el parrón con orgullo.",
+        "buzz_cut": "Raparse y asumir la calvicie como un adulto.",
+        "implant": "Buscar un implante capilar.",
+        "hide_it": "Innovar con los peinados para ocultar la calvicie."
+      },
+      "conversations": {
+        "let_nature": "El parrón a la vista, con orgullo.",
+        "buzz_cut": "Rapado al cero y lo asumimos.",
+        "implant": "Se nos fue buena plata, pero el pelo vuelve.",
+        "hide_it": "Cada mañana un peinado distinto para tapar esto.",
+        "mismatch": "Bueno... es tu pelo, pero quiero que sepas que no estoy de acuerdo."
+      }
+    },
+    "friend_who_wont_leave": {
+      "title": "El amigo que no se va",
+      "description": "Un amigo que vino de Madrid pidió quedarse unos días porque venía muy cansado del viaje. Esos días se convirtieron en meses, y las indirectas ya no funcionan.",
+      "questions": {
+        "what_to_do": "¿Qué hacen con él?"
+      },
+      "options": {
+        "lock_out": "Le dejamos las maletas afuera y cambiamos la cerradura.",
+        "ask_nicely": "Se lo pedimos de buena: que se busque otro lado.",
+        "split_rent": "Que se quede, pero que pague parte del arriendo.",
+        "let_stay": "Para eso están los amigos. Que se quede el tiempo que necesite."
+      },
+      "conversations": {
+        "lock_out": "Maletas afuera y cerradura nueva. Se acabó el hotel gratis.",
+        "ask_nicely": "Se lo dijimos de buena. Ya era hora de que se buscara un lugar.",
+        "split_rent": "Si se queda, paga parte del arriendo. Así duele menos.",
+        "let_stay": "Que se quede. Los amigos se apoyan, aunque el departamento quede pequeño.",
+        "mismatch": "Siempre lo mismo contigo, es tu amigo... haz lo que quieras."
+      },
+      "timeline": {
+        "lock_out": "Le cambiamos la cerradura al amigo",
+        "ask_nicely": "Le pedimos que se buscara otro lado",
+        "split_rent": "El amigo se queda, pero paga parte del arriendo",
+        "let_stay": "El amigo se queda el tiempo que necesite"
+      }
+    },
+    "entertaining_job_offers": {
+      "title": "Ofertas de pega entretenida",
+      "description": "A {{partnerAName}} le llegó una oferta de un trabajo re entretenido. Hay varias opciones en la mesa y la plata no está tan bien como para rechazarlas a la ligera.",
+      "questions": {
+        "which_offer": "¿Cuál aceptamos?"
+      },
+      "options": {
+        "calama_big_salary": "Sueldo brígido en Calama: casa excelente en el norte, pero nos vamos lejos.",
+        "puerto_aysen_good_salary": "Buen sueldo en Puerto Aysén: casa ok en el sur, con mejor onda.",
+        "san_fernando_mid_salary": "Sueldo media-alta en San Fernando: casa ok y cambio moderado.",
+        "daily_commute": "Sueldo mejor al actual, pero 1 hr 15 de viaje diario en la ciudad."
+      },
+      "conversations": {
+        "calama_big_salary": "Calama, po. La plata entra fuerte, pero el desierto y la distancia pegan duro.",
+        "puerto_aysen_good_salary": "Puerto Aysén suena lindo. Sur, casa decent y la vida un poco más tranqui.",
+        "san_fernando_mid_salary": "San Fernando, en el medio. Ni tanta mudanza ni tanta plata, pero suma.",
+        "daily_commute": "Nos quedamos, pero el viaje diario nos va a matar. La pega paga, el tráfico no.",
+        "mismatch": "Está bien que sean cosas que se ven en pareja, pero estamos hablando de mi carrera profesional."
+      },
+      "timeline": {
+        "calama_big_salary": "Aceptamos la pega en Calama",
+        "puerto_aysen_good_salary": "Aceptamos la pega en Puerto Aysén",
+        "san_fernando_mid_salary": "Aceptamos la pega en San Fernando",
+        "daily_commute": "Aceptamos la pega con viaje diario"
+      }
+    },
+    "adult_content_deal": {
+      "title": "El negocio del amigo juguetón",
+      "description": "Un amigo peculiar, súper juguetón, les propone un negocio. Dice que lo tienen todo: son buenos para la foto y elegantes. Les pregunta si quieren grabar contenido XXX. Les asegura que se van a hacer virales y van a ganar buena plata, pero no es algo de una vez: es un contrato por dos años.",
+      "questions": {
+        "what_to_do": "¿Qué hacen?"
+      },
+      "options": {
+        "go_all_in": "Plata y vergüenza es algo que no tenemos, ¡vamos!",
+        "mask_only": "Mmm, me tienta, pero me gustaría hacerlo tapando la cara con una máscara.",
+        "decline_values": "Mis valores de colegio católico no lo permiten, no gracias."
+      },
+      "conversations": {
+        "go_all_in": "Firmamos los dos años. La plata llega, y la vergüenza... bueno, esa la vemos después.",
+        "mask_only": "Entramos, pero con máscara. La cara no sale; el resto, sí.",
+        "decline_values": "Gracias, pero no. El colegio de monjas todavía pesa.",
+        "mismatch": "En esto de grabar XXX no estamos ni cerca de acuerdo."
+      },
+      "timeline": {
+        "adult_cinema_job": "Empezamos un nuevo trabajo en el cine para adultos"
+      }
+    },
+    "buy_luxury_car": {
+      "title": "¿Nos damos el gustito?",
+      "description": "Las finanzas están de lujo y podemos pensar en algo más fino. Hay varios autos premium en la mesa, po.",
+      "questions": {
+        "which_car": "¿Cuál nos llevamos?"
+      },
+      "options": {
+        "bmw_320i": "BMW 320i — elegante, deportivo y con esa grilla icónica",
+        "audi_a4": "Audi A4 2.0 TFSI — sobrio, tecnológico y con tracción quattro",
+        "mercedes_c200": "Mercedes-Benz C200 — clásico de lujo, confort y estatus",
+        "volvo_xc40": "Volvo XC40 Recharge — SUV premium, seguro y con onda nórdica"
+      },
+      "conversations": {
+        "bmw_320i": "BMW 320i en la cochera. Se siente el manejo deportivo desde el primer arranque, cachai.",
+        "audi_a4": "Audi A4 listo. Tecnología, cuero y esa sensación de que llegamos a otro nivel.",
+        "mercedes_c200": "Mercedes C200. Confort, estatus y la estrella en el volante. Nos vemos distintos.",
+        "volvo_xc40": "Volvo XC40. Seguro, premium y con espacio pa' ir a la cordillera con estilo.",
+        "mismatch": "No nos pusimos de acuerdo con el auto de lujo. El gustito queda pa' después."
+      },
+      "timeline": {
+        "bmw_320i": "Compramos un BMW 320i",
+        "audi_a4": "Compramos un Audi A4",
+        "mercedes_c200": "Compramos un Mercedes-Benz C200",
+        "volvo_xc40": "Compramos un Volvo XC40"
+      }
+    },
+    "buy_mid_range_car": {
+      "title": "¿Nos compramos un auto?",
+      "description": "Las finanzas van bien y podemos pensar en sacarnos el polvo del auto. Hay varios modelos de gama media en la mesa, po.",
+      "questions": {
+        "which_car": "¿Cuál nos llevamos?"
+      },
+      "options": {
+        "chevrolet_onix": "Chevrolet Onix 1.4 LT — compacto, económico y pa' la ciudad",
+        "nissan_kicks": "Nissan Kicks Advance — SUV chico, cómodo y con buena altura",
+        "toyota_corolla": "Toyota Corolla XEi — el clásico confiable, sin sorpresas",
+        "mazda_3": "Mazda 3 2.0 — el más fino de la tanda, manejo bacán"
+      },
+      "conversations": {
+        "chevrolet_onix": "Onix listo. Chico, rendidor y pa' meterse en cualquier estacionamiento, cachai.",
+        "nissan_kicks": "Kicks en la cochera. Alto, cómodo y pa' subir a la cordillera sin drama.",
+        "toyota_corolla": "Corolla nuevo. Clásico, confiable y que no te deja botado en la ruta.",
+        "mazda_3": "Mazda 3. Se maneja como un reloj y nos sube el nivel al salir a pasear.",
+        "mismatch": "No nos pusimos de acuerdo con el auto. Seguimos a pie un rato más."
+      },
+      "timeline": {
+        "chevrolet_onix": "Compramos un Chevrolet Onix",
+        "nissan_kicks": "Compramos un Nissan Kicks",
+        "toyota_corolla": "Compramos un Toyota Corolla",
+        "mazda_3": "Compramos un Mazda 3"
+      }
+    },
+    "upgrade_housing": {
+      "title": "¿Nos cambiamos de hogar?",
+      "description": "Las finanzas van bien y tenemos la luca pa' pensar en algo mejor. Hay varias opciones en la mesa.",
+      "questions": {
+        "which_home": "¿A dónde nos mudamos?"
+      },
+      "options": {
+        "trapenses_house": "Una casa buena en Los Trapenses",
+        "nunoa_apartment": "Un depto excelente en Ñuñoa",
+        "pedro_valdivia_apartment": "Un depto bueno en Pedro de Valdivia Norte",
+        "chicureo_house": "Una casa excelente en un condominio en Chicureo",
+        "metro_salvador_apartment": "Un depto excelente en Metro Salvador"
+      },
+      "conversations": {
+        "trapenses_house": "Casa en Los Trapenses. Espacio, vista y aire puro, po.",
+        "nunoa_apartment": "Depto en Ñuñoa, cerca de todo. La pega y el after quedan a la vuelta.",
+        "pedro_valdivia_apartment": "Depto en Pedro de Valdivia Norte. Bueno, cómodo y sin irnos tan lejos.",
+        "chicureo_house": "Casa en un condominio en Chicureo. Piscina, quincho y vida de barrio cerrado.",
+        "metro_salvador_apartment": "Depto en Metro Salvador. Llegas al centro en nada y el edificio es una joya.",
+        "mismatch": "Pareciera que tenemos objetivos de vida distintos."
+      },
+      "timeline": {
+        "trapenses_house": "Nos mudamos a Los Trapenses",
+        "nunoa_apartment": "Nos mudamos a Ñuñoa",
+        "pedro_valdivia_apartment": "Nos mudamos a Pedro de Valdivia Norte",
+        "chicureo_house": "Nos mudamos a Chicureo",
+        "metro_salvador_apartment": "Nos mudamos a Metro Salvador"
+      }
+    },
+    "work_party_crush": {
+      "title": "Alguien del cumpleaños",
+      "description": "Pareciera que las cosas no van bien con {{partnerAName}}, y conociste a una persona en un cumpleaños de alguien del trabajo. Después de un rato conversando le cuentas tus problemas, y te responde con fotos insinuantes diciendo: «Quizás yo te puedo ayudar».",
+      "questions": {
+        "what_to_do": "¿Qué haces?"
+      },
+      "options": {
+        "keep_playing": "Sigues el juego: ojos que no ven, corazón que no siente.",
+        "decline_situation": "Le dices que no te acomoda la situación.",
+        "block_and_tell": "Bloqueas y le avisas a {{partnerAName}}.",
+        "block_silent": "Bloqueas y no dices nada.",
+        "tell_and_leave": "Le comentas la situación a {{partnerAName}} y decides terminar la relación."
+      },
+      "conversations": {
+        "caught_partner_a": "Te descubrí. ¿En serio hiciste esto?",
+        "caught_partner_b": "Cuando una leona descuida a su león, este se va a buscar a Bambi."
+      },
+      "timeline": {
+        "affair_discovered": "La aventura salió a la luz",
+        "secret_affair": "Seguimos el juego en secreto",
+        "broke_up": "Terminamos la relación"
+      }
+    },
+    "how_well_do_you_know": {
+      "title": "¿Qué tanto conoces a tu pareja?",
+      "description": "El clásico. Seis preguntas para ver si de verdad se conocen o si solo están bromeando.",
+      "questions": {
+        "first_kiss": "¿Quién dio el primer beso?",
+        "first_kiss_guess": "Adivina lo que puso {{partnerAName}}: ¿quién dio el primer beso?",
+        "better_gifts": "¿Quién da mejores regalos?",
+        "better_gifts_guess": "Adivina lo que puso {{partnerAName}}: ¿quién da mejores regalos?",
+        "messier": "¿Quién es más desordenado?",
+        "messier_guess": "Adivina lo que puso {{partnerAName}}: ¿quién es más desordenado?",
+        "more_jealous": "¿Quién es más celoso?",
+        "more_jealous_guess": "Adivina lo que puso {{partnerAName}}: ¿quién es más celoso?",
+        "better_cook": "¿Quién cocina mejor?",
+        "better_cook_guess": "Adivina lo que puso {{partnerAName}}: ¿quién cocina mejor?",
+        "said_love_first": "¿Quién dijo te amo primero?",
+        "said_love_first_guess": "Adivina lo que puso {{partnerAName}}: ¿quién dijo te amo primero?"
+      },
+      "options": {
+        "partner_a": "{{partnerAName}}",
+        "partner_b": "{{partnerBName}}"
+      },
+      "conversations": {
+        "score_0": "Cero de seis. Esto no es una pareja, es un misterio.",
+        "score_1": "Solo una. ¿Vivimos juntos o qué?",
+        "score_2": "Solo dos. Vamos medio a ciegas.",
+        "score_3": "Tres de seis. Regular: ni tan bien ni tan mal.",
+        "score_4": "Cuatro bien. Más o menos nos conocemos.",
+        "score_5": "Casi perfecto. Solo una se nos escapó.",
+        "score_6": "¡Seis de seis! Nos conocemos de memoria."
+      },
+      "timeline": {
+        "quiz": "Jugamos a qué tanto nos conocemos"
+      }
+    },
+    "aunt_pepita_inheritance": {
+      "title": "La herencia de la tía Pepita",
+      "description": "Les llegaron 2 millones de la lejana tía Pepita. ¿Qué hacen con la plata?",
+      "questions": {
+        "what_to_do": "¿Qué hacemos con los 2 millones?"
+      },
+      "options": {
+        "brazil_vacation": "Unas buenas vacaciones de una semana en Brasil",
+        "save_money": "A ahorrar, el que guarda siempre tiene",
+        "wardrobe_refresh": "Hora de renovar el closet",
+        "donate_hogar_cristo": "Donarla al Hogar de Cristo",
+        "all_on_red": "Todo al rojo"
+      },
+      "conversations": {
+        "brazil_vacation": "Una semana en Brasil: playa, caipirinha y cero culpa. El wellness subió solito.",
+        "save_money": "A la cuenta de ahorro, po. El que guarda siempre tiene.",
+        "wardrobe_refresh": "Closet renovado: blazer y sweater pa' los dos. Nos vemos con otro nivel.",
+        "donate_hogar_cristo": "La plata de la tía Pepita fue directo al Hogar de Cristo. Quedó bonito.",
+        "all_on_red_win": "¡SALIO ROJO! Los 2 millones se multiplicaron. Ganamos plata y nos reímos todo el camino al banco.",
+        "all_on_red_win_partner_b": "Te lo dije, po. Confiá en el rojo.",
+        "all_on_red_lose": "Nada. Cero. La ruleta se comió los 2 millones como si fueran pisco sour. Chau plata, chau paz mental.",
+        "all_on_red_lose_partner_b": "Te lo dije que no... pero igual apostamos todo, cachai."
+      },
+      "timeline": {
+        "donation": "Donamos la herencia de la tía Pepita al Hogar de Cristo"
+      }
+    },
+    "partner_b_headache": {
+      "title": "La cabeza no para",
+      "description": "A {{partnerBName}} le lleva doliendo la cabeza hace 4 días. La plata está justa y el dolor no se va.",
+      "questions": {
+        "what_to_do": "A {{partnerBName}} le lleva doliendo la cabeza hace 4 días. ¿Qué hacemos?",
+        "what_to_do_self": "Te lleva doliendo la cabeza hace 4 días. ¿Qué hacemos?"
+      },
+      "options": {
+        "medical_check": "Ir al control médico.",
+        "wait_it_out": "Esperar a curarse o morirse solo, lo que pase primero."
+      },
+      "conversations": {
+        "medical_check": "Fuimos al control. Sale plata, pero al menos sabemos qué es.",
+        "hospitalized": "Te lo dije, po. Ahora estamos con deuda del hospital encima.",
+        "recovered": "Se pasó solo. Tuvimos suerte, pero no me gustó el show.",
+        "mismatch": "Tantas diferencias por un dolor de cabeza."
+      },
+      "timeline": {
+        "ignored_illness": "{{partnerBName}} se enfermó y no hizo nada al respecto"
+      }
+    },
+    "separation_reconciliation": {
+      "title": "Una última oportunidad",
+      "description": "Están separados y la cosa está tensa. Quizás todavía queda algo por intentar, o quizás no.",
+      "questions": {
+        "how_to_return": "¿Qué te gustaría que {{partnerBName}} hiciera para recuperar la relación?",
+        "how_to_return_self": "¿Qué harías para recuperar la relación?"
+      },
+      "options": {
+        "guitar_serenade": "Llegar con una guitarra a un evento familiar tuyo y dedicarte una linda canción compuesta por él/ella.",
+        "instagram_likes": "Poner like a todas las historias que subas en Instagram.",
+        "photo_letter": "Escribir una carta con fotos, recordando todos los buenos momentos que pasaron juntos.",
+        "beg_on_knees": "Suplicar de rodillas.",
+        "no_second_chances": "No hay buenas segundas partes en esta vida (aparte de Shrek)."
+      },
+      "conversations": {
+        "guitar_serenade": "Llegó con la guitarra al asado de mi familia y me cantó una canción que escribió. Fue ridículo y bonito a la vez.",
+        "instagram_likes": "Like a todo, hasta la story del café de las 3 de la mañana. Al menos se nota el esfuerzo, po.",
+        "photo_letter": "Una carta con fotos de viajes, cumpleaños y el depto viejo. Nos reímos, lloramos y volvimos a hablar en serio.",
+        "beg_on_knees": "De rodillas en la plaza, con gente mirando. Vergüenza total, pero también se sintió real.",
+        "no_second_chances": "Shrek sí, nosotros no. Así de simple.",
+        "mismatch": "Ni siquiera nos pusimos de acuerdo en cómo volver. Chau, era."
+      },
+      "timeline": {
+        "attempt": "Intentamos volver después de la separación"
+      }
+    },
+    "separation_closure": {
+      "title": "El final",
+      "description": "Ya lo intentaron. Siguen separados y no queda nada más que decirse.",
+      "questions": {
+        "farewell": "¿Qué les queda por decir?"
+      },
+      "options": {
+        "say_goodbye": "Despedirse."
+      },
+      "conversations": {
+        "partner_a": "Gracias por todo lo bueno. Ojalá te vaya bien, de verdad.",
+        "partner_b": "Igual, po. Cuídate. Fue lindo mientras duró."
+      },
+      "timeline": {
+        "final_goodbye": "Nos despedimos para siempre"
       }
     }
   }

@@ -24,20 +24,28 @@ def test_play_console_help() -> None:
     assert "--max-events" in result.stdout
 
 
-def test_catalog_includes_five_dummy_events() -> None:
+def test_catalog_includes_packaged_events() -> None:
     catalog = load_catalog(package_events_directory())
     ids = {event.id for event in catalog.all_events()}
     assert ids == {
-        "weekend_trip",
-        "buy_house_light",
-        "career_offer",
-        "midlife_checkpoint",
-        "burnout",
+        "adult_content_deal",
+        "aunt_pepita_inheritance",
+        "buy_luxury_car",
+        "buy_mid_range_car",
+        "entertaining_job_offers",
+        "friend_who_wont_leave",
+        "going_bald",
+        "how_well_do_you_know",
+        "partner_b_headache",
+        "separation_closure",
+        "separation_reconciliation",
+        "upgrade_housing",
+        "work_party_crush",
     }
 
 
 def test_play_console_completes_with_piped_answers() -> None:
-    stdin = "Alex\n" + ("1\n" * 20)
+    stdin = "Alex\n" + ("1\n" * 40)
     result = subprocess.run(
         [
             sys.executable,

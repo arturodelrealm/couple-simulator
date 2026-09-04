@@ -121,11 +121,13 @@ def _effective_duo_answers(
     effective: list[Answer] = []
     disagreements: list[tuple[str, str]] = []
     has_mismatch = False
+    match_count = 0
     for question in event.questions:
         live = live_by_question[question.id]
         partner_a = partner_a_by_question[question.id]
         if live.option_id == partner_a.option_id:
             effective.append(live)
+            match_count += 1
             continue
         has_mismatch = True
         winner_id = conflict.resolve(
@@ -138,7 +140,11 @@ def _effective_duo_answers(
         disagreements.append((winner_id, live.option_id))
     return (
         effective,
-        {"has_mismatch": has_mismatch, "answers_match": not has_mismatch},
+        {
+            "has_mismatch": has_mismatch,
+            "answers_match": not has_mismatch,
+            "match_count": match_count,
+        },
         disagreements,
     )
 

@@ -1,0 +1,258 @@
+{
+  "id": "buy_luxury_car",
+  "title": "events.buy_luxury_car.title",
+  "description": "events.buy_luxury_car.description",
+  "tags": ["financial", "leisure", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/finances",
+    "op": "gte",
+    "value": 70
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "which_car",
+      "text": "events.buy_luxury_car.questions.which_car",
+      "options": [
+        {
+          "id": "bmw_320i",
+          "text": "events.buy_luxury_car.options.bmw_320i",
+          "actions": []
+        },
+        {
+          "id": "audi_a4",
+          "text": "events.buy_luxury_car.options.audi_a4",
+          "actions": []
+        },
+        {
+          "id": "mercedes_c200",
+          "text": "events.buy_luxury_car.options.mercedes_c200",
+          "actions": []
+        },
+        {
+          "id": "volvo_xc40",
+          "text": "events.buy_luxury_car.options.volvo_xc40",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "bmw_320i",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_car",
+        "op": "eq",
+        "value": "bmw_320i"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "car",
+            "value": "BMW 320i"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -25
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 6, "max": 10 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.buy_luxury_car.conversations.bmw_320i"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.buy_luxury_car.timeline.bmw_320i",
+            "category": "financial"
+          }
+        }
+      ]
+    },
+    {
+      "id": "audi_a4",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_car",
+        "op": "eq",
+        "value": "audi_a4"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "car",
+            "value": "Audi A4"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -28
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 7, "max": 11 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.buy_luxury_car.conversations.audi_a4"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.buy_luxury_car.timeline.audi_a4",
+            "category": "financial"
+          }
+        }
+      ]
+    },
+    {
+      "id": "mercedes_c200",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_car",
+        "op": "eq",
+        "value": "mercedes_c200"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "car",
+            "value": "Mercedes-Benz C200"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -30
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 8, "max": 12 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.buy_luxury_car.conversations.mercedes_c200"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.buy_luxury_car.timeline.mercedes_c200",
+            "category": "financial"
+          }
+        }
+      ]
+    },
+    {
+      "id": "volvo_xc40",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_car",
+        "op": "eq",
+        "value": "volvo_xc40"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "car",
+            "value": "Volvo XC40"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -32
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 9, "max": 13 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.buy_luxury_car.conversations.volvo_xc40"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.buy_luxury_car.timeline.volvo_xc40",
+            "category": "financial"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.buy_luxury_car.conversations.mismatch"
+      }
+    }
+  ]
+}

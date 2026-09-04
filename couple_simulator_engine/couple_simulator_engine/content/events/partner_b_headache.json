@@ -1,0 +1,182 @@
+{
+  "id": "partner_b_headache",
+  "title": "events.partner_b_headache.title",
+  "description": "events.partner_b_headache.description",
+  "tags": ["financial", "health", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/finances",
+    "op": "lt",
+    "value": 30
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "what_to_do",
+      "text": {
+        "default_key": "events.partner_b_headache.questions.what_to_do",
+        "by_role": {
+          "partner_b": "events.partner_b_headache.questions.what_to_do_self"
+        }
+      },
+      "options": [
+        {
+          "id": "medical_check",
+          "text": "events.partner_b_headache.options.medical_check",
+          "actions": []
+        },
+        {
+          "id": "wait_it_out",
+          "text": "events.partner_b_headache.options.wait_it_out",
+          "actions": [
+            {
+              "type": "set_event_var",
+              "args": {
+                "variable": "illness_roll",
+                "value": {
+                  "distribution": {
+                    "kind": "uniform",
+                    "params": { "min": 1, "max": 100 }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "medical_check",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "medical_check"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -5
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": 5
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.partner_b_headache.conversations.medical_check"
+          }
+        }
+      ]
+    },
+    {
+      "id": "wait_it_out_hospitalized",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/what_to_do",
+            "op": "eq",
+            "value": "wait_it_out"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/illness_roll",
+            "op": "lte",
+            "value": 50
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -15
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": -15
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.partner_b_headache.timeline.ignored_illness",
+            "category": "health"
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.partner_b_headache.conversations.hospitalized"
+          }
+        }
+      ]
+    },
+    {
+      "id": "wait_it_out_recovered",
+      "when": {
+        "type": "all",
+        "items": [
+          {
+            "type": "compare",
+            "path": "answers/what_to_do",
+            "op": "eq",
+            "value": "wait_it_out"
+          },
+          {
+            "type": "compare",
+            "path": "event_variables/illness_roll",
+            "op": "gt",
+            "value": 50
+          }
+        ]
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": 5
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_b",
+            "text_key": "events.partner_b_headache.conversations.recovered"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.partner_b_headache.conversations.mismatch"
+      }
+    }
+  ],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

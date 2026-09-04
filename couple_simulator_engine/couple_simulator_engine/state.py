@@ -45,8 +45,8 @@ def _default_partner_b() -> Player:
 class SimulationState:
     partner_a: Player = field(default_factory=_default_partner_a)
     partner_b: Player = field(default_factory=_default_partner_b)
-    finances: int = 50
-    quality_of_life: int = 50
+    finances: int = 15
+    quality_of_life: int = 20
     children: int = 0
     wellness: int = 50
     housing: Housing = field(default_factory=Housing)
