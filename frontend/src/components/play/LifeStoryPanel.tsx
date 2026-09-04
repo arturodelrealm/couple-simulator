@@ -58,7 +58,7 @@ export function LifeStoryPanel({ timeline, stats }: LifeStoryPanelProps) {
                     {translateContent(entry.title)}
                   </p>
                   <p className="mt-0.5 text-xs text-slate-400">
-                    {t("game.play.age", { age: entry.age })}
+                    {t("game.play.eventYear", { year: entry.age })}
                   </p>
                   {entry.description ? (
                     <p className="mt-1 text-xs text-slate-500">

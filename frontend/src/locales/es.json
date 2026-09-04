@@ -81,9 +81,27 @@
       "inviteCopied": "¡Enlace copiado!",
       "hint": "Puedes cerrar esta página y volver más tarde — tu partida se recuperará automáticamente."
     },
+    "questionnaire": {
+      "title": "Preguntas de la pareja A",
+      "progress": "{{current}} de {{total}}",
+      "choicesPrompt": "¿Qué eliges?",
+      "skipEvent": "Saltar este evento",
+      "unskipEvent": "Dejar de saltar este evento",
+      "saveAnswers": "Guardar respuestas",
+      "complete": "Cuestionario completo",
+      "completeHint": "Aún puedes editar o dejar de saltar eventos, o volver al lobby.",
+      "startCta": "Responder las preguntas de la pareja A",
+      "continueCta": "Continuar las preguntas de la pareja A",
+      "status": {
+        "pending": "Pendiente",
+        "answered": "Respondido",
+        "skipped": "Saltado"
+      }
+    },
     "play": {
       "title": "Nuestra historia",
       "lifeEvent": "Evento de vida",
+      "eventYear": "Año {{year}}",
       "choicesPrompt": "¿Qué decides?",
       "lifeStory": "Historia de vida",
       "atAGlance": "De un vistazo",
@@ -122,7 +140,12 @@
       "household": {
         "house": "Hogar",
         "mascot": "Mascota",
-        "noMascot": "Sin mascota"
+        "noMascot": "Sin mascota",
+        "species": {
+          "cat": "Gato",
+          "dog": "Perro",
+          "hamster": "Hámster"
+        }
       },
       "housingType": {
         "apartment": "Departamento",
@@ -137,7 +160,8 @@
         "title": "Una vida bien vivida",
         "yourStory": "Nuestra historia",
         "playAgain": "Jugar de nuevo",
-        "ages": "{{partnerAName}} tiene {{partnerAAge}} años, {{partnerBName}} tiene {{partnerBAge}}."
+        "ages": "{{partnerAName}} tiene {{partnerAAge}} años, {{partnerBName}} tiene {{partnerBAge}}.",
+        "agreements": "Coincidieron en {{matches}} de {{compared}} preguntas."
       },
       "errors": {
         "runNotFound": "No se encontró esta simulación.",

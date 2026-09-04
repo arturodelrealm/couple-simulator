@@ -15,6 +15,8 @@ export type GameOverScreenProps = {
   partnerBAge: number;
   stats: StatsBarValues;
   timeline: TimelineEntry[];
+  matches: number;
+  compared: number;
   onPlayAgain: () => void;
   playAgainDisabled?: boolean;
   errorMessage?: string | null;
@@ -27,6 +29,8 @@ export function GameOverScreen({
   partnerBAge,
   stats,
   timeline,
+  matches,
+  compared,
   onPlayAgain,
   playAgainDisabled = false,
   errorMessage = null,
@@ -45,6 +49,12 @@ export function GameOverScreen({
             partnerAAge,
             partnerBName,
             partnerBAge,
+          })}
+        </p>
+        <p className="mb-6 text-sm font-medium text-slate-600">
+          {t("game.play.gameOver.agreements", {
+            matches,
+            compared,
           })}
         </p>
         <div className="mb-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
@@ -84,7 +94,7 @@ export function GameOverScreen({
                 key={`${entry.title}-${entry.age}-${index}`}
                 className="border-b border-slate-100 py-1 text-xs text-slate-500 last:border-0"
               >
-                {t("game.play.age", { age: entry.age })} —{" "}
+                {t("game.play.eventYear", { year: entry.age })} —{" "}
                 {translateContent(entry.title)}
               </p>
             ))
