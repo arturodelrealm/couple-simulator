@@ -125,9 +125,7 @@ def engine_player_to_dict(player: EnginePlayer) -> dict[str, Any]:
 
 def engine_player_from_dict(data: dict[str, Any]) -> EnginePlayer:
     avatar_raw = data.get("avatar_config")
-    avatar = (
-        _avatar_config_dict(avatar_raw) if isinstance(avatar_raw, dict) else None
-    )
+    avatar = _avatar_config_dict(avatar_raw) if isinstance(avatar_raw, dict) else None
     return EnginePlayer(
         id=str(data["id"]),
         name=str(data["name"]),

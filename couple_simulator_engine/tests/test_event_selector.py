@@ -163,9 +163,7 @@ def test_weight_rules_override_base_weight_when_condition_matches() -> None:
     event = _event(
         "conditional",
         weight=1.0,
-        weight_rules=(
-            WeightRuleDefinition(when=_COMPAT_LT_20, weight=2.0),
-        ),
+        weight_rules=(WeightRuleDefinition(when=_COMPAT_LT_20, weight=2.0),),
     )
     catalog = ContentCatalog([event])
     session = _session()
@@ -182,9 +180,7 @@ def test_weight_rules_fall_back_to_base_weight_when_no_rule_matches() -> None:
     event = _event(
         "conditional",
         weight=1.0,
-        weight_rules=(
-            WeightRuleDefinition(when=_COMPAT_LT_20, weight=2.0),
-        ),
+        weight_rules=(WeightRuleDefinition(when=_COMPAT_LT_20, weight=2.0),),
     )
     catalog = ContentCatalog([event])
     session = _session()

@@ -569,4 +569,3 @@ def test_couple_flags_include_per_question_match_count() -> None:
     )
     assert resolution.applied_outcome_ids == ["one_hit"]
     assert session.event_variables == {}
-

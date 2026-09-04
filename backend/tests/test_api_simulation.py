@@ -362,9 +362,7 @@ def _compatibility_actions(client_actions: list[dict]) -> list[dict]:
     ]
 
 
-def _get_current_event_payload(
-    client: TestClient, game_id: str, run_id: str
-) -> dict:
+def _get_current_event_payload(client: TestClient, game_id: str, run_id: str) -> dict:
     current = client.get(
         f"/api/games/{game_id}/simulation/runs/{run_id}/events/current",
     )
