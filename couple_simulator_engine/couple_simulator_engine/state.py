@@ -16,7 +16,9 @@ from couple_simulator_engine.enums import (
 from couple_simulator_engine.player import Player
 
 _DERIVED_STATS = frozenset({"age", "compatibility"})
-_COUPLE_STATS = frozenset({"finances", "quality_of_life", "children", "wellness"})
+_COUPLE_STATS = frozenset(
+    {"finances", "quality_of_life", "children", "wellness", "mismatches"}
+)
 _DEFAULT_HOUSING_PLACE = "Providencia"
 
 
@@ -49,6 +51,7 @@ class SimulationState:
     quality_of_life: int = 20
     children: int = 0
     wellness: int = 50
+    mismatches: int = 0
     housing: Housing = field(default_factory=Housing)
     mascot: Mascot | None = None
     tags: dict[str, Any] = field(default_factory=dict)
@@ -85,6 +88,7 @@ class SimulationState:
             "quality_of_life": self.quality_of_life,
             "children": self.children,
             "wellness": self.wellness,
+            "mismatches": self.mismatches,
             "housing": {
                 "place": self.housing.place,
                 "type": self.housing.type.value,

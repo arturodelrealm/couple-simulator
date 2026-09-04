@@ -1,0 +1,121 @@
+{
+  "id": "first_baby_gender",
+  "title": "events.first_baby_gender.title",
+  "description": "events.first_baby_gender.description",
+  "tags": ["family", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "all",
+    "items": [
+      {
+        "type": "compare",
+        "path": "state/tags/want_kids",
+        "op": "eq",
+        "value": true
+      },
+      {
+        "type": "compare",
+        "path": "state/children",
+        "op": "eq",
+        "value": 0
+      }
+    ]
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "child_gender",
+      "text": "events.first_baby_gender.questions.child_gender",
+      "options": [
+        {
+          "id": "girl",
+          "text": "events.first_baby_gender.options.girl",
+          "actions": []
+        },
+        {
+          "id": "boy",
+          "text": "events.first_baby_gender.options.boy",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "girl",
+      "when": {
+        "type": "compare",
+        "path": "answers/child_gender",
+        "op": "eq",
+        "value": "girl"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "children",
+            "delta": 1
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -5
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.first_baby_gender.timeline.baby_born",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "boy",
+      "when": {
+        "type": "compare",
+        "path": "answers/child_gender",
+        "op": "eq",
+        "value": "boy"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "children",
+            "delta": 1
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -5
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.first_baby_gender.timeline.baby_born",
+            "category": "family"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.first_baby_gender.conversations.mismatch"
+      }
+    }
+  ],
+  "weight": 2.0,
+  "max_occurrences": 1
+}

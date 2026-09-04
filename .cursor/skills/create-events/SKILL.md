@@ -10,7 +10,7 @@ description: >-
 
 Ship **content fast**. JSON + locales. **Do not write tests for events.** Actions are already tested; that is enough. Do not run engine/frontend test or lint targets for event-only work.
 
-For the spanish texts use something informal chilean language always.
+Spanish copy: informal Chilean that a couple would actually say — never forced slang or fillers. See Copy.
 
 ## Files
 
@@ -103,9 +103,11 @@ Use this pattern for chance forks (50/50, 30%, etc.). **Do not search the codeba
 
 ## Copy
 
-For the spanish texts use something informal chilean language always.
+Informal Chilean Spanish, couple *nosotros*. Use real Chilean vocabulary when it is the normal word (*depto, arriendo, pega, parrón, quincho*). Write complete words (*para*, not *pa'*).
 
-Chilean informal, couple *nosotros*. *depto, arriendo, pega, lucas, po, cachai* when natural. No Spain/Mexico defaults. Light swearing. EN: informal English, no slang calques. Keys/ids English.
+Do **not** sprinkle fillers or forced slang to “sound Chilean”: no *po*, *cachai*, *brígido*, *bacán*, *weón* as flavor, no *re* as intensifier. That reads pretentious and ridiculous. Prefer plain Spanish: *sueldo muy alto*, not *sueldo brígido*.
+
+No Spain/Mexico defaults (*alquiler*, *piso*, *tío*). Light swearing is fine when the scene calls for it. EN: informal English, no slang calques. Keys/ids English.
 
 ## Consequences
 

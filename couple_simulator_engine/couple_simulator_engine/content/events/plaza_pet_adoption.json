@@ -1,0 +1,290 @@
+{
+  "id": "plaza_pet_adoption",
+  "title": "events.plaza_pet_adoption.title",
+  "description": "events.plaza_pet_adoption.description",
+  "tags": ["family", "leisure", "decision"],
+  "life_stage": null,
+  "eligibility": null,
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "what_to_do",
+      "text": "events.plaza_pet_adoption.questions.what_to_do",
+      "options": [
+        {
+          "id": "adopt_dog_enrique",
+          "text": "events.plaza_pet_adoption.options.adopt_dog_enrique",
+          "actions": []
+        },
+        {
+          "id": "adopt_poodle_copito",
+          "text": "events.plaza_pet_adoption.options.adopt_poodle_copito",
+          "actions": []
+        },
+        {
+          "id": "adopt_kitten_ulises",
+          "text": "events.plaza_pet_adoption.options.adopt_kitten_ulises",
+          "actions": []
+        },
+        {
+          "id": "adopt_hamsters",
+          "text": "events.plaza_pet_adoption.options.adopt_hamsters",
+          "actions": []
+        },
+        {
+          "id": "walk_away",
+          "text": "events.plaza_pet_adoption.options.walk_away",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "adopt_dog_enrique",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "adopt_dog_enrique"
+      },
+      "actions": [
+        {
+          "type": "set_mascot",
+          "args": {
+            "species": "dog",
+            "name": "Enrique"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 8, "max": 12 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -12, "max": -8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.plaza_pet_adoption.conversations.adopt_dog_enrique"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.plaza_pet_adoption.timeline.adopt_dog_enrique",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "adopt_poodle_copito",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "adopt_poodle_copito"
+      },
+      "actions": [
+        {
+          "type": "set_mascot",
+          "args": {
+            "species": "dog",
+            "name": "Copito de Nieve"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 8, "max": 12 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -12, "max": -8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.plaza_pet_adoption.conversations.adopt_poodle_copito"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.plaza_pet_adoption.timeline.adopt_poodle_copito",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "adopt_kitten_ulises",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "adopt_kitten_ulises"
+      },
+      "actions": [
+        {
+          "type": "set_mascot",
+          "args": {
+            "species": "cat",
+            "name": "Ulises"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 8, "max": 12 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -12, "max": -8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.plaza_pet_adoption.conversations.adopt_kitten_ulises"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.plaza_pet_adoption.timeline.adopt_kitten_ulises",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "adopt_hamsters",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "adopt_hamsters"
+      },
+      "actions": [
+        {
+          "type": "set_mascot",
+          "args": {
+            "species": "hamster",
+            "name": "Los Hámsters"
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 8, "max": 12 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "quality_of_life",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -12, "max": -8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.plaza_pet_adoption.conversations.adopt_hamsters"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.plaza_pet_adoption.timeline.adopt_hamsters",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "walk_away",
+      "when": {
+        "type": "compare",
+        "path": "answers/what_to_do",
+        "op": "eq",
+        "value": "walk_away"
+      },
+      "actions": [
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.plaza_pet_adoption.conversations.walk_away"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

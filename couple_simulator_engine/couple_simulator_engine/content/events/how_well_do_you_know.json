@@ -6,6 +6,7 @@
   "life_stage": null,
   "eligibility": null,
   "use_answer_bank": true,
+  "apply_couple_deltas": false,
   "questions": [
     {
       "id": "first_kiss",

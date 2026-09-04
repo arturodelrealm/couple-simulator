@@ -31,6 +31,7 @@ def _session(
     age: int = 22,
     event_variables: dict[str, int] | None = None,
     current_event_id: str | None = None,
+    config: GameConfig | None = None,
 ) -> GameSession:
     state = SimulationState()
     state.begin_simulation()
@@ -41,7 +42,7 @@ def _session(
         session_id="s1",
         player=Player(id="p1", name="Alex", sex=PlayerSex.FEMALE),
         state=state,
-        config=GameConfig(),
+        config=config or GameConfig(passive_income_enabled=False),
         rng=SeededRNG(1),
         event_variables=dict(event_variables or {}),
         current_event_id=current_event_id,
@@ -214,7 +215,7 @@ def _partner_b_session(*, happiness: int = 70) -> GameSession:
         session_id="s-b",
         player=partner_b,
         state=state,
-        config=GameConfig(),
+        config=GameConfig(passive_income_enabled=False),
         rng=SeededRNG(1),
     )
 
@@ -225,6 +226,7 @@ def _choice_event(
     outcomes: tuple[OutcomeDefinition, ...] = (),
     default_actions: tuple[ActionDefinition, ...] = (),
     use_answer_bank: bool = True,
+    apply_couple_deltas: bool = True,
 ) -> EventDefinition:
     return EventDefinition(
         id="duo_choice",
@@ -265,6 +267,7 @@ def _choice_event(
         default_actions=default_actions,
         mismatch_actions=mismatch_actions,
         use_answer_bank=use_answer_bank,
+        apply_couple_deltas=apply_couple_deltas,
     )
 
 
@@ -569,3 +572,150 @@ def test_couple_flags_include_per_question_match_count() -> None:
     )
     assert resolution.applied_outcome_ids == ["one_hit"]
     assert session.event_variables == {}
+
+
+def test_apply_couple_deltas_false_skips_penalties_but_keeps_match_flags() -> None:
+    event = _choice_event(apply_couple_deltas=False)
+    session = _partner_b_session()
+    session.rng = MagicMock()
+    session.rng.weighted_choice.return_value = "opt_a"
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
+    )
+    assert session.state.finances == 35
+    assert session.state.partner_a.simulation_relation_happiness == 70
+    assert session.state.partner_b.simulation_relation_happiness == 70
+    assert session.state.mismatches == 0
+
+
+def test_apply_couple_deltas_false_skips_mismatch_actions() -> None:
+    event = _choice_event(
+        apply_couple_deltas=False,
+        mismatch_actions=(
+            ActionDefinition(
+                type="modify_stat",
+                args={"variable": "quality_of_life", "delta": 7},
+            ),
+        ),
+    )
+    session = _partner_b_session()
+    resolve_event(
+        session,
+        event,
+        [Answer(question_id="q1", option_id="opt_b")],
+        partner_a_answers=[Answer(question_id="q1", option_id="opt_a")],
+    )
+    assert session.state.quality_of_life == 20
+
+
+def test_mismatches_increment_per_disagreeing_question() -> None:
+    event = EventDefinition(
+        id="quiz",
+        title="Quiz",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="q1",
+                text="Q1",
+                options=(
+                    OptionDefinition(id="opt_a", text="A"),
+                    OptionDefinition(id="opt_b", text="B"),
+                ),
+            ),
+            QuestionDefinition(
+                id="q2",
+                text="Q2",
+                options=(
+                    OptionDefinition(id="opt_a", text="A"),
+                    OptionDefinition(id="opt_b", text="B"),
+                ),
+            ),
+        ),
+        outcomes=(),
+        default_actions=(),
+        mismatch_actions=(),
+    )
+    session = _partner_b_session()
+    session.rng = MagicMock()
+    session.rng.weighted_choice.side_effect = ["opt_a", "opt_b"]
+    resolve_event(
+        session,
+        event,
+        [
+            Answer(question_id="q1", option_id="opt_b"),
+            Answer(question_id="q2", option_id="opt_b"),
+        ],
+        partner_a_answers=[
+            Answer(question_id="q1", option_id="opt_a"),
+            Answer(question_id="q2", option_id="opt_a"),
+        ],
+    )
+    assert session.state.mismatches == 2
+
+
+def _zero_effect_event(event_id: str = "noop_tick") -> EventDefinition:
+    return EventDefinition(
+        id=event_id,
+        title="Noop",
+        description=None,
+        tags=(),
+        life_stage=None,
+        eligibility=None,
+        questions=(
+            QuestionDefinition(
+                id="q1",
+                text="Continue",
+                options=(OptionDefinition(id="ok", text="OK"),),
+            ),
+        ),
+        outcomes=(OutcomeDefinition(id="ok", when=None, actions=()),),
+        default_actions=(),
+        mismatch_actions=(),
+    )
+
+
+def test_resolve_applies_default_passive_income() -> None:
+    session = _session(config=GameConfig())
+    resolve_event(
+        session,
+        _zero_effect_event(),
+        [Answer(question_id="q1", option_id="ok")],
+    )
+    assert session.state.finances == 52
+
+
+def test_resolve_applies_high_band_income_net_of_upkeep() -> None:
+    session = _session(config=GameConfig())
+    session.state.tags["income_band"] = "high"
+    resolve_event(
+        session,
+        _zero_effect_event(),
+        [Answer(question_id="q1", option_id="ok")],
+    )
+    assert session.state.finances == 58
+
+
+def test_resolve_emits_post_event_economy_action() -> None:
+    session = _session(config=GameConfig())
+    resolution = resolve_event(
+        session,
+        _zero_effect_event(),
+        [Answer(question_id="q1", option_id="ok")],
+    )
+    economy = [
+        action
+        for action in resolution.client_actions
+        if action.type == "post_event_economy"
+    ]
+    assert len(economy) == 1
+    assert economy[0].args["income"] == 2
+    assert economy[0].args["upkeep_children"] == 0
+    assert economy[0].args["upkeep_housing"] == 0
+    assert economy[0].args["net"] == 2
+    assert economy[0].args["income_band"] is None

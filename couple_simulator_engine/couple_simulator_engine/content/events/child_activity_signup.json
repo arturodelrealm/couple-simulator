@@ -1,0 +1,225 @@
+{
+  "id": "child_activity_signup",
+  "title": "events.child_activity_signup.title",
+  "description": "events.child_activity_signup.description",
+  "tags": ["family", "leisure", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/children",
+    "op": "gt",
+    "value": 0
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "which_activity",
+      "text": "events.child_activity_signup.questions.which_activity",
+      "options": [
+        {
+          "id": "swimming",
+          "text": "events.child_activity_signup.options.swimming",
+          "actions": []
+        },
+        {
+          "id": "soccer",
+          "text": "events.child_activity_signup.options.soccer",
+          "actions": []
+        },
+        {
+          "id": "art",
+          "text": "events.child_activity_signup.options.art",
+          "actions": []
+        },
+        {
+          "id": "none",
+          "text": "events.child_activity_signup.options.none",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "swimming",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_activity",
+        "op": "eq",
+        "value": "swimming"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -12, "max": -8 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 8, "max": 12 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.child_activity_signup.conversations.swimming"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.child_activity_signup.timeline.swimming",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "soccer",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_activity",
+        "op": "eq",
+        "value": "soccer"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -14, "max": -10 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 6, "max": 10 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.child_activity_signup.conversations.soccer"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.child_activity_signup.timeline.soccer",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "art",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_activity",
+        "op": "eq",
+        "value": "art"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -10, "max": -6 }
+              }
+            }
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 5, "max": 9 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.child_activity_signup.conversations.art"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.child_activity_signup.timeline.art",
+            "category": "family"
+          }
+        }
+      ]
+    },
+    {
+      "id": "none",
+      "when": {
+        "type": "compare",
+        "path": "answers/which_activity",
+        "op": "eq",
+        "value": "none"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": -4, "max": -1 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.child_activity_signup.conversations.none"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

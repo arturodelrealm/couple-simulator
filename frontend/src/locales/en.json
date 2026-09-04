@@ -232,6 +232,30 @@
         "bought_house": "Bought a house"
       }
     },
+    "child_activity_signup": {
+      "title": "Extracurricular activities",
+      "description": "Your 7-year-old came home with three flyers from the neighborhood: swimming, soccer, and an art workshop. Time to pick something — or not.",
+      "questions": {
+        "which_activity": "What activity do you want to enroll your kid in?"
+      },
+      "options": {
+        "swimming": "Swimming lessons at the municipal pool",
+        "soccer": "Saturday soccer at the neighborhood field",
+        "art": "Art and crafts workshop at the cultural center",
+        "none": "Nothing — not this year"
+      },
+      "conversations": {
+        "swimming": "They've got a shirt and a schedule now. Let's see if they actually learn to swim.",
+        "soccer": "Registration paid and first practice on Saturday. Hope they like it.",
+        "art": "They showed up with a sketch folder. The living room already smells like tempera paint.",
+        "none": "We told them maybe next year. They didn't look convinced."
+      },
+      "timeline": {
+        "swimming": "We enrolled our kid in swimming lessons",
+        "soccer": "We enrolled our kid in youth soccer",
+        "art": "We enrolled our kid in an art workshop"
+      }
+    },
     "career_offer": {
       "title": "Career offer",
       "description": "A promotion with longer hours.",
@@ -241,6 +265,27 @@
       "options": {
         "accept": "Accept",
         "decline": "Decline"
+      }
+    },
+    "couples_therapy_suggestion": {
+      "title": "Couples therapy",
+      "description": "The rough patches in your relationship are showing. Your family suggests seeing a professional couples therapist.",
+      "questions": {
+        "therapy_choice": "Our family is suggesting couples therapy. What do we do?",
+        "therapy_choice_self": "Our family is suggesting couples therapy. What do we do?"
+      },
+      "options": {
+        "not_interested": "I'm not interested.",
+        "whatever_it_takes": "Whatever it takes to help this relationship.",
+        "budget_therapy": "Fine, let's go — but to an affordable one."
+      },
+      "conversations": {
+        "not_interested": "With this attitude, we're not getting anywhere.",
+        "therapy_breakup": "The therapist was blunt: this relationship makes no sense — we should call it quits.",
+        "therapy_works": "The therapist told us everything has a solution, that we love each other and that's what matters."
+      },
+      "timeline": {
+        "went_to_therapy": "We went to couples therapy"
       }
     },
     "midlife_checkpoint": {
@@ -548,6 +593,46 @@
         "ignored_illness": "{{partnerBName}} got sick and did nothing about it"
       }
     },
+    "pet_parenting_style": {
+      "title": "How do we raise {{mascotName}}?",
+      "description": "You've had a pet for a while and the differences are showing: space in the apartment, money on food, even social media.",
+      "questions": {
+        "rearing_style": "What parenting style do we want for {{mascotName}}?"
+      },
+      "options": {
+        "free_roam_bedroom": "{{mascotName}} can roam free through the whole house and has a bed in the bedroom. We're the luckiest pet parents.",
+        "restricted_premium_food": "{{mascotName}} can only go in certain parts of the house, but always gets the best food.",
+        "basics_only": "{{mascotName}} has a roof and food. That's enough for an animal.",
+        "instagram_page": "{{mascotName}} is getting their own Instagram page."
+      }
+    },
+    "plaza_pet_adoption": {
+      "title": "Pets in the plaza",
+      "description": "On some random Sunday, ice cream in hand, you're walking through the neighborhood plaza when a couple of hippies show up offering animals for adoption. Despite the incense smell, you go over for a look.",
+      "questions": {
+        "what_to_do": "What do you do?"
+      },
+      "options": {
+        "adopt_dog_enrique": "Adopt Enrique, a 10-year-old dog. You could give him a few good last years.",
+        "adopt_poodle_copito": "Take home Copito de Nieve, a white poodle. He seems sweet and has his whole life ahead.",
+        "adopt_kitten_ulises": "Take the kitten Ulises.",
+        "adopt_hamsters": "The little group of hamsters looks like exactly what you need. You take them.",
+        "walk_away": "You figure the humans probably gave the animals fleas, and you'd rather pass."
+      },
+      "conversations": {
+        "adopt_dog_enrique": "Enrique is getting on in years, but he looks grateful. The apartment feels different with him around.",
+        "adopt_poodle_copito": "Copito de Nieve is white as snow and already wants up on the couch. Welcome home.",
+        "adopt_kitten_ulises": "Ulises won't stop exploring every corner. The kitten already runs the place.",
+        "adopt_hamsters": "The hamsters arrived as a crew and took over the coffee table. At least they're cute.",
+        "walk_away": "Better stick with the ice cream. Between the incense and the fleas, we kept walking."
+      },
+      "timeline": {
+        "adopt_dog_enrique": "We adopted Enrique, a 10-year-old dog",
+        "adopt_poodle_copito": "We adopted Copito de Nieve, the white poodle",
+        "adopt_kitten_ulises": "We adopted the kitten Ulises",
+        "adopt_hamsters": "We adopted a little group of hamsters"
+      }
+    },
     "separation_reconciliation": {
       "title": "One last chance",
       "description": "You're separated and things are tense. Maybe there's still something to try — or maybe not.",
@@ -589,6 +674,98 @@
       },
       "timeline": {
         "final_goodbye": "We said goodbye for good"
+      }
+    },
+    "want_kids_decision": {
+      "title": "Do we want a baby?",
+      "description": "You've been together a while, and at some dinner or late-night talk the topic comes up: kids. Time to put it on the table.",
+      "questions": {
+        "want_kids": "Do we want to have a child?"
+      },
+      "options": {
+        "yes": "Yes",
+        "no": "No"
+      },
+      "conversations": {
+        "yes": "Get me pregnant, {{partnerBName}}.",
+        "no": "You know the rule — no glove, no love."
+      }
+    },
+    "first_baby_gender": {
+      "title": "A new life",
+      "description": "What joy — you've conceived a little one. For some divine reason, you get to choose the child's sex.",
+      "questions": {
+        "child_gender": "What do you prefer?"
+      },
+      "options": {
+        "girl": "A girl",
+        "boy": "A boy"
+      },
+      "conversations": {
+        "mismatch": "Well, we don't agree on this, but we'll love them anyway."
+      },
+      "timeline": {
+        "baby_born": "Our first child was born"
+      }
+    },
+    "unplanned_pregnancy": {
+      "title": "An unexpected miracle",
+      "description": "No birth control is foolproof — the miracle of life happened and you've conceived.",
+      "questions": {
+        "what_to_do": "What do you prefer?"
+      },
+      "options": {
+        "boy": "A boy",
+        "girl": "A girl",
+        "abortion": "An abortion"
+      },
+      "timeline": {
+        "baby_born": "Our first child was born"
+      }
+    },
+    "sex_toys_exploration": {
+      "title": "Curiosity at the shop",
+      "description": "After talking with some friends, you decide to explore sex toys. You do a bit of research online and see these options.",
+      "questions": {
+        "what_to_get": "What do you get?"
+      },
+      "options": {
+        "handcuffs_ropes": "A nice set of handcuffs and ropes",
+        "tarzan_costume": "That silly Tarzan costume",
+        "little_whip": "A cute little whip",
+        "skip_this_time": "We'll pass this time"
+      },
+      "conversations": {
+        "handcuffs_ropes": "The set arrived. We tried it carefully and laughed more than we expected.",
+        "tarzan_costume": "The Tarzan costume was ridiculous. That night was pure embarrassed laughter.",
+        "little_whip": "The whip was smaller than we imagined. Still, it helped break the ice.",
+        "skip_this_time": "We closed the tab and left the idea for later. At least we talked about it."
+      }
+    },
+    "vacation_week_decision": {
+      "title": "Where should we go on vacation?",
+      "description": "Vacation week is coming up and you need to pick a plan. Every option has its vibe — and its price tag.",
+      "questions": {
+        "where_to_go": "What do we do with the week off?"
+      },
+      "options": {
+        "brazil_with_friends": "Fly to Brazil with friends who go there all the time",
+        "family_beach_house": "Head to the family beach house",
+        "usa_trip": "Visit the land of freedom and opportunity",
+        "southern_chile": "Road-trip southern Chile for new adventures"
+      },
+      "conversations": {
+        "brazil_with_friends": "Brazil with the friends. Caipirinhas, beach days, long nights. The bill was long too.",
+        "family_beach_house": "Family beach house. Good food, sun, and barely any spending.",
+        "usa_trip": "The United States. Parks, malls, the whole cliché. The credit card felt it.",
+        "southern_chile": "Southern Chile for adventure. Hikes, lakes, and a full recharge.",
+        "mismatch": "We can't even agree on a vacation!"
+      },
+      "timeline": {
+        "brazil_with_friends": "Vacation in Brazil with friends",
+        "family_beach_house": "Week at the family beach house",
+        "usa_trip": "Trip to the United States",
+        "southern_chile": "Adventure in southern Chile"
       }
     }
   }

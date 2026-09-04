@@ -17,6 +17,8 @@ from app.shared.enums import GameStatus, PlayerRole, PlayerSex
 from app.shared.exceptions import AppError
 from app.shared.player_game_stats import GAME_AGE_DEFAULT
 
+_COUPLE_DELTA_TEST_EVENT = "going_bald"
+
 
 def _create_ready_game(db: Session, match_name: str, avatar: dict[str, str]):
     return game_service.create_game(
@@ -684,6 +686,10 @@ def test_partner_b_submit_with_a_bank_applies_couple_match(
         seed=11,
         max_events=1,
     )
+    orm_a = db_session.get(SimulationRun, a_run.run_id)
+    assert orm_a is not None
+    orm_a.current_event_id = _COUPLE_DELTA_TEST_EVENT
+    db_session.commit()
     current = manager.get_current_event(db_session, game.id, a_run.run_id)
     a_answers = _continue_answers(current.event)
     a_event_id = current.event["event_id"]

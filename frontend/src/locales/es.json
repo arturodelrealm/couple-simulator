@@ -232,6 +232,30 @@
         "bought_house": "Compramos una casa"
       }
     },
+    "child_activity_signup": {
+      "title": "Actividades extracurriculares",
+      "description": "Nuestro hije de 7 años llegó con tres volantes del barrio: natación, fútbol y un taller de dibujo. Hay que elegir algo, o no.",
+      "questions": {
+        "which_activity": "¿A qué actividad quieres inscribir a tu hije?"
+      },
+      "options": {
+        "swimming": "Clases de natación en la piscina municipal",
+        "soccer": "Clases de fútbol los sábados en la cancha del barrio",
+        "art": "Taller de arte y manualidades en el centro cultural",
+        "none": "De nada, este año no"
+      },
+      "conversations": {
+        "swimming": "Ya tiene polera y horario. A ver si aprende a nadar de verdad.",
+        "soccer": "Matrícula pagada y primera práctica el sábado. Ojalá le guste.",
+        "art": "Llegó con su carpeta de dibujos. El living ya huele a témpera.",
+        "none": "Le dijimos que el año que viene. No quedó muy convencido."
+      },
+      "timeline": {
+        "swimming": "Inscribimos a nuestro hije en clases de natación",
+        "soccer": "Inscribimos a nuestro hije en fútbol infantil",
+        "art": "Inscribimos a nuestro hije en un taller de arte"
+      }
+    },
     "career_offer": {
       "title": "Oferta de trabajo",
       "description": "Un ascenso con más horas.",
@@ -241,6 +265,27 @@
       "options": {
         "accept": "Aceptar",
         "decline": "Rechazar"
+      }
+    },
+    "couples_therapy_suggestion": {
+      "title": "Terapia de pareja",
+      "description": "Se notan las asperezas en la relación. Tanto que la familia les sugiere ir a terapia de pareja con un profesional.",
+      "questions": {
+        "therapy_choice": "La familia nos sugiere ir a terapia de pareja. ¿Qué hacemos?",
+        "therapy_choice_self": "La familia nos sugiere ir a terapia de pareja. ¿Qué hacemos?"
+      },
+      "options": {
+        "not_interested": "No estoy interesado.",
+        "whatever_it_takes": "Lo que sea necesario para ayudar a esta relación.",
+        "budget_therapy": "Bueno, vamos, pero a una económica."
+      },
+      "conversations": {
+        "not_interested": "Con esta actitud no vamos a ningún lado.",
+        "therapy_breakup": "La terapeuta fue directa: esta relación no tiene ni pies ni cabeza, deberíamos darla por terminada.",
+        "therapy_works": "La terapeuta nos dijo que todo tiene solución, que nos queremos y eso es lo importante."
+      },
+      "timeline": {
+        "went_to_therapy": "Fuimos a terapia de pareja"
       }
     },
     "midlife_checkpoint": {
@@ -317,19 +362,19 @@
     },
     "entertaining_job_offers": {
       "title": "Ofertas de pega entretenida",
-      "description": "A {{partnerAName}} le llegó una oferta de un trabajo re entretenido. Hay varias opciones en la mesa y la plata no está tan bien como para rechazarlas a la ligera.",
+      "description": "A {{partnerAName}} le llegó una oferta de un trabajo muy entretenido. Hay varias opciones en la mesa y la plata no está tan bien como para rechazarlas a la ligera.",
       "questions": {
         "which_offer": "¿Cuál aceptamos?"
       },
       "options": {
-        "calama_big_salary": "Sueldo brígido en Calama: casa excelente en el norte, pero nos vamos lejos.",
-        "puerto_aysen_good_salary": "Buen sueldo en Puerto Aysén: casa ok en el sur, con mejor onda.",
+        "calama_big_salary": "Sueldo muy alto en Calama: casa excelente en el norte, pero nos vamos lejos.",
+        "puerto_aysen_good_salary": "Buen sueldo en Puerto Aysén: casa ok en el sur, con mejor ambiente.",
         "san_fernando_mid_salary": "Sueldo media-alta en San Fernando: casa ok y cambio moderado.",
         "daily_commute": "Sueldo mejor al actual, pero 1 hr 15 de viaje diario en la ciudad."
       },
       "conversations": {
-        "calama_big_salary": "Calama, po. La plata entra fuerte, pero el desierto y la distancia pegan duro.",
-        "puerto_aysen_good_salary": "Puerto Aysén suena lindo. Sur, casa decent y la vida un poco más tranqui.",
+        "calama_big_salary": "Calama. La plata entra fuerte, pero el desierto y la distancia pegan duro.",
+        "puerto_aysen_good_salary": "Puerto Aysén suena lindo. Sur, casa decente y la vida un poco más tranquila.",
         "san_fernando_mid_salary": "San Fernando, en el medio. Ni tanta mudanza ni tanta plata, pero suma.",
         "daily_commute": "Nos quedamos, pero el viaje diario nos va a matar. La pega paga, el tráfico no.",
         "mismatch": "Está bien que sean cosas que se ven en pareja, pero estamos hablando de mi carrera profesional."
@@ -343,7 +388,7 @@
     },
     "adult_content_deal": {
       "title": "El negocio del amigo juguetón",
-      "description": "Un amigo peculiar, súper juguetón, les propone un negocio. Dice que lo tienen todo: son buenos para la foto y elegantes. Les pregunta si quieren grabar contenido XXX. Les asegura que se van a hacer virales y van a ganar buena plata, pero no es algo de una vez: es un contrato por dos años.",
+      "description": "Un amigo peculiar, muy juguetón, les propone un negocio. Dice que lo tienen todo: son guapos y elegantes. Les pregunta si quieren grabar contenido XXX. Les asegura que se van a hacer virales y van a ganar buena plata, pero no es algo de una vez: es un contrato por dos años.",
       "questions": {
         "what_to_do": "¿Qué hacen?"
       },
@@ -364,7 +409,7 @@
     },
     "buy_luxury_car": {
       "title": "¿Nos damos el gustito?",
-      "description": "Las finanzas están de lujo y podemos pensar en algo más fino. Hay varios autos premium en la mesa, po.",
+      "description": "Las finanzas están de lujo y podemos pensar en algo más fino. Hay varios autos premium en la mesa.",
       "questions": {
         "which_car": "¿Cuál nos llevamos?"
       },
@@ -375,11 +420,11 @@
         "volvo_xc40": "Volvo XC40 Recharge — SUV premium, seguro y con onda nórdica"
       },
       "conversations": {
-        "bmw_320i": "BMW 320i en la cochera. Se siente el manejo deportivo desde el primer arranque, cachai.",
+        "bmw_320i": "BMW 320i en el garage. Se siente el manejo deportivo desde el primer arranque.",
         "audi_a4": "Audi A4 listo. Tecnología, cuero y esa sensación de que llegamos a otro nivel.",
         "mercedes_c200": "Mercedes C200. Confort, estatus y la estrella en el volante. Nos vemos distintos.",
-        "volvo_xc40": "Volvo XC40. Seguro, premium y con espacio pa' ir a la cordillera con estilo.",
-        "mismatch": "No nos pusimos de acuerdo con el auto de lujo. El gustito queda pa' después."
+        "volvo_xc40": "Volvo XC40. Seguro, premium y con espacio para ir a la cordillera con estilo.",
+        "mismatch": "No nos pusimos de acuerdo con el auto de lujo. El gustito queda para después."
       },
       "timeline": {
         "bmw_320i": "Compramos un BMW 320i",
@@ -390,19 +435,19 @@
     },
     "buy_mid_range_car": {
       "title": "¿Nos compramos un auto?",
-      "description": "Las finanzas van bien y podemos pensar en sacarnos el polvo del auto. Hay varios modelos de gama media en la mesa, po.",
+      "description": "Las finanzas van bien y podemos pensar en cambiarnos de auto. Hay varios modelos de gama media en la mesa.",
       "questions": {
         "which_car": "¿Cuál nos llevamos?"
       },
       "options": {
-        "chevrolet_onix": "Chevrolet Onix 1.4 LT — compacto, económico y pa' la ciudad",
+        "chevrolet_onix": "Chevrolet Onix 1.4 LT — compacto, económico y para la ciudad",
         "nissan_kicks": "Nissan Kicks Advance — SUV chico, cómodo y con buena altura",
         "toyota_corolla": "Toyota Corolla XEi — el clásico confiable, sin sorpresas",
-        "mazda_3": "Mazda 3 2.0 — el más fino de la tanda, manejo bacán"
+        "mazda_3": "Mazda 3 2.0 — el más fino del grupo, se maneja muy bien"
       },
       "conversations": {
-        "chevrolet_onix": "Onix listo. Chico, rendidor y pa' meterse en cualquier estacionamiento, cachai.",
-        "nissan_kicks": "Kicks en la cochera. Alto, cómodo y pa' subir a la cordillera sin drama.",
+        "chevrolet_onix": "Onix listo. Chico, rendidor y para meterse en cualquier estacionamiento.",
+        "nissan_kicks": "Kicks en el garage. Alto, cómodo y para subir a la cordillera sin drama.",
         "toyota_corolla": "Corolla nuevo. Clásico, confiable y que no te deja botado en la ruta.",
         "mazda_3": "Mazda 3. Se maneja como un reloj y nos sube el nivel al salir a pasear.",
         "mismatch": "No nos pusimos de acuerdo con el auto. Seguimos a pie un rato más."
@@ -416,7 +461,7 @@
     },
     "upgrade_housing": {
       "title": "¿Nos cambiamos de hogar?",
-      "description": "Las finanzas van bien y tenemos la luca pa' pensar en algo mejor. Hay varias opciones en la mesa.",
+      "description": "Las finanzas van bien y tenemos plata para pensar en algo mejor. Hay varias opciones en la mesa.",
       "questions": {
         "which_home": "¿A dónde nos mudamos?"
       },
@@ -428,7 +473,7 @@
         "metro_salvador_apartment": "Un depto excelente en Metro Salvador"
       },
       "conversations": {
-        "trapenses_house": "Casa en Los Trapenses. Espacio, vista y aire puro, po.",
+        "trapenses_house": "Casa en Los Trapenses. Espacio, vista y aire puro.",
         "nunoa_apartment": "Depto en Ñuñoa, cerca de todo. La pega y el after quedan a la vuelta.",
         "pedro_valdivia_apartment": "Depto en Pedro de Valdivia Norte. Bueno, cómodo y sin irnos tan lejos.",
         "chicureo_house": "Casa en un condominio en Chicureo. Piscina, quincho y vida de barrio cerrado.",
@@ -515,13 +560,13 @@
       },
       "conversations": {
         "brazil_vacation": "Una semana en Brasil: playa, caipirinha y cero culpa. El wellness subió solito.",
-        "save_money": "A la cuenta de ahorro, po. El que guarda siempre tiene.",
-        "wardrobe_refresh": "Closet renovado: blazer y sweater pa' los dos. Nos vemos con otro nivel.",
+        "save_money": "A la cuenta de ahorro. El que guarda siempre tiene.",
+        "wardrobe_refresh": "Closet renovado: blazer y sweater para los dos. Nos vemos con otro nivel.",
         "donate_hogar_cristo": "La plata de la tía Pepita fue directo al Hogar de Cristo. Quedó bonito.",
         "all_on_red_win": "¡SALIO ROJO! Los 2 millones se multiplicaron. Ganamos plata y nos reímos todo el camino al banco.",
-        "all_on_red_win_partner_b": "Te lo dije, po. Confiá en el rojo.",
-        "all_on_red_lose": "Nada. Cero. La ruleta se comió los 2 millones como si fueran pisco sour. Chau plata, chau paz mental.",
-        "all_on_red_lose_partner_b": "Te lo dije que no... pero igual apostamos todo, cachai."
+        "all_on_red_win_partner_b": "Te lo dije. Confía en el rojo.",
+        "all_on_red_lose": "Nada. Cero. La ruleta se comió los 2 millones como si fueran pisco sour. Chao plata, chao paz mental.",
+        "all_on_red_lose_partner_b": "Te lo dije que no... pero igual apostamos todo."
       },
       "timeline": {
         "donation": "Donamos la herencia de la tía Pepita al Hogar de Cristo"
@@ -540,12 +585,52 @@
       },
       "conversations": {
         "medical_check": "Fuimos al control. Sale plata, pero al menos sabemos qué es.",
-        "hospitalized": "Te lo dije, po. Ahora estamos con deuda del hospital encima.",
+        "hospitalized": "Te lo dije. Ahora estamos con deuda del hospital encima.",
         "recovered": "Se pasó solo. Tuvimos suerte, pero no me gustó el show.",
         "mismatch": "Tantas diferencias por un dolor de cabeza."
       },
       "timeline": {
         "ignored_illness": "{{partnerBName}} se enfermó y no hizo nada al respecto"
+      }
+    },
+    "pet_parenting_style": {
+      "title": "¿Cómo criamos a {{mascotName}}?",
+      "description": "Llevamos un tiempo con mascota y empiezan a salir las diferencias: espacio en el depto, plata en la comida, hasta redes sociales.",
+      "questions": {
+        "rearing_style": "¿Qué estilo de crianza queremos para {{mascotName}}?"
+      },
+      "options": {
+        "free_roam_bedroom": "{{mascotName}} puede andar libre por toda la casa y tiene su camita en la pieza. Somos los papás más afortunados.",
+        "restricted_premium_food": "{{mascotName}} puede estar solo en ciertos lugares de la casa, pero siempre con la mejor comida.",
+        "basics_only": "{{mascotName}} tiene techo y comida. Para un animal eso basta.",
+        "instagram_page": "{{mascotName}} va a tener su propia página de Instagram."
+      }
+    },
+    "plaza_pet_adoption": {
+      "title": "Mascotas en la plaza",
+      "description": "Un domingo cualquiera, pasando por una plaza del barrio con un buen helado en la mano, ven a un par de hippies ofreciendo animales en adopción. Pese al olor a incienso, se acercan a mirar los ejemplares.",
+      "questions": {
+        "what_to_do": "¿Qué hacen?"
+      },
+      "options": {
+        "adopt_dog_enrique": "Adoptan a Enrique, un perro de 10 años. Le podrían dar unos buenos últimos años de vida.",
+        "adopt_poodle_copito": "Se llevan a Copito de Nieve, un poodle blanco. Parece tener buen carácter y tiene toda una vida por delante.",
+        "adopt_kitten_ulises": "Se llevan al gatito Ulises.",
+        "adopt_hamsters": "El grupito de hámsters parece ser justo lo que necesitan. Se los llevan.",
+        "walk_away": "Piensan que los humanos deben haber pegado las pulgas a los animales, y prefieren desistir."
+      },
+      "conversations": {
+        "adopt_dog_enrique": "Enrique ya tiene sus años, pero se ve agradecido. El depto se siente distinto con él.",
+        "adopt_poodle_copito": "Copito de Nieve es blanco como la nieve y ya quiere subirse al sofá. Bienvenido a casa.",
+        "adopt_kitten_ulises": "Ulises no para de explorar cada rincón. El gatito ya manda en el depto.",
+        "adopt_hamsters": "Los hámsters vienen en bandada y ocupan la mesa del living. Al menos son simpáticos.",
+        "walk_away": "Mejor seguir con el helado. Con ese olor a incienso y las pulgas, pasamos de largo."
+      },
+      "timeline": {
+        "adopt_dog_enrique": "Adoptamos a Enrique, un perro de 10 años",
+        "adopt_poodle_copito": "Adoptamos a Copito de Nieve, el poodle blanco",
+        "adopt_kitten_ulises": "Adoptamos al gatito Ulises",
+        "adopt_hamsters": "Adoptamos un grupito de hámsters"
       }
     },
     "separation_reconciliation": {
@@ -564,11 +649,11 @@
       },
       "conversations": {
         "guitar_serenade": "Llegó con la guitarra al asado de mi familia y me cantó una canción que escribió. Fue ridículo y bonito a la vez.",
-        "instagram_likes": "Like a todo, hasta la story del café de las 3 de la mañana. Al menos se nota el esfuerzo, po.",
+        "instagram_likes": "Like a todo, hasta la story del café de las 3 de la mañana. Al menos se nota el esfuerzo.",
         "photo_letter": "Una carta con fotos de viajes, cumpleaños y el depto viejo. Nos reímos, lloramos y volvimos a hablar en serio.",
         "beg_on_knees": "De rodillas en la plaza, con gente mirando. Vergüenza total, pero también se sintió real.",
         "no_second_chances": "Shrek sí, nosotros no. Así de simple.",
-        "mismatch": "Ni siquiera nos pusimos de acuerdo en cómo volver. Chau, era."
+        "mismatch": "Ni siquiera nos pusimos de acuerdo en cómo volver. Se acabó."
       },
       "timeline": {
         "attempt": "Intentamos volver después de la separación"
@@ -585,10 +670,102 @@
       },
       "conversations": {
         "partner_a": "Gracias por todo lo bueno. Ojalá te vaya bien, de verdad.",
-        "partner_b": "Igual, po. Cuídate. Fue lindo mientras duró."
+        "partner_b": "Igual. Cuídate. Fue lindo mientras duró."
       },
       "timeline": {
         "final_goodbye": "Nos despedimos para siempre"
+      }
+    },
+    "want_kids_decision": {
+      "title": "¿Queremos un hijo?",
+      "description": "Llevan un tiempo juntos y en alguna cena o sobremesa sale el tema: hijos. Ya es hora de ponerlo sobre la mesa.",
+      "questions": {
+        "want_kids": "¿Queremos tener un hijo?"
+      },
+      "options": {
+        "yes": "Sí",
+        "no": "No"
+      },
+      "conversations": {
+        "yes": "Preñame, {{partnerBName}}.",
+        "no": "Ya saben, sin gorrito no hay fiesta."
+      }
+    },
+    "first_baby_gender": {
+      "title": "Una nueva vida",
+      "description": "Qué alegría que alegría: han concebido a una pequeña criatura. Por algún motivo divino, pueden escoger el sexo de la descendencia.",
+      "questions": {
+        "child_gender": "¿Qué prefieren?"
+      },
+      "options": {
+        "girl": "Niña",
+        "boy": "Niño"
+      },
+      "conversations": {
+        "mismatch": "Bueno, no estamos de acuerdo en esto, pero de todos modos lo querremos."
+      },
+      "timeline": {
+        "baby_born": "Nació nuestro primer hijo"
+      }
+    },
+    "unplanned_pregnancy": {
+      "title": "El milagro inesperado",
+      "description": "No hay método anticonceptivo infalible: se ha producido el milagro de la vida y han concebido a una criatura.",
+      "questions": {
+        "what_to_do": "¿Qué prefieren?"
+      },
+      "options": {
+        "boy": "Que sea niño",
+        "girl": "Que sea niña",
+        "abortion": "Que sea aborto"
+      },
+      "timeline": {
+        "baby_born": "Nació nuestro primer hijo"
+      }
+    },
+    "sex_toys_exploration": {
+      "title": "Curiosidad en la tienda",
+      "description": "Tras conversar con algunos amigos, deciden explorar el mundo de los juguetes sexuales. Investigan un rato en internet y ven estas opciones.",
+      "questions": {
+        "what_to_get": "¿Qué se llevan?"
+      },
+      "options": {
+        "handcuffs_ropes": "Su buen set de esposas y amarras",
+        "tarzan_costume": "Su tonto disfraz de Tarzán",
+        "little_whip": "Un latiguito piola",
+        "skip_this_time": "Pasamos por esta vez"
+      },
+      "conversations": {
+        "handcuffs_ropes": "Llegó el set. Lo probamos con cuidado y nos reímos más de lo que pensábamos.",
+        "tarzan_costume": "El disfraz de Tarzán era ridículo. Esa noche fue pura vergüenza divertida.",
+        "little_whip": "El latiguito era más chico de lo que imaginábamos. Igual nos sirvió para romper el hielo.",
+        "skip_this_time": "Cerramos la pestaña y dejamos la idea para después. Al menos ya hablamos del tema."
+      }
+    },
+    "vacation_week_decision": {
+      "title": "¿A dónde vamos de vacaciones?",
+      "description": "Se acerca la semana de vacaciones y hay que decidir el plan. Cada opción tiene su onda — y su precio.",
+      "questions": {
+        "where_to_go": "¿Qué hacemos con la semana libre?"
+      },
+      "options": {
+        "brazil_with_friends": "Viajar a Brasil con unos amigos que van harto para allá",
+        "family_beach_house": "Ir a la casa familiar en la playa",
+        "usa_trip": "Ir a la tierra de la libertad y las oportunidades",
+        "southern_chile": "Ir al sur de Chile, en busca de nuevas aventuras"
+      },
+      "conversations": {
+        "brazil_with_friends": "Brasil con los amigos. Caipiriñas, playa y noches largas. La cuenta también fue larga.",
+        "family_beach_house": "Casa de la familia en la playa. Comida rica, sol y casi sin gastar.",
+        "usa_trip": "Estados Unidos. Parques, tiendas y todo el cliché. La tarjeta lo sintió.",
+        "southern_chile": "Sur de Chile en busca de aventuras. Trekking, lagos y pura energía renovada.",
+        "mismatch": "Ni para unas vacaciones nos podemos poner de acuerdo!"
+      },
+      "timeline": {
+        "brazil_with_friends": "Vacaciones en Brasil con amigos",
+        "family_beach_house": "Semana en la casa familiar en la playa",
+        "usa_trip": "Viaje a Estados Unidos",
+        "southern_chile": "Aventura en el sur de Chile"
       }
     }
   }

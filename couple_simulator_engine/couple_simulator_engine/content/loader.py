@@ -130,6 +130,11 @@ def _parse_event(data: dict[str, Any], *, source: str) -> EventDefinition:
             field="use_answer_bank",
             **ctx,
         ),
+        apply_couple_deltas=_parse_bool(
+            data.get("apply_couple_deltas", True),
+            field="apply_couple_deltas",
+            **ctx,
+        ),
     )
 
 

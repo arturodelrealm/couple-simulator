@@ -1,0 +1,91 @@
+{
+  "id": "want_kids_decision",
+  "title": "events.want_kids_decision.title",
+  "description": "events.want_kids_decision.description",
+  "tags": ["family", "decision"],
+  "life_stage": null,
+  "eligibility": {
+    "type": "compare",
+    "path": "state/children",
+    "op": "eq",
+    "value": 0
+  },
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "want_kids",
+      "text": "events.want_kids_decision.questions.want_kids",
+      "options": [
+        {
+          "id": "yes",
+          "text": "events.want_kids_decision.options.yes",
+          "actions": []
+        },
+        {
+          "id": "no",
+          "text": "events.want_kids_decision.options.no",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "yes",
+      "when": {
+        "type": "compare",
+        "path": "answers/want_kids",
+        "op": "eq",
+        "value": "yes"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "want_kids",
+            "value": true
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.want_kids_decision.conversations.yes",
+            "params": {
+              "partnerBName": "{{partner_b.name}}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "no",
+      "when": {
+        "type": "compare",
+        "path": "answers/want_kids",
+        "op": "eq",
+        "value": "no"
+      },
+      "actions": [
+        {
+          "type": "set_tag",
+          "args": {
+            "key": "want_kids",
+            "value": false
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.want_kids_decision.conversations.no"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

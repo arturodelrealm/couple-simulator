@@ -20,6 +20,8 @@ from couple_simulator_engine.session import ClientAction, GameSession, TimelineE
 from couple_simulator_engine.state import Housing, Mascot
 
 _PLAYER_NAME_PLACEHOLDER = "{{player.name}}"
+_PARTNER_A_NAME_PLACEHOLDER = "{{partner_a.name}}"
+_PARTNER_B_NAME_PLACEHOLDER = "{{partner_b.name}}"
 
 
 def _as_int_delta(value: Any) -> int:
@@ -39,8 +41,20 @@ def _player_name(ctx: EvaluationContext, session: GameSession) -> str:
     return session.player.name
 
 
-def _interpolate_player_name(template: str, name: str) -> str:
-    return template.replace(_PLAYER_NAME_PLACEHOLDER, name)
+def _interpolate_templates(
+    template: str,
+    ctx: EvaluationContext,
+    session: GameSession,
+) -> str:
+    result = template.replace(_PLAYER_NAME_PLACEHOLDER, _player_name(ctx, session))
+    result = result.replace(
+        _PARTNER_A_NAME_PLACEHOLDER,
+        session.state.partner_a.name,
+    )
+    return result.replace(
+        _PARTNER_B_NAME_PLACEHOLDER,
+        session.state.partner_b.name,
+    )
 
 
 def handle_modify_stat(
@@ -124,19 +138,18 @@ def handle_add_conversation(
     session: GameSession,
     rng: SeededRNG,
 ) -> list[ClientAction]:
-    name = _player_name(ctx, session)
     payload: dict[str, Any] = {"speaker": args["speaker"]}
     raw_params = args.get("params")
     if isinstance(raw_params, dict):
         resolved_params: dict[str, Any] = {}
         for key, value in raw_params.items():
             if isinstance(value, str):
-                resolved_params[key] = _interpolate_player_name(value, name)
+                resolved_params[key] = _interpolate_templates(value, ctx, session)
             else:
                 resolved_params[key] = value
         payload["params"] = resolved_params
     if "text" in args:
-        payload["text"] = _interpolate_player_name(str(args["text"]), name)
+        payload["text"] = _interpolate_templates(str(args["text"]), ctx, session)
     if "text_key" in args:
         payload["text_key"] = args["text_key"]
     return [ClientAction(type="add_conversation", args=payload)]

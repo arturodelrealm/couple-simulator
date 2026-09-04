@@ -31,6 +31,7 @@ class SimulationStateRead(BaseModel):
     quality_of_life: int
     children: int
     wellness: int
+    mismatches: int = 0
     housing: HousingRead
     mascot: MascotRead | None
     tags: dict[str, Any] = Field(default_factory=dict)

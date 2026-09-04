@@ -1,0 +1,227 @@
+{
+  "id": "vacation_week_decision",
+  "title": "events.vacation_week_decision.title",
+  "description": "events.vacation_week_decision.description",
+  "tags": ["leisure", "financial", "relationship", "decision"],
+  "life_stage": null,
+  "eligibility": null,
+  "use_answer_bank": true,
+  "questions": [
+    {
+      "id": "where_to_go",
+      "text": "events.vacation_week_decision.questions.where_to_go",
+      "options": [
+        {
+          "id": "brazil_with_friends",
+          "text": "events.vacation_week_decision.options.brazil_with_friends",
+          "actions": []
+        },
+        {
+          "id": "family_beach_house",
+          "text": "events.vacation_week_decision.options.family_beach_house",
+          "actions": []
+        },
+        {
+          "id": "usa_trip",
+          "text": "events.vacation_week_decision.options.usa_trip",
+          "actions": []
+        },
+        {
+          "id": "southern_chile",
+          "text": "events.vacation_week_decision.options.southern_chile",
+          "actions": []
+        }
+      ]
+    }
+  ],
+  "outcomes": [
+    {
+      "id": "brazil_with_friends",
+      "when": {
+        "type": "compare",
+        "path": "answers/where_to_go",
+        "op": "eq",
+        "value": "brazil_with_friends"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -22
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 2, "max": 15 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.vacation_week_decision.conversations.brazil_with_friends"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.vacation_week_decision.timeline.brazil_with_friends",
+            "category": "leisure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "family_beach_house",
+      "when": {
+        "type": "compare",
+        "path": "answers/where_to_go",
+        "op": "eq",
+        "value": "family_beach_house"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -6
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 2, "max": 15 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.vacation_week_decision.conversations.family_beach_house"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.vacation_week_decision.timeline.family_beach_house",
+            "category": "leisure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "usa_trip",
+      "when": {
+        "type": "compare",
+        "path": "answers/where_to_go",
+        "op": "eq",
+        "value": "usa_trip"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -38
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 2, "max": 15 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.vacation_week_decision.conversations.usa_trip"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.vacation_week_decision.timeline.usa_trip",
+            "category": "leisure"
+          }
+        }
+      ]
+    },
+    {
+      "id": "southern_chile",
+      "when": {
+        "type": "compare",
+        "path": "answers/where_to_go",
+        "op": "eq",
+        "value": "southern_chile"
+      },
+      "actions": [
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "finances",
+            "delta": -14
+          }
+        },
+        {
+          "type": "modify_stat",
+          "args": {
+            "variable": "wellness",
+            "delta": {
+              "distribution": {
+                "kind": "uniform",
+                "params": { "min": 2, "max": 15 }
+              }
+            }
+          }
+        },
+        {
+          "type": "add_conversation",
+          "args": {
+            "speaker": "partner_a",
+            "text_key": "events.vacation_week_decision.conversations.southern_chile"
+          }
+        },
+        {
+          "type": "add_timeline_entry",
+          "args": {
+            "title_key": "events.vacation_week_decision.timeline.southern_chile",
+            "category": "leisure"
+          }
+        }
+      ]
+    }
+  ],
+  "default_actions": [],
+  "mismatch_actions": [
+    {
+      "type": "add_conversation",
+      "args": {
+        "speaker": "partner_a",
+        "text_key": "events.vacation_week_decision.conversations.mismatch"
+      }
+    }
+  ],
+  "weight": 1.0,
+  "max_occurrences": 1
+}

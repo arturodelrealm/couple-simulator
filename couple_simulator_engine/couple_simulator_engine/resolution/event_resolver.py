@@ -20,6 +20,9 @@ from couple_simulator_engine.content.definitions import (
 from couple_simulator_engine.enums import SessionStatus
 from couple_simulator_engine.resolution.conflict import ConflictResolver
 from couple_simulator_engine.resolution.outcomes import matching_outcomes
+from couple_simulator_engine.resolution.post_event_economy import (
+    apply_post_event_economy,
+)
 from couple_simulator_engine.session import (
     Answer,
     ClientAction,
@@ -130,14 +133,17 @@ def _effective_duo_answers(
             match_count += 1
             continue
         has_mismatch = True
-        winner_id = conflict.resolve(
-            partner_a.option_id,
-            live.option_id,
-            session.rng,
-            session.config,
-        )
-        effective.append(Answer(question_id=question.id, option_id=winner_id))
-        disagreements.append((winner_id, live.option_id))
+        if event.apply_couple_deltas:
+            winner_id = conflict.resolve(
+                partner_a.option_id,
+                live.option_id,
+                session.rng,
+                session.config,
+            )
+            effective.append(Answer(question_id=question.id, option_id=winner_id))
+            disagreements.append((winner_id, live.option_id))
+        else:
+            effective.append(live)
     return (
         effective,
         {
@@ -234,7 +240,9 @@ def resolve_event(
             flags=flags,
         )
 
-    if flags is not None:
+    if flags is not None and event.apply_couple_deltas:
+        if disagreements:
+            session.state.mismatches += len(disagreements)
         _apply_couple_compatibility_delta(
             session, event, effective_ordered, client_actions, flags=flags
         )
@@ -270,6 +278,13 @@ def resolve_event(
             client_actions,
             flags=flags,
         )
+
+    client_actions.extend(
+        apply_post_event_economy(
+            session,
+            game_finished=_game_finished(session, client_actions),
+        )
+    )
 
     snapshot = session.state.to_dict()
     for answer in submitted_ordered:

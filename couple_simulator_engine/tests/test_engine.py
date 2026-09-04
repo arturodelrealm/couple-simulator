@@ -425,7 +425,7 @@ def test_loaded_partner_b_submit_match_applies_bonus_not_personal() -> None:
         loaded, event, [Answer(question_id="q1", option_id="opt_b")]
     )
     session = loaded.session
-    assert session.state.finances == 35
+    assert session.state.finances == 37
     assert session.state.partner_a.simulation_relation_happiness == 75
     assert session.state.partner_b.simulation_relation_happiness == 75
     assert any(
@@ -461,7 +461,7 @@ def test_loaded_partner_b_submit_conflict_applies_winner_and_penalties() -> None
     loaded.session.rng.weighted_choice = MagicMock(return_value="opt_a")
     engine.submit_answers(loaded, event, [Answer(question_id="q1", option_id="opt_b")])
     session = loaded.session
-    assert session.state.finances == 16
+    assert session.state.finances == 18
     assert session.state.partner_a.simulation_relation_happiness == 62
     assert session.state.partner_b.simulation_relation_happiness == 58
     assert session.answers[0].option_id == "opt_b"
@@ -479,7 +479,7 @@ def test_loaded_partner_b_empty_bank_skips_config_deltas() -> None:
     loaded = engine.load_game(_partner_b_snapshot([]))
     engine.submit_answers(loaded, event, [Answer(question_id="q1", option_id="opt_b")])
     session = loaded.session
-    assert session.state.finances == 35
+    assert session.state.finances == 37
     assert session.state.partner_a.simulation_relation_happiness == 70
     assert session.state.partner_b.simulation_relation_happiness == 70
     exported = engine.export_snapshot(loaded)
@@ -510,7 +510,7 @@ def test_session_submit_does_not_use_partner_a_bank() -> None:
         loaded.session, event, [Answer(question_id="q1", option_id="opt_b")]
     )
     session = loaded.session
-    assert session.state.finances == 35
+    assert session.state.finances == 37
     assert session.state.partner_a.simulation_relation_happiness == 70
     assert session.state.partner_b.simulation_relation_happiness == 70
 

@@ -9,10 +9,15 @@ from couple_simulator_engine.content.definitions import (
 )
 from couple_simulator_engine.enums import PlayerSex, SessionStatus
 from couple_simulator_engine.player import Player
-from couple_simulator_engine.session import RecordedAnswer, TimelineEntry
+from couple_simulator_engine.resolution.post_event_economy import (
+    apply_post_event_economy,
+)
+from couple_simulator_engine.rng import SeededRNG
+from couple_simulator_engine.session import GameSession, RecordedAnswer, TimelineEntry
 from couple_simulator_engine.snapshot import (
     GameSnapshot,
     RunSnapshot,
+    copy_simulation_state,
     export_loaded_game,
     hydrate_loaded_game,
 )
@@ -235,3 +240,49 @@ def test_export_then_hydrate_is_lossless_except_answer_state_snapshot() -> None:
     _assert_runs_equal(second.active_run, exported.active_run)
     assert original.active_run.answers[0].state_snapshot == {"finances": 40}
     assert exported.active_run.answers[0].state_snapshot is None
+
+
+def test_snapshot_preserves_finances_and_income_band_after_passive_tick() -> None:
+    state = _state()
+    state.tags["income_band"] = "high"
+    session = GameSession(
+        session_id="econ-snap",
+        player=state.partner_a,
+        state=state,
+        config=GameConfig(),
+        rng=SeededRNG(1),
+    )
+    apply_post_event_economy(session, game_finished=False)
+    assert session.state.finances == 46
+    copied = copy_simulation_state(session.state)
+    assert copied.finances == 46
+    assert copied.tags == {"income_band": "high"}
+
+    snapshot = GameSnapshot(
+        game_id="game-econ",
+        mode="solo",
+        active_run=RunSnapshot(
+            run_id="run-econ",
+            player_role="partner_a",
+            run_number=1,
+            status=SessionStatus.ACTIVE,
+            rng_seed=1,
+            events_played=1,
+            events_played_ids=["noop_tick"],
+            timeline=[],
+            answers=[],
+            event_variables={},
+            current_event_id=None,
+            end_reason=None,
+            max_events=5,
+            state=copied,
+        ),
+        partner_a_runs=[],
+        config=GameConfig(),
+    )
+    loaded = hydrate_loaded_game(snapshot)
+    assert loaded.session.state.finances == 46
+    assert loaded.session.state.tags == {"income_band": "high"}
+    exported = export_loaded_game(loaded)
+    assert exported.active_run.state.finances == 46
+    assert exported.active_run.state.tags == {"income_band": "high"}

@@ -42,6 +42,7 @@ def test_simulation_state_read_omits_removed_stats():
     assert "career" not in SimulationStateRead.model_fields
     assert "adventures" not in SimulationStateRead.model_fields
     assert "wellness" in SimulationStateRead.model_fields
+    assert "mismatches" in SimulationStateRead.model_fields
     assert "housing" in SimulationStateRead.model_fields
     assert "mascot" in SimulationStateRead.model_fields
     assert "tags" in SimulationStateRead.model_fields

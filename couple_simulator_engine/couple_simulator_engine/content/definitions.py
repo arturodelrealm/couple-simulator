@@ -74,3 +74,4 @@ class EventDefinition:
     max_occurrences: int = 1
     player_role: PlayerRole | None = None
     use_answer_bank: bool = True
+    apply_couple_deltas: bool = True
