@@ -37,8 +37,8 @@ export function AvatarColorSwatches({
             })}
             aria-pressed={selected}
             onClick={() => onSelect(hex)}
-            className={`h-10 w-10 rounded-full border border-slate-200 shadow-sm transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-purple-300 ${
-              selected ? "ring-2 ring-purple-500 ring-offset-2" : ""
+            className={`h-10 w-10 rounded-full border border-slate-200 shadow-sm transition-transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-sky-300 ${
+              selected ? "ring-2 ring-sky-500 ring-offset-2" : ""
             }`}
             style={{ backgroundColor: toCssHex(hex) }}
           />

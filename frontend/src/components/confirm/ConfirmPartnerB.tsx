@@ -26,8 +26,8 @@ export function ConfirmPartnerB({
   const { t } = useTranslation();
 
   return (
-    <section className="rounded-3xl border border-purple-50 bg-white px-6 py-6 text-center shadow-sm sm:px-8">
-      <span className="inline-block rounded-full bg-indigo-50 px-2.5 py-1 text-xs font-semibold text-indigo-500">
+    <section className="rounded-3xl border border-slate-200 bg-white px-6 py-6 text-center shadow-sm sm:px-8">
+      <span className="inline-block rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700">
         {t("game.confirm.partnerBHeading")}
       </span>
       <div className="mt-4">

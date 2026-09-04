@@ -26,8 +26,8 @@ export function QuestionnaireEventNav({
             onClick={() => onSelect(item.event_id)}
             className={`rounded-full px-3 py-1 text-xs font-semibold ${
               selected
-                ? "bg-purple-600 text-white"
-                : "bg-white text-slate-600 ring-1 ring-purple-100"
+                ? "bg-sky-600 text-white"
+                : "bg-white text-slate-600 ring-1 ring-slate-200"
             }`}
           >
             {index + 1} · {t(`game.questionnaire.status.${item.status}`)}

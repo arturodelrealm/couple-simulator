@@ -58,14 +58,14 @@ export function PartnerAQuestionnairePage() {
           {showSetupLink ? (
             <Link
               to={`/games/${gameId}/player-a`}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              className="text-sm font-medium text-sky-700 hover:text-sky-800"
             >
               {t("game.play.errors.goToSetup")}
             </Link>
           ) : (
             <Link
               to="/lobby"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              className="text-sm font-medium text-sky-700 hover:text-sky-800"
             >
               {t("game.nav.backToLobby")}
             </Link>
@@ -106,7 +106,7 @@ export function PartnerAQuestionnairePage() {
         />
       ) : null}
       {isComplete ? (
-        <div className="rounded-3xl border border-purple-100 bg-white px-6 py-5">
+        <div className="rounded-3xl border border-slate-200 bg-white px-6 py-5">
           <p className="font-display text-lg font-bold text-slate-800">
             {t("game.questionnaire.complete")}
           </p>
@@ -126,6 +126,7 @@ export function PartnerAQuestionnairePage() {
             currentItem.presentation.title,
             contentParams,
           )}
+          eventId={currentItem.event_id}
           description={
             currentItem.presentation.description
               ? translateContent(

@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import type { PlayerSex } from "../../services/gameService";
 import type { AvatarConfig } from "../../shared/avatar/avataaarsVariants";
 import { AvatarPreview } from "../../shared/ui/AvatarPreview";
+import { theme } from "../../shared/ui/theme";
 
 const SEX_LABEL_KEYS: Record<PlayerSex, string> = {
   male: "game.playerA.sex.male",
@@ -31,12 +32,12 @@ export function ConfirmHero({
 
   return (
     <section
-      className="rounded-3xl border border-purple-50 px-6 py-8 text-center shadow-sm sm:px-10"
+      className="rounded-3xl border border-slate-200 px-6 py-8 text-center shadow-sm sm:px-10"
       style={{
-        background: "linear-gradient(90deg, #faf5ff, #fdf2f8, #eff6ff)",
+        background: theme.headerGradient,
       }}
     >
-      <span className="inline-block rounded-full bg-pink-50 px-2.5 py-1 text-xs font-semibold text-pink-500">
+      <span className="inline-block rounded-full bg-sky-50 px-2.5 py-1 text-xs font-semibold text-sky-700">
         {t("game.confirm.title")}
       </span>
       <h1 className="mt-3 font-display text-3xl font-extrabold tracking-tight text-slate-800 sm:text-4xl">

@@ -122,7 +122,7 @@ export function HouseholdPanel({
   });
 
   return (
-    <section className="rounded-3xl border border-purple-50 bg-white/95 px-5 py-3 shadow-sm sm:px-6 lg:sticky lg:top-14 lg:z-[9] lg:backdrop-blur-sm">
+    <section className="rounded-3xl border border-slate-200 bg-white/95 px-5 py-3 shadow-sm sm:px-6 lg:sticky lg:top-14 lg:z-[9] lg:backdrop-blur-sm">
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:gap-6">
         <PartnerChip
           partner={partnerA}

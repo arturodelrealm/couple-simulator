@@ -1,36 +1,38 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 
+import { eventAccentForId, theme } from "../../shared/ui/theme";
+
 export type EventCardProps = {
   title: string;
   description: string | null;
   year?: number;
+  eventId?: string;
   children?: ReactNode;
 };
-
-const EVENT_BACKGROUND = "#EFF6FF";
-const EVENT_ACCENT = "#3B82F6";
 
 export function EventCard({
   title,
   description,
   year,
+  eventId,
   children,
 }: EventCardProps) {
   const { t } = useTranslation();
+  const accent = eventId ? eventAccentForId(eventId) : theme.primary;
 
   return (
     <div
-      className="overflow-hidden rounded-3xl border border-purple-50 shadow-sm"
-      style={{ background: EVENT_BACKGROUND }}
+      className="overflow-hidden rounded-3xl border border-slate-200 shadow-sm"
+      style={{ background: theme.primaryLight }}
     >
       <div className="px-6 py-5 sm:px-8 sm:py-6">
         <div className="mb-3 flex flex-wrap items-center gap-2">
           <span
             className="inline-block rounded-full px-2.5 py-1 text-xs font-semibold"
             style={{
-              color: EVENT_ACCENT,
-              background: `${EVENT_ACCENT}18`,
+              color: accent,
+              background: `${accent}18`,
             }}
           >
             {t("game.play.lifeEvent")}
@@ -50,7 +52,7 @@ export function EventCard({
           </p>
         ) : null}
         {children ? (
-          <div className="mt-5 space-y-3 border-t border-black/5 pt-5">
+          <div className="mt-5 space-y-3 border-t border-slate-200 pt-5">
             {children}
           </div>
         ) : null}

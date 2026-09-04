@@ -18,7 +18,7 @@ export function LifeStoryPanel({ timeline, stats }: LifeStoryPanelProps) {
   const newestIndex = timeline.length > 0 ? timeline.length - 1 : -1;
 
   return (
-    <aside className="flex flex-col rounded-3xl border border-purple-50 bg-white p-5 shadow-sm">
+    <aside className="flex flex-col rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
       <div className="mb-4 flex items-center gap-2">
         <PlayBookIcon className="h-4 w-4" style={{ color: "#A78BFA" }} />
         <h3 className="font-display text-sm font-bold text-slate-700">
@@ -38,21 +38,19 @@ export function LifeStoryPanel({ timeline, stats }: LifeStoryPanelProps) {
               <div
                 key={`${entry.title}-${entry.age}-${index}`}
                 className={`flex items-start gap-3 rounded-xl p-3 ${
-                  isNewest
-                    ? "border border-purple-100 bg-purple-50"
-                    : "bg-slate-50"
+                  isNewest ? "border border-sky-100 bg-sky-50" : "bg-slate-50"
                 }`}
               >
                 <div
                   className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full"
                   style={{
-                    background: isNewest ? "#a78bfa" : "#cbd5e1",
+                    background: isNewest ? "#0284C7" : "#cbd5e1",
                   }}
                 />
                 <div>
                   <p
                     className={`text-xs font-semibold ${
-                      isNewest ? "text-purple-700" : "text-slate-600"
+                      isNewest ? "text-sky-700" : "text-slate-600"
                     }`}
                   >
                     {translateContent(entry.title)}

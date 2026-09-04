@@ -30,21 +30,21 @@ export function PlayEntryPage() {
         {showPartnerBSetupLink ? (
           <Link
             to={getPlayerBSetupPath(gameId)}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            className="text-sm font-medium text-sky-700 hover:text-sky-800"
           >
             {t("game.play.errors.goToPartnerBSetup")}
           </Link>
         ) : showSetupLink ? (
           <Link
             to={`/games/${gameId}/player-a`}
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            className="text-sm font-medium text-sky-700 hover:text-sky-800"
           >
             {t("game.play.errors.goToSetup")}
           </Link>
         ) : (
           <Link
             to="/lobby"
-            className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+            className="text-sm font-medium text-sky-700 hover:text-sky-800"
           >
             {t("game.nav.backToLobby")}
           </Link>

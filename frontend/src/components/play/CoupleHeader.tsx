@@ -7,6 +7,7 @@ import {
   LIFE_STAGE_CONFIG,
 } from "../../shared/play/lifeStageConfig";
 import { ChildrenIcon } from "../../shared/play/statIcons";
+import { theme } from "../../shared/ui/theme";
 import { PlayAvatar } from "./PlayAvatar";
 import { PlayHeartIcon } from "./playIcons";
 
@@ -69,12 +70,11 @@ export function CoupleHeader({
   const childIcons = Math.min(childrenCount, 5);
 
   return (
-    <section className="overflow-hidden rounded-3xl border border-purple-50 bg-white shadow-sm">
+    <section className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
       <div
         className="px-8 py-6"
         style={{
-          background:
-            "linear-gradient(135deg, #faf5ff 0%, #fdf2f8 50%, #eff6ff 100%)",
+          background: theme.headerGradient,
         }}
       >
         <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
@@ -87,8 +87,8 @@ export function CoupleHeader({
                 config={partnerAAvatar}
                 seed={partnerASeed}
                 age={age}
-                background="#fce7f3"
-                badgeColor="#F472B6"
+                background={theme.partnerA.background}
+                badgeColor={theme.partnerA.color}
                 badgeAlign="right"
               />
             }
@@ -111,7 +111,10 @@ export function CoupleHeader({
               </div>
             )}
             <div className="flex justify-center">
-              <PlayHeartIcon className="h-7 w-7" style={{ color: "#F472B6" }} />
+              <PlayHeartIcon
+                className="h-7 w-7"
+                style={{ color: theme.heart }}
+              />
             </div>
             {childrenCount > 0 && (
               <div className="mt-2 flex items-center justify-center gap-1">
@@ -119,7 +122,7 @@ export function CoupleHeader({
                   <ChildrenIcon
                     key={index}
                     className="h-3.5 w-3.5"
-                    style={{ color: "#60A5FA" }}
+                    style={{ color: theme.primary }}
                   />
                 ))}
                 {extraChildren > 0 && (
@@ -140,8 +143,8 @@ export function CoupleHeader({
                 config={partnerBAvatar}
                 seed={partnerBSeed}
                 age={partnerBAge}
-                background="#dbeafe"
-                badgeColor="#6366F1"
+                background={theme.partnerB.background}
+                badgeColor={theme.partnerB.color}
                 badgeAlign="left"
               />
             }

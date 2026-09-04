@@ -6,8 +6,9 @@ import { LobbyJoinIcon, LobbyPlusIcon } from "../components/lobby/lobbyIcons";
 import { PlayLayout } from "../components/play/PlayLayout";
 import { PlayHeartIcon } from "../components/play/playIcons";
 import { useLobby } from "../hooks/useLobby";
-import { ErrorMessage } from "../shared/ui/ErrorMessage";
 import { getPlayerBSetupPath } from "../shared/gameNavigation";
+import { ErrorMessage } from "../shared/ui/ErrorMessage";
+import { theme } from "../shared/ui/theme";
 
 export function LobbyPage() {
   const { t } = useTranslation();
@@ -19,13 +20,13 @@ export function LobbyPage() {
       contentClassName="mx-auto max-w-3xl space-y-6 px-6 py-8"
     >
       <section
-        className="rounded-3xl border border-purple-50 px-6 py-10 text-center shadow-sm sm:px-10"
+        className="rounded-3xl border border-slate-200 px-6 py-10 text-center shadow-sm sm:px-10"
         style={{
-          background: "linear-gradient(90deg, #faf5ff, #fdf2f8, #eff6ff)",
+          background: theme.headerGradient,
         }}
       >
         <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/80 shadow-sm">
-          <PlayHeartIcon className="h-6 w-6" style={{ color: "#F472B6" }} />
+          <PlayHeartIcon className="h-6 w-6" style={{ color: theme.heart }} />
         </div>
         <h1 className="font-display text-3xl font-extrabold text-slate-800 sm:text-4xl">
           {t("game.lobby.title")}

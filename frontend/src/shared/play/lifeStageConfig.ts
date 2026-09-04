@@ -7,15 +7,15 @@ export type LifeStageDisplayConfig = {
 
 export const LIFE_STAGE_CONFIG: Record<LifeStageId, LifeStageDisplayConfig> = {
   youth: {
-    color: "#F472B6",
+    color: "#0284C7",
     labelKey: "game.play.lifeStage.youth",
   },
   adult: {
-    color: "#A78BFA",
+    color: "#7C3AED",
     labelKey: "game.play.lifeStage.adult",
   },
   elderly: {
-    color: "#FBBF24",
+    color: "#D97706",
     labelKey: "game.play.lifeStage.elderly",
   },
 };

@@ -5,6 +5,7 @@ import type { TimelineEntry } from "../../services/simulationService";
 import { STAT_CONFIG } from "../../shared/play/statConfig";
 import { translateContent } from "../../shared/play/translateContent";
 import { ErrorMessage } from "../../shared/ui/ErrorMessage";
+import { theme } from "../../shared/ui/theme";
 import type { StatsBarValues } from "./StatsBar";
 import { PlayRefreshIcon } from "./playIcons";
 
@@ -38,7 +39,10 @@ export function GameOverScreen({
   const { t } = useTranslation();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#f5f0ff] p-8">
+    <div
+      className="flex min-h-screen items-center justify-center p-8"
+      style={{ background: theme.page }}
+    >
       <div className="w-full max-w-lg rounded-3xl bg-white p-10 text-center shadow-xl">
         <h1 className="mb-2 font-display text-3xl font-extrabold text-slate-800">
           {t("game.play.gameOver.title")}
@@ -111,14 +115,14 @@ export function GameOverScreen({
             onClick={onPlayAgain}
             disabled={playAgainDisabled}
             className="flex w-full items-center justify-center gap-2 rounded-2xl py-3 font-display text-base font-bold text-white transition-all hover:opacity-90 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
-            style={{ background: "linear-gradient(135deg, #a78bfa, #f472b6)" }}
+            style={{ background: theme.ctaGradient }}
           >
             <PlayRefreshIcon className="h-4 w-4" />
             {t("game.play.gameOver.playAgain")}
           </button>
           <Link
             to="/lobby"
-            className="block w-full rounded-2xl border-2 border-purple-100 bg-white px-5 py-3 text-center font-display text-base font-bold text-slate-700 transition-all hover:border-purple-300 hover:bg-purple-50"
+            className="block w-full rounded-2xl border-2 border-slate-200 bg-white px-5 py-3 text-center font-display text-base font-bold text-slate-700 transition-all hover:border-sky-300 hover:bg-sky-50"
           >
             {t("game.nav.backToLobby")}
           </Link>

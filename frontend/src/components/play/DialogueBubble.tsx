@@ -1,3 +1,5 @@
+import { theme } from "../../shared/ui/theme";
+
 export type DialogueSpeaker = "partner_a" | "partner_b" | "both";
 
 export type DialogueBubbleProps = {
@@ -11,9 +13,9 @@ const SPEAKER_STYLES: Record<
   DialogueSpeaker,
   { color: string; background: string }
 > = {
-  partner_a: { color: "#EC4899", background: "#FDF2F8" },
-  partner_b: { color: "#6366F1", background: "#EEF2FF" },
-  both: { color: "#A78BFA", background: "#F5F3FF" },
+  partner_a: theme.partnerA,
+  partner_b: theme.partnerB,
+  both: theme.both,
 };
 
 export function DialogueBubble({

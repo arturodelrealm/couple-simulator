@@ -80,7 +80,7 @@ export function StatsBar({
 
   return (
     <aside
-      className={`rounded-3xl border border-purple-50 bg-white shadow-sm ${
+      className={`rounded-3xl border border-slate-200 bg-white shadow-sm ${
         isVertical ? "p-5" : "px-8 py-5"
       }`}
     >

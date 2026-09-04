@@ -19,6 +19,7 @@ import { resolvePlayPartnerB } from "../shared/play/resolvePlayPartnerB";
 import { translateContent } from "../shared/play/translateContent";
 import { ErrorMessage } from "../shared/ui/ErrorMessage";
 import { LoadingState } from "../shared/ui/LoadingState";
+import { theme } from "../shared/ui/theme";
 
 function statsFromState(state: SimulationState): StatsBarValues {
   return {
@@ -86,14 +87,14 @@ export function PlayPage() {
           {showSetupLink ? (
             <Link
               to={`/games/${gameId}/player-a`}
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              className="text-sm font-medium text-sky-700 hover:text-sky-800"
             >
               {t("game.play.errors.goToSetup")}
             </Link>
           ) : (
             <Link
               to="/lobby"
-              className="text-sm font-medium text-indigo-600 hover:text-indigo-700"
+              className="text-sm font-medium text-sky-700 hover:text-sky-800"
             >
               {t("game.nav.backToLobby")}
             </Link>
@@ -152,16 +153,16 @@ export function PlayPage() {
             run.state.partner_a_avatar ?? game.partner_a.avatar_config ?? {},
           seed: gameId,
           age: run.state.age,
-          background: "#fce7f3",
-          badgeColor: "#F472B6",
+          background: theme.partnerA.background,
+          badgeColor: theme.partnerA.color,
         }}
         partnerB={{
           name: partnerBName,
           avatar: partnerB.avatarConfig,
           seed: partnerB.seed,
           age: partnerBAge,
-          background: "#dbeafe",
-          badgeColor: "#6366F1",
+          background: theme.partnerB.background,
+          badgeColor: theme.partnerB.color,
         }}
       />
       {actionError ? <ErrorMessage message={actionError} /> : null}
@@ -178,6 +179,7 @@ export function PlayPage() {
                 : null
             }
             year={run.state.age}
+            eventId={currentEvent.event.event_id}
           >
             {showChoices && currentQuestion ? (
               <>

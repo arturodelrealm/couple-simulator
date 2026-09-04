@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+import { theme } from "../../shared/ui/theme";
 import { PlayHeartIcon } from "./playIcons";
 
 export type PlayLayoutProps = {
@@ -24,13 +25,13 @@ export function PlayLayout({
   const showTrailing = showProgress || showBackToLobby;
 
   return (
-    <div className="min-h-screen bg-[#f5f0ff]">
-      <nav className="sticky top-0 z-20 border-b border-purple-100 bg-white/80 px-6 py-3 backdrop-blur-sm">
+    <div className="min-h-screen" style={{ background: theme.page }}>
+      <nav className="sticky top-0 z-20 border-b border-slate-200 bg-white/80 px-6 py-3 backdrop-blur-sm">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <PlayHeartIcon
               className="h-[18px] w-[18px]"
-              style={{ color: "#F472B6" }}
+              style={{ color: theme.heart }}
             />
             <span className="font-display text-lg font-extrabold text-slate-800">
               {t("game.play.title")}
@@ -39,10 +40,13 @@ export function PlayLayout({
           {showTrailing ? (
             <div className="flex items-center gap-4">
               {showProgress && (
-                <div className="h-2 w-32 rounded-full bg-purple-100">
+                <div className="h-2 w-32 rounded-full bg-sky-100">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-700"
-                    style={{ width: `${clampedFill}%` }}
+                    className="h-full rounded-full transition-all duration-700"
+                    style={{
+                      width: `${clampedFill}%`,
+                      background: theme.progressGradient,
+                    }}
                   />
                 </div>
               )}
