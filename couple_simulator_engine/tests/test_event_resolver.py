@@ -734,9 +734,7 @@ def test_resolve_advances_one_year_after_event() -> None:
     assert session.state.partner_a.simulation_age == 23
     assert session.state.partner_b.simulation_age == 23
     years = [
-        action
-        for action in resolution.client_actions
-        if action.type == "advance_year"
+        action for action in resolution.client_actions if action.type == "advance_year"
     ]
     assert len(years) == 1
     assert years[0].args["age"] == 23
